@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets'
+import avatarImg from '@assets/avatar.jpg'
+---
+
+<div class="avatar-wrapper my-5 rounded-full relative cursor-pointer select-none transition-all">
+  <Image
+      src={avatarImg}
+      loading={'eager'}
+      alt=""
+      class="aspect-square w-[200px] rounded-full"
+  />
+  <div class="border-circle"></div>
+</div>
+
+<style>
+  .avatar-wrapper {
+    width: 200px;
+    height: 200px;
+    border: 8px solid white;
+    position: relative;
+    display: inline-block;
+  }
+
+  .border-circle {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: orange;
+    border-radius: 50%;
+    left: calc(50% - 5px);
+    top: -5px;
+    transform-origin: 50% 96px;
+    border: 1px solid #000000;
+  }
+
+  @keyframes wobble {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .avatar-wrapper:hover .border-circle,
+  .avatar-wrapper.animate .border-circle {
+    animation: wobble 1s ease-out forwards;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const avatarWrapper = document.querySelector('.avatar-wrapper');
+    function toggleAnimation() {
+      avatarWrapper.classList.toggle('animate');
+    }
+
+    // Mouse events
+    avatarWrapper.addEventListener('mouseenter', toggleAnimation);
+    avatarWrapper.addEventListener('mouseleave', toggleAnimation);
+
+    // Touch events
+    avatarWrapper.addEventListener('touchstart', toggleAnimation, { passive: true });
+    avatarWrapper.addEventListener('touchend', toggleAnimation, { passive: true });
+  })
+</script>
