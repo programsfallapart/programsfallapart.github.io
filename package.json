@@ -1,0 +1,36 @@
+{
+  "name": "astro-blog",
+  "type": "module",
+  "license": "MIT",
+  "version": "0.9",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "new": "node generate.cjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/sitemap": "3.1.1",
+    "@astrojs/tailwind": "^5.1.5",
+    "astro": "^5.18.0",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "@vite-pwa/astro": "^1.2.0",
+    "autoprefixer": "^10.4.14",
+    "crc": "^4.3.2",
+    "gray-matter": "^4.0.3",
+    "less": "^4.2.0",
+    "rehype-external-links": "^3.0.0",
+    "rehype-prism-plus": "^1.6.3",
+    "tailwindcss": "^3.3.3",
+    "yaml": "^2.3.2"
+  },
+  "overrides": {
+    "serialize-javascript": ">=7.0.3"
+  }
+}

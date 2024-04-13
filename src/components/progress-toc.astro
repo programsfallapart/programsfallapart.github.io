@@ -1,0 +1,211 @@
+---
+interface Heading {
+  depth: number
+  slug: string
+  text: string
+}
+
+interface Props {
+  headings: Heading[]
+}
+
+const { headings } = Astro.props
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3)
+const h2Headings = headings.filter((h) => h.depth === 2)
+---
+
+{h2Headings.length > 0 && (
+  <div id="progress-toc" class="progress-toc">
+    <div id="progress-lines" class="progress-lines">
+      {h2Headings.map(() => (
+        <div class="toc-line" />
+      ))}
+    </div>
+    <div id="toc-panel" class="toc-panel">
+      <ul id="toc-list">
+        {tocHeadings.map((h) => (
+          <li>
+            <a
+              href={`#${h.slug}`}
+              class={h.depth === 3 ? 'toc-h3' : ''}
+              data-slug={h.slug}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+)}
+
+<style>
+  .progress-toc {
+    position: fixed;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+  }
+
+  .progress-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .progress-toc:hover .progress-lines {
+    display: none;
+  }
+
+  .toc-line {
+    height: 2px;
+    width: 20px;
+    background-color: #d1d5db;
+    border-radius: 1px;
+    transition: width 0.25s ease, background-color 0.25s ease;
+  }
+
+  :global(.dark) .toc-line {
+    background-color: theme('colors.primary-gray');
+  }
+
+  .toc-line.active {
+    width: 36px;
+    background-color: theme('colors.primary');
+  }
+
+  .toc-line.passed {
+    background-color: theme('colors.muted');
+  }
+
+  :global(.dark) .toc-line.passed {
+    background-color: theme('colors.muted');
+  }
+
+  .toc-panel {
+    display: none;
+    max-width: calc(20vw - 4rem);
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+
+  .toc-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .progress-toc:hover .toc-panel {
+    display: block;
+  }
+
+  .toc-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .toc-panel li {
+    margin: 0;
+  }
+
+  .toc-panel a {
+    font-family: 'JetBrains Mono';
+    color: theme('colors.muted');
+    font-size: 0.6rem;
+    text-decoration: none;
+    line-height: 1.8;
+    display: block;
+    white-space: nowrap;
+  }
+
+  .toc-panel a:hover {
+    color: theme('colors.primary');
+  }
+
+  .toc-panel a.active {
+    color: theme('colors.primary');
+  }
+
+  .toc-panel .toc-h3 {
+    padding-left: 1rem;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .progress-toc {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const progressToc = document.getElementById('progress-toc');
+    if (!progressToc) return;
+
+    const lines = progressToc.querySelectorAll<HTMLElement>('.toc-line');
+    const tocLinks = progressToc.querySelectorAll<HTMLAnchorElement>('#toc-list a');
+
+    // Map lines to h2 heading elements in the DOM
+    const h2Elements: Element[] = [];
+    lines.forEach((line, i) => {
+      // Find the corresponding h2 by matching order
+      const h2s = document.querySelectorAll('article h2');
+      if (h2s[i]) {
+        h2Elements.push(h2s[i]);
+        line.addEventListener('click', () => {
+          h2s[i].scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
+
+    // Map all toc links to their heading elements
+    const allHeadingElements: Element[] = [];
+    tocLinks.forEach((link) => {
+      const slug = link.dataset.slug;
+      const heading = document.getElementById(slug || '');
+      if (heading) {
+        allHeadingElements.push(heading);
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          heading.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
+
+    const update = () => {
+      // Update progress lines based on h2 positions
+      let activeLineIndex = -1;
+      h2Elements.forEach((h, idx) => {
+        if (h.getBoundingClientRect().top <= 100) activeLineIndex = idx;
+      });
+
+      lines.forEach((line, i) => {
+        line.classList.remove('active', 'passed');
+        if (i === activeLineIndex) {
+          line.classList.add('active');
+        } else if (i < activeLineIndex) {
+          line.classList.add('passed');
+        }
+      });
+
+      // Update TOC links based on all heading positions
+      let activeTocIndex = -1;
+      allHeadingElements.forEach((h, idx) => {
+        if (h.getBoundingClientRect().top <= 100) activeTocIndex = idx;
+      });
+
+      tocLinks.forEach((a, i) => {
+        a.classList.toggle('active', i === activeTocIndex);
+      });
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>

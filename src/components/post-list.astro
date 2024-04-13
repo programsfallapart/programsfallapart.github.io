@@ -1,0 +1,24 @@
+---
+import type { PostMatter, PostModel } from '@interfaces/post-model'
+import { formatedYMD } from '@utils/date-helper'
+import { getPostLink } from '@utils/post-link'
+
+interface Props {
+  posts: PostModel[]
+}
+
+const { posts } = Astro.props
+---
+
+<div class="flex flex-col">
+  {
+    posts.map((post) => (
+      <div class="post-row flex items-baseline gap-x-4">
+        <span class="date-mono">{formatedYMD(post.data.date)}</span>
+        <a href={getPostLink(post)} class="flex-1 truncate">
+          {post.data.title}
+        </a>
+      </div>
+    ))
+  }
+</div>

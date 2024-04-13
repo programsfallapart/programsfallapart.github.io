@@ -1,0 +1,73 @@
+---
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+const { active } = require('../../palettes.config.cjs')
+const l = active.logo
+
+const logoSvg = `<svg width="370" height="122" viewBox="-5 5 420 130" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap');
+    .logo-text { font-family: 'EB Garamond', serif; font-size: 38px; }
+    .logo-text-primary { fill: ${l.text}; }
+    .logo-text-accent { fill: ${l.accent}; }
+  </style>
+  <rect x="10" y="80" width="120" height="18" rx="4" fill="${l.bars[3]}"/>
+  <rect x="10" y="58" width="120" height="18" rx="4" fill="${l.bars[2]}"/>
+  <rect x="10" y="36" width="120" height="18" rx="4" fill="${l.bars[1]}"/>
+  <rect x="10" y="14" width="120" height="18" rx="4" fill="${l.bars[0]}" transform="rotate(-10 70 23)"/>
+  <rect x="140" y="10" width="8" height="8" fill="${l.particles[0]}"/>
+  <rect x="152" y="18" width="6" height="6" fill="${l.particles[1]}"/>
+  <rect x="146" y="28" width="7" height="7" fill="${l.particles[2]}"/>
+  <rect x="160" y="32" width="5" height="5" fill="${l.particles[3]}"/>
+  <text x="178" y="55" class="logo-text logo-text-primary">programs</text>
+  <text x="178" y="95" class="logo-text logo-text-accent">fall apart</text>
+</svg>`;
+---
+
+<div class="site-logo mt-8 mb-1 select-none flex justify-center">
+  <Fragment set:html={logoSvg} />
+</div>
+<div class="epigraph">
+  <p class="epigraph-text">
+    &#8220;Non pas des v&#233;rit&#233;s acquises, mais l&#8217;id&#233;e d&#8217;une recherche libre&#8221;
+  </p>
+  <p class="epigraph-author">&#8212; Maurice Merleau-Ponty</p>
+</div>
+
+<style>
+  .site-logo :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .epigraph {
+    margin: 0.5rem auto 0;
+    width: auto;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .epigraph-text {
+    font-family: 'EB Garamond';
+    font-style: italic;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: theme('colors.muted');
+  }
+
+  .epigraph-author {
+    font-family: 'JetBrains Mono';
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: right;
+    margin-top: 0.5rem;
+    color: theme('colors.muted');
+  }
+
+  @media screen and (max-width: 768px) {
+    .epigraph {
+      width: 90%;
+    }
+  }
+</style>

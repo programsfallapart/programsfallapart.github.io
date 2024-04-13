@@ -1,0 +1,92 @@
+---
+import type { PostModel } from '@interfaces/post-model'
+import { getFormatDate } from '@utils/date-helper'
+import { render } from 'astro:content'
+import fs from 'node:fs'
+
+interface Props {
+  post: PostModel
+  from?: string
+}
+
+const { post, from } = Astro.props
+const { Content } = await render(post)
+
+const giscusDarkCss = fs.readFileSync('public/giscus-dark.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
+const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
+---
+
+<article>
+  <h1 class:list={['mt-8', { 'text-center': from && from === 'post' }]}>{post.data.title}</h1>
+  {
+    from === 'post' ? (
+        <div class="flex items-baseline my-3">
+          <div class="date-mono flex-1 text-left">{getFormatDate(post.data.date)}</div>
+          <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
+            {post.data.tags.flatMap((tag, index, array) => [
+              <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
+              index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
+            ])}
+          </div>
+        </div>
+        <div style="margin-bottom: 1.5rem;" />
+    ) : (
+        ''
+    )
+  }
+  <Content />
+
+  <section
+    class="giscus mx-auto mt-10 w-full"
+    data-dark-css={giscusDarkCss}
+    data-light-css={giscusLightCss}
+  ></section>
+  <script>
+    function getGiscusTheme() {
+      const section = document.querySelector('.giscus')!
+      const isDark = document.documentElement.classList.contains('dark')
+      const css = isDark ? section.getAttribute('data-dark-css')! : section.getAttribute('data-light-css')!
+      return `data:text/css;base64,${btoa(css)}`
+    }
+
+    function setGiscusTheme(theme: string) {
+      const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+      iframe?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme } } },
+        'https://giscus.app'
+      )
+    }
+
+    function loadGiscus() {
+      const existing = document.querySelector('script[src="https://giscus.app/client.js"]')
+      if (existing) existing.remove()
+
+      const script = document.createElement('script')
+      script.src = 'https://giscus.app/client.js'
+      script.setAttribute('data-repo', 'programsfallapart/programsfallapart.github.io')
+      script.setAttribute('data-repo-id', 'R_kgDOLtiadA')
+      script.setAttribute('data-category', 'General')
+      script.setAttribute('data-category-id', 'DIC_kwDOLtiadM4Ceq7K')
+      script.setAttribute('data-mapping', 'url')
+      script.setAttribute('data-strict', '1')
+      script.setAttribute('data-reactions-enabled', '1')
+      script.setAttribute('data-emit-metadata', '0')
+      script.setAttribute('data-input-position', 'top')
+      script.setAttribute('data-theme', getGiscusTheme())
+      script.setAttribute('data-lang', 'en')
+      script.setAttribute('crossorigin', 'anonymous')
+      script.async = true
+      document.querySelector('.giscus')?.appendChild(script)
+    }
+
+    // Watch for theme toggles
+    const themeObserver = new MutationObserver(() => {
+      setGiscusTheme(getGiscusTheme())
+    })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
+    // Load on page navigation
+    document.addEventListener('astro:page-load', loadGiscus)
+  </script>
+
+</article>

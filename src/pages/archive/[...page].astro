@@ -1,0 +1,69 @@
+---
+import type { Page, PaginateFunction } from 'astro'
+
+import Pagination from '@components/pagination.astro'
+import BaseLayout from '@layouts/base-layout.astro'
+import { getAllPosts } from '@utils/all-posts'
+import { formatedYMD } from '@utils/date-helper'
+import { getPostLink } from '@utils/post-link'
+import AvatarImage from "../../components/avatar-image.astro";
+import ThemeButton from "../../components/theme-button.astro";
+import { navLinks } from '@utils/nav-links'
+
+interface Props {
+  page: Page
+}
+
+export const getStaticPaths = async ({ paginate }: { paginate: PaginateFunction }) => {
+  const blogs = await getAllPosts()
+  return paginate(blogs, { pageSize: 100 })
+}
+
+const { page } = Astro.props
+const title = 'Archive'
+const description = 'Archive - Programs Fall Apart'
+
+const grouped = page.data.reduce((acc: Record<string, typeof page.data>, post) => {
+  const date = post.data.date
+  const key = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+  if (!acc[key]) acc[key] = []
+  acc[key].push(post)
+  return acc
+}, {})
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="nav-links my-10 flex items-center justify-center gap-10">
+      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <hr class="separator" />
+    <section>
+      {
+        Object.entries(grouped).map(([monthYear, posts]) => (
+          <div class="mb-10">
+            <h3 class="section-heading mb-4">{monthYear}</h3>
+            <div class="flex flex-col">
+              {posts.map((post) => (
+                <div class="post-row flex items-baseline gap-x-4">
+                  <span class="date-mono">{formatedYMD(post.data.date)}</span>
+                  <a href={getPostLink(post)} class="flex-1 truncate">
+                    {post.data.title}
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="flex items-center gap-4 py-5">
+      <Pagination page={page} />
+    </section>
+  </main>
+</BaseLayout>

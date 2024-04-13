@@ -1,0 +1,355 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Font variables
+@font-serif: 'EB Garamond';
+@font-mono: 'JetBrains Mono';
+
+// Border color variables
+@border-light: #e5e7eb;
+@border-dark: #2a2a2a;
+
+// Base font size, scales down on mobile
+html {
+  font-size: 17px;
+
+  @media screen and (max-width: 900px) {
+    font-size: 15px;
+  }
+}
+
+// Default body font
+body {
+  font-family: @font-serif;
+  line-height: 1.75;
+}
+
+// Utility: monospace font
+.mono {
+  font-family: @font-mono;
+}
+
+// Header navigation links
+.nav-links {
+  flex-wrap: wrap;
+
+  a {
+    font-family: @font-mono;
+    font-size: 0.7rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: theme('colors.muted');
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 1.5rem !important;
+
+    a {
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+    }
+  }
+}
+
+// Date labels across the blog
+.date-mono {
+  font-family: @font-mono;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  color: theme('colors.muted');
+}
+
+// Section titles like "Last Posts", tag names, archive month groups
+.section-heading {
+  font-family: @font-mono;
+  font-size: 0.7rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: theme('colors.muted');
+}
+
+// Individual post row in post lists
+.post-row {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid @border-light;
+
+  a {
+    font-family: @font-serif;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+  }
+}
+.dark .post-row {
+  border-bottom-color: @border-dark;
+}
+
+// Thin horizontal rule used between page sections
+.separator {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid @border-light;
+}
+
+.dark .separator {
+  border-top-color: @border-dark;
+}
+
+// Main content area layout
+main {
+  width: 60%;
+  max-width: 1220px;
+  margin: auto;
+  @media screen and (max-width: 1000px) {
+    width: 85%;
+  }
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
+}
+
+// Global link styling
+a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+// Hover color for all links (only on devices that support hover)
+@media (any-hover: hover) {
+  a:hover {
+    color: theme('colors.primary');
+  }
+}
+
+// Inline code inside paragraphs, list items, and bold text
+p code,
+li code,
+strong code {
+  font-size: 0.75em;
+  white-space: nowrap;
+  color: #e4e4e7;
+  background-color: #374151;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  margin: 0 0.1rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  overflow-x: scroll;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Code blocks
+pre {
+  letter-spacing: normal;
+  border-radius: 0.3rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Blog post article content
+article {
+  // Body text
+  p {
+    letter-spacing: 0.2px;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  // List items
+  li {
+    letter-spacing: 0.2px;
+    margin: 0.125rem 0;
+  }
+
+  // Blockquote body text spacing
+  blockquote {
+    letter-spacing: 0.2px;
+    margin: 1.5rem 0 !important;
+    padding: 0.75rem 1.25rem;
+    border-left: 2px solid theme('colors.muted');
+    border-radius: 0;
+  }
+
+  // Unordered lists
+  ul {
+    list-style: disc;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 2rem;
+  }
+
+  // Ordered lists
+  ol {
+    list-style: decimal;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 2rem;
+  }
+
+  // Tighten gap between paragraph and following list
+  p + ul,
+  p + ol {
+    margin-top: -0.75rem;
+  }
+
+  // Post title
+  h1 {
+    font-family: @font-serif;
+    font-size: 1.6rem;
+    font-weight: normal;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem;
+  }
+
+  // Major section heading — monospace, primary color, underlined
+  h2 {
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.primary');
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  // Subsection heading — monospace, muted color, no underline
+  h3 {
+    font-family: @font-mono;
+    font-size: 0.8rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.muted');
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  // Minor heading — monospace, normal weight
+  h4 {
+    font-family: @font-mono;
+    font-size: 0.75rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  // Small label heading
+  h5 {
+    font-family: @font-mono;
+    font-size: 0.7rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  // Smallest heading
+  h6 {
+    font-family: @font-mono;
+    font-size: 0.65rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  // Nested list indentation
+  li > ul {
+    padding-left: 1.25rem;
+  }
+
+  // Inline paragraph inside list item (no extra block margin)
+  li > p {
+    display: inline;
+  }
+
+  // Horizontal rule
+  hr {
+    width: 30%;
+    margin: 1rem auto;
+    border-top: 3px dotted #282c34;
+  }
+
+  // Scrollable table container
+  .table-wrapper {
+    max-width: 100%;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    white-space: nowrap;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #374151;
+  }
+
+  td {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #374151;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 5px;
+  }
+}
+
+
+// Previous/next post navigation at bottom of posts
+.post-nav-link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+// "← Previous" / "Next →" label
+.post-nav-label {
+  font-family: @font-mono;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: theme('colors.muted');
+}
+
+// Post title in prev/next navigation
+.post-nav-title {
+  font-family: @font-serif;
+  font-size: 0.95rem;
+}
+
+// Dark mode overrides
+.dark {
+  p code,
+  li code,
+  strong code {
+    background-color: #282c34;
+  }
+
+  blockquote {
+    border-left-color: theme('colors.primary-gray');
+  }
+}
