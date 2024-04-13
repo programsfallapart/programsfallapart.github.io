@@ -1,0 +1,64 @@
+---
+import AvatarImage from "@components/avatar-image.astro";
+import ThemeButton from "@components/theme-button.astro";
+import BaseLayout from "@layouts/base-layout.astro";
+import { getAllPosts } from "@utils/all-posts";
+import { formatedTime, formatedYMD, getFormatDate } from "@utils/date-helper";
+import { getPostLink } from "@utils/post-link";
+
+const links = [
+  { url: "/", title: "Home" },
+  { url: "/tags", title: "Tags" },
+  { url: "/archive", title: "Archive" },
+  { url: "/about", title: "About" },
+];
+
+const latestPost = (await getAllPosts()).slice(0, 10);
+
+const title = "Programs Fall Apart";
+const description = "Home - Programs Fall Apart";
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="my-10 flex items-center justify-center gap-10 text-primary">
+      {links.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <!-- Études Section -->
+    <!-- <section class="my-10, mt-20">
+      <h2 class="text-2xl font-bold text-center">Études</h2>
+    </section> -->
+    <!-- Last Posts Section -->
+    <section class="my-10">
+      <h2 class="text-2xl font-bold text-center">Last Posts</h2>
+      <div class="flex flex-wrap gap-5 px-2 pt-1">
+        {
+          latestPost.map((post) => (
+            <div class="flex justify-between gap-x-3 py-2">
+              <span class="date-style">{formatedYMD(post.data.date)}</span>
+              <a class="flex-1 truncate" href={getPostLink(post)}>
+                {post.data.title}
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .centered {
+    text-align: center;
+  }
+
+  .date-style {
+    font-size: 0.8rem;
+    color: #808080;
+    margin-right: 2rem; /* Adjust as needed */
+  }
+</style>

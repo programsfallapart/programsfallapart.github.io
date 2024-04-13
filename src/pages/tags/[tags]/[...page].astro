@@ -1,0 +1,65 @@
+---
+import type { Page, PaginateFunction } from 'astro'
+
+import NavHead from '@components/nav-header.astro'
+import Pagination from '@components/pagination.astro'
+import PostList from '@components/post-list.astro'
+import BaseLayout from '@layouts/base-layout.astro'
+import { getAllPosts } from '@utils/all-posts'
+import AvatarImage from "../../../components/avatar-image.astro";
+import ThemeButton from "../../../components/theme-button.astro";
+
+interface Props {
+  page: Page
+}
+
+export const getStaticPaths = async ({ paginate }: { paginate: PaginateFunction }) => {
+  const allPosts = await getAllPosts()
+
+  const uniqueTags = [
+    ...new Set(
+      allPosts
+        .map((post) => post.data.tags)
+        .flat()
+        .filter((tag): tag is string => Boolean(tag)),
+    ),
+  ]
+
+  return uniqueTags.flatMap((tag) => {
+    const filteredPosts = allPosts
+      .filter((post) => post.data.tags && post.data.tags.includes(tag))
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    return paginate(filteredPosts, { params: { tags: tag }, pageSize: 6 })
+  })
+}
+
+const { tags } = Astro.params
+const { page } = Astro.props
+const links = [
+  {url: '/', title: 'Home'},
+  {url: '/tags', title: 'Tags'},
+  {url: '/archive', title: 'Archive'},
+  {url: '/about', title: 'About'},
+]
+---
+
+<BaseLayout title={tags ?? 'tag'} description="blog tag">
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="my-10 flex items-center justify-center gap-10 text-primary">
+      {links.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <section class="py-5 text-2xl font-bold first-letter:uppercase">
+      <a href={`/tags/${tags}`}>{tags}</a>
+    </section>
+    <section>
+      <PostList posts={page.data} />
+    </section>
+    <section class="mt-5 flex items-center gap-4">
+      <Pagination page={page} />
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,42 @@
+---
+import { Image } from "astro:assets";
+import avatarImg from "@assets/avatar-test-2.png";
+---
+
+<div
+  class="avatar-wrapper my-5 rounded-full relative select-none transition-all"
+>
+  <Image
+    src={avatarImg}
+    loading={"eager"}
+    alt=""
+    class="aspect-square w-[200px] rounded-full"
+  />
+</div>
+<div
+  class="text-center mt-3"
+  style=" font-family:Work Sans Medium;font-size: 20px; color: #708090;"
+>
+  Programs Fall Apart
+</div>
+<div
+  class="text-center mt-3"
+  style="
+    margin-top: 30px; /* Added extra space before the quote */
+    font-family: 'Sabon', serif;
+    font-size: 12px;
+    width: 50%;
+    margin: 30px auto; /* Updated to give more overall spacing */
+    text-align: justify;
+    line-height: 1.6;
+  "
+>
+  “Je rivais mes yeux à cette mer vide, où chaque vague, en glissant sans bruit
+  comme une langue, semblait s'obstiner à creuser encore l'absence de toute
+  trace, dans le geste toujours inachevé de l'effacement pur… Je rêvais d'une
+  voile naissant du vide de la mer”
+  <br />
+  <span style="display: block; margin-top: 10px; text-align: right;"
+    >— Julien Gracq</span
+  >
+</div>

@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.prettier-scrollbar {
+  scrollbar-width: auto;
+
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #475569;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    border-radius: 0.625rem;
+  }
+
+  &::-webkit-scrollbar-corner {
+    opacity: 0;
+  }
+}
+
+@font-face {
+  font-family: "Sabon";
+    src: url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.eot");
+      src: url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.eot?#iefix")format("embedded-opentype"),
+        url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.woff2")format("woff2"),
+        url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.woff")format("woff"),
+        url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.ttf")format("truetype"),
+        url("https://db.onlinewebfonts.com/t/14c8e4a0fff16e0c88e203b6f94f95c7.svg#Sabon Regular")format("svg");
+}
+
+@font-face {
+  font-family: "Work Sans Medium";
+  src: url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.eot");
+  src: url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/16b843a1b5750141ba5cb4236620d60c.svg#Work Sans Medium")format("svg");
+}
+
+@font-face {
+  font-family: 'CronosPro';
+  src: url('/fonts/CronosPro.woff2') format('woff2');
+  font-weight: bold;
+  font-display: block;
+}
+
+html {
+  width: 100vw;
+  overflow-x: hidden;
+  font-size: 15px;
+
+  @media screen and (max-width: 900px) {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-family:  'CronosPro';
+  line-height: 24px !important;
+  .prettier-scrollbar();
+}
+
+main,
+nav {
+  width: 60%;
+  margin: auto;
+  max-width: 1220px;
+  font-family: "CronosPro", sans-serif;
+
+  @media screen and (max-width: 1000px) {
+    width: 85%;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
+}
+
+main {
+  min-height: calc(100dvh - 90px);
+  letter-spacing: 1px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (any-hover: hover) {
+  a:hover {
+    color: #4ca9b0;
+  }
+}
+
+:is(p) code {
+  padding: 0 0.4rem;
+  margin: 0 0.2rem;
+  border-radius: 0.3rem;
+  display: inline-flex;
+  white-space: nowrap;
+  overflow-x: scroll;
+  max-width: 100%;
+  scrollbar-width: none;
+  color: white;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+pre {
+  border-radius: 0.3rem;
+  letter-spacing: normal;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+article {
+  p,
+  h1,
+  h2,
+  h3,
+  h5,
+  h6 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  ul,
+  ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.17rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+  }
+
+  h5 {
+    font-size: 0.83rem;
+  }
+
+  h6 {
+    font-size: 0.67rem;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  ol,
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin: 0.125rem 0;
+  }
+
+  li > ul {
+    padding-left: 1.25rem;
+  }
+
+  li > p {
+    display: inline;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  hr {
+    border-top: 3px dotted #282c34;
+    margin: 1rem auto;
+    width: 30%;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 5px;
+  }
+}
+
+blockquote {
+  border-left: 0.3rem solid;
+  border-radius: 0.3rem;
+  margin: 0.625rem 0 !important;
+  padding: 0.625rem 0.625rem 0.625rem 0.625rem;
+}
+
+:is(p) code {
+  background-color: #374151;
+}
+
+blockquote {
+  border-left-color: #1f1f1f;
+  background-color: #dddddd;
+}
+
+.dark {
+  :is(p) code {
+    background-color: #282c34;
+  }
+
+  blockquote {
+    border-left-color: #fcfcfc;
+    background-color: #2a2a2a;
+  }
+}
