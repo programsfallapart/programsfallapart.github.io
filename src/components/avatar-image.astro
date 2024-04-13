@@ -1,0 +1,16 @@
+---
+import { Image } from 'astro:assets'
+import avatarImg from '@assets/avatar.webp'
+---
+
+<div class="avatar-wrapper my-5 rounded-full relative cursor-pointer select-none transition-all">
+  <Image
+      src={avatarImg}
+      loading={'eager'}
+      alt=""
+      class="aspect-square w-[200px] rounded-full"
+  />
+</div>
+<div class="underline-center">
+  Programs Fall Apart
+</div>
