@@ -1,0 +1,27 @@
+---
+import AvatarImage from '@components/avatar-image.astro'
+import ThemeButton from '@components/theme-button.astro'
+import BaseLayout from '@layouts/base-layout.astro'
+
+const links = [
+  { url: '/', title: 'Home' },
+  { url: '/tags', title: 'Tags' },
+  { url: '/archive', title: 'Archive' },
+]
+
+const title = '404 Not Found'
+const description = 'Page Not Found'
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="my-10 flex items-center justify-center gap-10 text-primary">
+      {links.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <section class="flex justify-center py-5 text-4xl">404</section>
+  </main>
+</BaseLayout>

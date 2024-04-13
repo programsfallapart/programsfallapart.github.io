@@ -1,0 +1,59 @@
+<div
+  id="pwa-toast"
+  class="fixed left-[50%] top-5 z-10 hidden -translate-x-[50%]"
+  role="alert"
+  aria-labelledby="toast-message"
+>
+  <div
+    class="flex min-w-[300px] flex-wrap gap-5 rounded-xl border bg-primary-white px-5 py-2 dark:border-primary-gray dark:bg-primary-dark"
+  >
+    <span id="toast-message">The website has been updated! Would you like to refresh?</span>
+    <button id="pwa-refresh" class="hover:text-primary" aria-label="yes">Yes</button>
+    <button id="pwa-close" class="hover:text-primary" aria-label="no">No</button>
+  </div>
+</div>
+<script>
+  import { registerSW } from 'virtual:pwa-register'
+
+  const reloadPrompt = () => {
+    const pwaToast = document.querySelector<HTMLDivElement>('#pwa-toast')!
+    const pwaCloseBtn = pwaToast.querySelector<HTMLButtonElement>('#pwa-close')!
+    const pwaRefreshBtn = pwaToast.querySelector<HTMLButtonElement>('#pwa-refresh')!
+
+    let refreshSW: ((reloadPage?: boolean) => Promise<void>) | undefined
+
+    const refreshCallback = () => refreshSW?.(true)
+
+    const hidePwaToast = (raf = false) => {
+      if (raf) {
+        requestAnimationFrame(() => hidePwaToast(false))
+        return
+      }
+      if (pwaToast.classList.contains('inline-block')) pwaRefreshBtn.removeEventListener('click', refreshCallback)
+
+      pwaToast.classList.remove('inline-block')
+      pwaToast.classList.add('hidden')
+    }
+
+    const showPwaToast = () => {
+      pwaRefreshBtn.addEventListener('click', refreshCallback)
+      requestAnimationFrame(() => {
+        hidePwaToast(false)
+        pwaToast.classList.remove('hidden')
+        pwaToast.classList.add('inline-block')
+      })
+    }
+
+    pwaCloseBtn.addEventListener('click', () => hidePwaToast(true))
+
+    refreshSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {
+        console.log('update')
+        showPwaToast()
+      },
+    })
+  }
+  reloadPrompt()
+  document.addEventListener('astro:page-load', () => reloadPrompt())
+</script>

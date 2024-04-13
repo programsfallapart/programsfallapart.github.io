@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/base-layout.astro";
+import AvatarImage from "@components/avatar-image.astro";
+import NavHead from "../components/nav-header.astro";
+import ThemeButton from "../components/theme-button.astro";
+
+const { page } = Astro.props;
+const title = "About";
+const description = "About - Programs Fall Apart";
+
+const links = [
+  { url: "/", title: "Home" },
+  { url: "/tags", title: "Tags" },
+  { url: "/archive", title: "Archive" },
+  { url: "/about", title: "About" },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="my-10 flex items-center justify-center gap-10 text-primary">
+      {links.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <section class="flex flex-wrap gap-5 px-2 pt-1">
+      <div>
+        <p>Hey there 👋, I’m Amira (ah-mee-rah) .</p>
+        <p>
+          I started off in mathematics, but somewhere along the way, I stumbled
+          into software engineering and just… stayed. There's something about
+          solving tricky software problems that keeps pulling me back in 💻.
+        </p>
+
+        <p>
+          I’m not here to claim mastery over anything. I’m just a curious
+          programmer with a skeptical mind 🧠. This blog comes from those
+          nights, you know, when a "quick fix" spirals into a three-hour deep
+          dive on why programming languages handle whitespace differently, all
+          while a forgotten coffee cup grows cold beside you ☕️. That's where
+          most of these posts come from.<br />
+        </p>
+
+        <p>
+          What you'll find here are thoughts from those rabbit holes. Technical
+          insights that are a bit opinionated and hopefully useful.<br />
+        </p>
+
+        <p>
+          So, this is a space for learning, not to be taken too seriously 😄.
+          I’m here to share the journey, probably mess up a few times, and maybe
+          even spark some real conversations. If you ever feel like reaching
+          out, I’m just a comment, an <a
+            href="mailto:amira@programsfallapart.com"
+            style="text-decoration: underline; color: 'text-primary';">email</a
+          >, or <a
+            href="https://twitter.com/pfa_amira"
+            target="_blank"
+            style="text-decoration: underline; color: 'text-primary';"
+            >twitter</a
+          > away 📧. Let’s see where this rabbit hole goes.
+        </p>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

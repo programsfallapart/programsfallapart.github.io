@@ -1,0 +1,65 @@
+---
+import NavHead from "@components/nav-header.astro";
+import BaseLayout from "@layouts/base-layout.astro";
+import { getAllPosts } from "@utils/all-posts";
+import AvatarImage from "../../components/avatar-image.astro";
+import ThemeButton from "../../components/theme-button.astro";
+
+const allPosts = await getAllPosts();
+
+const uniqueTags = [
+  ...new Set(allPosts.map((post) => post.data.tags).flat()),
+].filter((tag) => tag) as string[];
+const tagContent = uniqueTags.map((tag) => {
+  const tagPost = allPosts.filter(
+    (post) => post.data.tags && post.data.tags.includes(tag)
+  );
+
+  return {
+    tag,
+    count: tagPost.length,
+  };
+});
+
+const title = "Tags";
+const description = "Tags - Programs Fall Apart";
+const links = [
+  { url: "/", title: "Home" },
+  { url: "/tags", title: "Tags" },
+  { url: "/archive", title: "Archive" },
+  { url: "/about", title: "About" },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="my-10 flex items-center justify-center gap-10 text-primary">
+      {links.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <section class="flex flex-wrap gap-5 px-2 pt-1">
+      {
+        tagContent.map((item) => (
+          <div class="flex justify-between">
+            <a
+              class="text-secondary"
+              href={"/tags/" + item.tag}
+            >{`${item.tag?.slice(0, 1).toUpperCase()}${item.tag?.slice(1)}`}</a>
+            <sup class="ml-2 mt-1 flex h-[14px] w-[14px] items-center justify-center rounded-full border text-[10px]  ">
+              {item.count}
+            </sup>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .text-secondary {
+    color: #708090;
+  }
+</style>

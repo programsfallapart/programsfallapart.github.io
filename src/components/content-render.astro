@@ -1,0 +1,51 @@
+---
+import type { PostModel } from '@interfaces/post-model'
+import { getFormatDate } from '@utils/date-helper'
+
+interface Props {
+  post: PostModel
+  from?: string
+}
+
+const { post, from } = Astro.props
+const { Content } = await post.render()
+---
+
+<article>
+  <h4 class:list={['mt-2', { 'text-center': from && from === 'post' }]}>{post.data.title}</h4>
+  {
+    from && from === 'post' ? (
+        <div style="display: flex; align-items: center; font-size: 0.75rem; color: #ccc; margin: 0.5rem 0;">
+          <div style="flex: 1; text-align: left;color: #708090">{getFormatDate(post.data.date)}</div>
+          <div style="display: inline-flex; align-items: center; text-align: right; line-height: 1.2; padding: 0px 5px; border-radius: 10px;">
+            {post.data.tags.flatMap((tag, index, array) => [
+              <a href={`/tags/${tag}`} style="color: #708090; margin-left: 5px ;margin-right: 5px ">{tag}</a>,
+              index < array.length - 1 ? ' - ' : null
+            ])}
+          </div>
+        </div>
+    ) : (
+        ''
+    )
+  }
+  <Content />
+
+  <section class="giscus mx-auto mt-10 w-full"></section>
+  <script src="https://giscus.app/client.js"
+          data-repo="programsfallapart/programsfallapart.github.io"
+          data-repo-id="R_kgDOLtiadA"
+          data-category="General"
+          data-category-id="DIC_kwDOLtiadM4Ceq7K"
+          data-mapping="url"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="noborder_dark"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+</article>

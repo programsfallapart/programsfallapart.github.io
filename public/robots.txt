@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://programsfallapart.com/sitemap-index.xml
