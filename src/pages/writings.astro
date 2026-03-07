@@ -65,6 +65,11 @@ const description = "Writings - Programs Fall Apart";
       }
     </section>
 
+    <!-- Search -->
+    <section class="search-bar mb-8">
+      <input type="text" id="search-input" placeholder="Search writings..." autocomplete="off" spellcheck="false" />
+    </section>
+
     <!-- Writings list -->
     <section class="writings-section">
       {
@@ -73,6 +78,7 @@ const description = "Writings - Programs Fall Apart";
             class="writing-row flex items-baseline gap-x-8"
             data-kind="posts"
             data-tags={JSON.stringify(post.data.tags || [])}
+            data-title={post.data.title}
           >
             <span class="kind-label">post</span>
             <a href={getPostLink(post)} class="flex-1 truncate">
@@ -88,6 +94,7 @@ const description = "Writings - Programs Fall Apart";
             class="writing-row flex items-baseline gap-x-8"
             data-kind="essays"
             data-tags={JSON.stringify(essay.data.tags || [])}
+            data-title={essay.data.title}
           >
             <span class="kind-label">essay</span>
             <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
@@ -103,14 +110,22 @@ const description = "Writings - Programs Fall Apart";
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
-    const tagPills = document.querySelectorAll<HTMLButtonElement>(".tag-pill");
     const rows = document.querySelectorAll<HTMLElement>(".writings-section .writing-row");
+    const searchInput = document.getElementById("search-input") as HTMLInputElement;
 
     const allTagPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
     const filterTagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
 
     let activeCat = "all";
+    let searchQuery = "";
     const activeTags = new Set<string>();
+
+    function highlightText(text: string, query: string): string {
+      if (!query) return text;
+      const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`(${escaped})`, "gi");
+      return text.replace(re, '<mark class="search-highlight">$1</mark>');
+    }
 
     function updateVisibility() {
       const showAllTags = activeTags.size === 0;
@@ -120,13 +135,22 @@ const description = "Writings - Programs Fall Apart";
       rows.forEach((row) => {
         const kind = row.dataset.kind!;
         const tags: string[] = JSON.parse(row.dataset.tags || "[]");
+        const title = row.dataset.title || "";
+        const link = row.querySelector("a")!;
 
         const catMatch = activeCat === "all" || kind === activeCat;
         const tagMatch = showAllTags || tags.some((t) => activeTags.has(t));
+        const searchMatch = !searchQuery || title.toLowerCase().includes(searchQuery.toLowerCase());
 
-        row.style.display = catMatch && tagMatch ? "" : "none";
+        row.style.display = catMatch && tagMatch && searchMatch ? "" : "none";
+        link.innerHTML = searchQuery && searchMatch ? highlightText(title, searchQuery) : title;
       });
     }
+
+    searchInput.addEventListener("input", () => {
+      searchQuery = searchInput.value.trim();
+      updateVisibility();
+    });
 
     catBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -218,6 +242,34 @@ const description = "Writings - Programs Fall Apart";
 
   .writing-row a {
     text-decoration: none;
+  }
+
+  #search-input {
+    width: 100%;
+    font-family: "JetBrains Mono";
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid theme("colors.muted");
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  #search-input::placeholder {
+    color: theme("colors.muted");
+    opacity: 0.6;
+  }
+
+  #search-input:focus {
+    border-color: theme("colors.primary");
+  }
+
+  :global(mark.search-highlight) {
+    background: color-mix(in srgb, theme("colors.accent") 50%, transparent);
+    color: inherit;
   }
 
   .kind-label {
