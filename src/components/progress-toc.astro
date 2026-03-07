@@ -144,7 +144,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const progressToc = document.getElementById('progress-toc');
     if (!progressToc) return;
 

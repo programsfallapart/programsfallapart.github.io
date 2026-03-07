@@ -5,7 +5,7 @@ import ThemeButton from '@components/theme-button.astro'
 import type { EssayModel } from '@interfaces/post-model'
 import BaseLayout from '@layouts/base-layout.astro'
 import { getAllEssays } from '@utils/all-essays'
-import { navLinks } from '@utils/nav-links'
+import { navLinks, isActivePath } from '@utils/nav-links'
 import { render } from 'astro:content'
 import fs from 'node:fs'
 
@@ -35,7 +35,7 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
       <AvatarImage />
     </section>
     <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
     </section>
     <hr class="separator" />
@@ -106,5 +106,5 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
   })
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
-  document.addEventListener('astro:page-load', loadGiscus)
+  document.addEventListener('DOMContentLoaded', loadGiscus)
 </script>

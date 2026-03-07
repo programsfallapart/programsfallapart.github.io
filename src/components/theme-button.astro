@@ -57,7 +57,7 @@
     document.getElementById('themeToggle')?.addEventListener('click', handleToggleClick)
   }
 
-  document.addEventListener('astro:page-load', handleTheme)
+  document.addEventListener('DOMContentLoaded', handleTheme)
 </script>
 <style>
   #themeToggle {

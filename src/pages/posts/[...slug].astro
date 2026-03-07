@@ -6,7 +6,7 @@ import ThemeButton from "../../components/theme-button.astro";
 import type { PostModel } from '@interfaces/post-model'
 import BaseLayout from '@layouts/base-layout.astro'
 import { getAllPosts } from '@utils/all-posts'
-import { navLinks } from '@utils/nav-links'
+import { navLinks, isActivePath } from '@utils/nav-links'
 import { render } from 'astro:content'
 
 interface Props {
@@ -34,7 +34,7 @@ const { headings } = await render(post)
       <AvatarImage />
     </section>
     <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
     </section>
     <hr class="separator" />

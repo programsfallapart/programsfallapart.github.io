@@ -7,7 +7,7 @@ import BaseLayout from '@layouts/base-layout.astro'
 import { getAllPosts } from '@utils/all-posts'
 import AvatarImage from "../../../components/avatar-image.astro";
 import ThemeButton from "../../../components/theme-button.astro";
-import { navLinks } from '@utils/nav-links'
+import { navLinks, isActivePath } from '@utils/nav-links'
 
 interface Props {
   page: Page
@@ -43,7 +43,7 @@ const { page } = Astro.props
       <AvatarImage />
     </section>
     <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
     </section>
     <hr class="separator" />

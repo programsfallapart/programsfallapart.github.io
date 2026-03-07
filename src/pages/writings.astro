@@ -6,7 +6,7 @@ import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD } from "@utils/date-helper";
 import { getPostLink } from "@utils/post-link";
-import { navLinks } from "@utils/nav-links";
+import { navLinks, isActivePath } from "@utils/nav-links";
 
 const allPosts = await getAllPosts();
 const allEssays = await getAllEssays();
@@ -38,7 +38,9 @@ const description = "Writings - Programs Fall Apart";
       <AvatarImage />
     </section>
     <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      {navLinks.map((item) => (
+        <a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>
+      ))}
       <ThemeButton class="absolute right-0" />
     </section>
     <hr class="separator" />
@@ -99,7 +101,7 @@ const description = "Writings - Programs Fall Apart";
 </BaseLayout>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
     const tagPills = document.querySelectorAll<HTMLButtonElement>(".tag-pill");
     const rows = document.querySelectorAll<HTMLElement>(".writings-section .writing-row");

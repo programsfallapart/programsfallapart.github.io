@@ -86,7 +86,7 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
     // Load on page navigation
-    document.addEventListener('astro:page-load', loadGiscus)
+    document.addEventListener('DOMContentLoaded', loadGiscus)
   </script>
 
 </article>
