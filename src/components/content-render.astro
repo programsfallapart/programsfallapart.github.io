@@ -78,6 +78,7 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
       script.setAttribute('data-input-position', 'top')
       script.setAttribute('data-theme', getGiscusTheme())
       script.setAttribute('data-lang', 'en')
+      script.setAttribute('data-loading', 'lazy')
       script.setAttribute('crossorigin', 'anonymous')
       script.async = true
       document.querySelector('.giscus')?.appendChild(script)
