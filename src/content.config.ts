@@ -14,4 +14,16 @@ const posts = defineCollection({
   }),
 })
 
-export const collections = { posts }
+const essays = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/essays' }),
+  schema: z.object({
+    isDraft: z.boolean().optional(),
+    title: z.string(),
+    abbrlink: z.string(),
+    tags: z.array(z.string()),
+    description: z.string().optional(),
+    order: z.number(),
+  }),
+})
+
+export const collections = { posts, essays }

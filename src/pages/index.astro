@@ -3,11 +3,13 @@ import AvatarImage from "@components/avatar-image.astro";
 import ThemeButton from "@components/theme-button.astro";
 import BaseLayout from "@layouts/base-layout.astro";
 import { getAllPosts } from "@utils/all-posts";
+import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD } from "@utils/date-helper";
 import { navLinks } from "@utils/nav-links";
 import { getPostLink } from "@utils/post-link";
 
-const latestPost = (await getAllPosts()).slice(0, 10);
+const latestPosts = (await getAllPosts()).slice(0, 5);
+const latestEssays = (await getAllEssays()).slice(0, 5);
 
 const title = "Programs Fall Apart";
 const description = "Home - Programs Fall Apart";
@@ -23,13 +25,34 @@ const description = "Home - Programs Fall Apart";
       <ThemeButton class="absolute right-0" />
     </section>
     <hr class="separator" />
-    <!-- Last Posts Section -->
-    <section class="my-10">
-      <h2 class="section-heading text-center mb-8">Last Posts</h2>
+
+    <!-- Latest Essays -->
+    <section class="my-16">
+      <h2 class="section-heading text-center mb-8">
+        <a href="/writings" class="heading-link">Latest Essays</a>
+      </h2>
       <div class="flex flex-col">
         {
-          latestPost.map((post) => (
-            <div class="post-row flex justify-between items-baseline gap-x-4">
+          latestEssays.map((essay) => (
+            <div class="post-row flex items-baseline gap-x-4">
+              <a class="flex-1 truncate" href={`/essays/${essay.data.abbrlink}`}>
+                {essay.data.title}
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Latest Posts -->
+    <section class="my-20">
+      <h2 class="section-heading text-center mb-8">
+        <a href="/writings" class="heading-link">Latest Posts</a>
+      </h2>
+      <div class="flex flex-col">
+        {
+          latestPosts.map((post) => (
+            <div class="post-row flex items-baseline gap-x-4">
               <span class="date-mono">{formatedYMD(post.data.date)}</span>
               <a class="flex-1 truncate" href={getPostLink(post)}>
                 {post.data.title}
@@ -41,3 +64,14 @@ const description = "Home - Programs Fall Apart";
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  .heading-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .heading-link:hover {
+    color: theme("colors.primary");
+  }
+</style>

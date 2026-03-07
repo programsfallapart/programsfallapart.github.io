@@ -1,0 +1,231 @@
+---
+import BaseLayout from "@layouts/base-layout.astro";
+import AvatarImage from "@components/avatar-image.astro";
+import ThemeButton from "@components/theme-button.astro";
+import { getAllPosts } from "@utils/all-posts";
+import { getAllEssays } from "@utils/all-essays";
+import { formatedYMD } from "@utils/date-helper";
+import { getPostLink } from "@utils/post-link";
+import { navLinks } from "@utils/nav-links";
+
+const allPosts = await getAllPosts();
+const allEssays = await getAllEssays();
+
+const allTags = [
+  ...new Set([
+    ...allPosts.flatMap((p) => p.data.tags),
+    ...allEssays.flatMap((e) => e.data.tags),
+  ].filter(Boolean)),
+] as string[];
+
+const tagCounts = allTags.reduce(
+  (acc, tag) => {
+    acc[tag] =
+      allPosts.filter((p) => p.data.tags?.includes(tag)).length +
+      allEssays.filter((e) => e.data.tags?.includes(tag)).length;
+    return acc;
+  },
+  {} as Record<string, number>
+);
+
+const title = "Writings";
+const description = "Writings - Programs Fall Apart";
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="nav-links my-10 flex items-center justify-center gap-10">
+      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <hr class="separator" />
+
+    <!-- Category toggle -->
+    <section class="category-toggle flex justify-center gap-0 my-8">
+      <button class="cat-btn active" data-cat="all">All</button>
+      <button class="cat-btn" data-cat="posts">Posts</button>
+      <button class="cat-btn" data-cat="essays">Essays</button>
+    </section>
+
+    <!-- Tag filter pills -->
+    <section class="tags-bar flex flex-wrap gap-2 mb-8">
+      <button class="tag-pill active" data-tag="all">All</button>
+      {
+        allTags.map((tag) => (
+          <button class="tag-pill" data-tag={tag}>
+            {tag.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+            <sup class="tag-count">{tagCounts[tag]}</sup>
+          </button>
+        ))
+      }
+    </section>
+
+    <!-- Writings list -->
+    <section class="writings-section">
+      {
+        allPosts.map((post) => (
+          <div
+            class="writing-row flex items-baseline gap-x-8"
+            data-kind="posts"
+            data-tags={JSON.stringify(post.data.tags || [])}
+          >
+            <span class="kind-label">post</span>
+            <a href={getPostLink(post)} class="flex-1 truncate">
+              {post.data.title}
+            </a>
+            <span class="date-mono">{formatedYMD(post.data.date)}</span>
+          </div>
+        ))
+      }
+      {
+        allEssays.map((essay) => (
+          <div
+            class="writing-row flex items-baseline gap-x-8"
+            data-kind="essays"
+            data-tags={JSON.stringify(essay.data.tags || [])}
+          >
+            <span class="kind-label">essay</span>
+            <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
+              {essay.data.title}
+            </a>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
+    const tagPills = document.querySelectorAll<HTMLButtonElement>(".tag-pill");
+    const rows = document.querySelectorAll<HTMLElement>(".writings-section .writing-row");
+
+    const allTagPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
+    const filterTagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
+
+    let activeCat = "all";
+    const activeTags = new Set<string>();
+
+    function updateVisibility() {
+      const showAllTags = activeTags.size === 0;
+      allTagPill?.classList.toggle("active", showAllTags);
+      filterTagPills.forEach((p) => p.classList.toggle("active", activeTags.has(p.dataset.tag!)));
+
+      rows.forEach((row) => {
+        const kind = row.dataset.kind!;
+        const tags: string[] = JSON.parse(row.dataset.tags || "[]");
+
+        const catMatch = activeCat === "all" || kind === activeCat;
+        const tagMatch = showAllTags || tags.some((t) => activeTags.has(t));
+
+        row.style.display = catMatch && tagMatch ? "" : "none";
+      });
+    }
+
+    catBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeCat = btn.dataset.cat!;
+        catBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        updateVisibility();
+      });
+    });
+
+    allTagPill?.addEventListener("click", () => {
+      activeTags.clear();
+      updateVisibility();
+    });
+
+    filterTagPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const tag = pill.dataset.tag!;
+        if (activeTags.has(tag)) {
+          activeTags.delete(tag);
+        } else {
+          activeTags.add(tag);
+        }
+        updateVisibility();
+      });
+    });
+  });
+</script>
+
+<style>
+  .cat-btn {
+    font-family: "JetBrains Mono";
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border: 1px solid theme("colors.muted");
+    background: transparent;
+    color: theme("colors.muted");
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .cat-btn:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .cat-btn:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .cat-btn + .cat-btn {
+    border-left: none;
+  }
+
+  .cat-btn:hover,
+  .cat-btn.active {
+    color: theme("colors.primary");
+    border-color: theme("colors.primary");
+  }
+
+  .cat-btn.active + .cat-btn {
+    border-left-color: theme("colors.primary");
+  }
+
+  .tag-pill {
+    font-family: "JetBrains Mono";
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid theme("colors.muted");
+    border-radius: 999px;
+    background: transparent;
+    color: theme("colors.muted");
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .tag-pill:hover,
+  .tag-pill.active {
+    color: theme("colors.primary");
+    border-color: theme("colors.primary");
+  }
+
+  .tag-count {
+    font-size: 0.55rem;
+    margin-left: 0.2rem;
+    opacity: 0.7;
+  }
+
+  .writing-row a {
+    text-decoration: none;
+  }
+
+  .kind-label {
+    font-family: "JetBrains Mono";
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: theme("colors.muted");
+    white-space: nowrap;
+    width: 3rem;
+    flex-shrink: 0;
+  }
+</style>
