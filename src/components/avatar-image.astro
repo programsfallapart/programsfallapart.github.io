@@ -6,7 +6,7 @@ const ld = active.logo.dark
 const ll = active.logo.light
 ---
 
-<div class="site-logo mt-8 mb-1 select-none flex justify-center">
+<div class="site-logo mt-8 mb-1 select-none flex justify-center" style={`--lt:${ll.text};--la:${ll.accent};--lb1:${ll.bars[0]};--lb2:${ll.bars[1]};--lb3:${ll.bars[2]};--lb4:${ll.bars[3]};--lp1:${ll.particles[0]};--lp2:${ll.particles[1]};--lp3:${ll.particles[2]};--lp4:${ll.particles[3]};--dt:${ld.text};--da:${ld.accent};--db1:${ld.bars[0]};--db2:${ld.bars[1]};--db3:${ld.bars[2]};--db4:${ld.bars[3]};--dp1:${ld.particles[0]};--dp2:${ld.particles[1]};--dp3:${ld.particles[2]};--dp4:${ld.particles[3]}`}>
   <svg width="370" height="122" viewBox="-5 5 420 130" xmlns="http://www.w3.org/2000/svg">
     <style>
       .logo-text { font-family: 'EB Garamond', serif; font-size: 38px; }
@@ -30,17 +30,11 @@ const ll = active.logo.light
   <p class="epigraph-author">&#8212; Maurice Merleau-Ponty</p>
 </div>
 
-<style define:vars={{
-  'lt': ll.text, 'la': ll.accent,
-  'lb1': ll.bars[0], 'lb2': ll.bars[1], 'lb3': ll.bars[2], 'lb4': ll.bars[3],
-  'lp1': ll.particles[0], 'lp2': ll.particles[1], 'lp3': ll.particles[2], 'lp4': ll.particles[3],
-  'dt': ld.text, 'da': ld.accent,
-  'db1': ld.bars[0], 'db2': ld.bars[1], 'db3': ld.bars[2], 'db4': ld.bars[3],
-  'dp1': ld.particles[0], 'dp2': ld.particles[1], 'dp3': ld.particles[2], 'dp4': ld.particles[3],
-}}>
+<style>
   .site-logo :global(svg) {
     max-width: 100%;
     height: auto;
+    aspect-ratio: 370 / 122;
   }
 
   .site-logo :global(.logo-text-primary) { fill: var(--lt); }

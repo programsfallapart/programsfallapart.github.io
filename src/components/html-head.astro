@@ -11,7 +11,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/blog-placeholder.jpg" } = Astro.props;
+const { title, description, image } = Astro.props;
 ---
 
 <head>
@@ -33,6 +33,9 @@ const { title, description, image = "/blog-placeholder.jpg" } = Astro.props;
   />
   <meta name="color-scheme" content="light dark" />
 
+  <!-- Resource hints -->
+  <link rel="preconnect" href="https://giscus.app" crossorigin />
+
   <!-- Fonts (self-hosted) -->
   <link rel="preload" href="/fonts/eb-garamond/eb-garamond-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/eb-garamond/eb-garamond-latin-italic.woff2" as="font" type="font/woff2" crossorigin />
@@ -42,12 +45,19 @@ const { title, description, image = "/blog-placeholder.jpg" } = Astro.props;
   <link rel="canonical" href={canonicalURL} />
   <link rel="sitemap" href="/sitemap-index.xml" />
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="Programs Fall Apart" />
+  {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
+
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={Astro.url} />
+  <meta property="twitter:card" content={image ? "summary_large_image" : "summary"} />
   <meta property="twitter:title" content={title} />
   <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content={new URL(image, Astro.url)} />
+  {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
 
 {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 </head>

@@ -46,6 +46,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     top: 50%;
     transform: translateY(-50%);
     z-index: 50;
+    contain: layout;
   }
 
   .progress-lines {
@@ -247,7 +248,15 @@ const h2Headings = headings.filter((h) => h.depth === 2)
       }
     });
 
-    window.addEventListener('scroll', update, { passive: true });
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => {
+        update();
+        tocTicking = false;
+      });
+    }, { passive: true });
     update();
 
     // Tap to toggle panel on touch devices

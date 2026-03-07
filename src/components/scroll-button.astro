@@ -1,5 +1,5 @@
 <svg
-  class="nav-icon fixed bottom-10 right-5 hidden rotate-180 cursor-pointer fill-primary-dark transition-all dark:fill-primary-white"
+  class="nav-icon fixed bottom-10 right-5 hidden rotate-180 cursor-pointer fill-primary-dark transition-all dark:fill-primary-white will-change-transform"
   viewBox="0 0 1024 1024"
   version="1.1"
   xmlns="http://www.w3.org/2000/svg"
@@ -18,18 +18,22 @@
     if (document.documentElement.scrollHeight !== document.documentElement.clientHeight) {
       navIcon.classList.remove('hidden')
     }
+    let scrollTicking = false
     window.addEventListener('scroll', () => {
-      navIcon.classList.remove('hidden')
-      if (window.scrollY !== 0) {
-        //开始滑动
-        navIcon.classList.remove('rotate-180')
-        navIcon.classList.add('to-down', 'rotate-0')
-      } else {
-        //最上面
-        navIcon.classList.add('rotate-180')
-        navIcon.classList.remove('to-down', 'rotate-0')
-      }
-    })
+      if (scrollTicking) return
+      scrollTicking = true
+      requestAnimationFrame(() => {
+        navIcon.classList.remove('hidden')
+        if (window.scrollY !== 0) {
+          navIcon.classList.remove('rotate-180')
+          navIcon.classList.add('to-down', 'rotate-0')
+        } else {
+          navIcon.classList.add('rotate-180')
+          navIcon.classList.remove('to-down', 'rotate-0')
+        }
+        scrollTicking = false
+      })
+    }, { passive: true })
 
     navIcon.addEventListener('click', () => {
       // 页面总高

@@ -2,8 +2,6 @@
 import type { PostModel, EssayModel } from '@interfaces/post-model'
 import { getFormatDate } from '@utils/date-helper'
 import { render } from 'astro:content'
-import fs from 'node:fs'
-
 interface Props {
   post: PostModel | EssayModel
   from?: string
@@ -12,8 +10,7 @@ interface Props {
 const { post, from } = Astro.props
 const { Content } = await render(post)
 
-const giscusDarkCss = fs.readFileSync('public/giscus-dark.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
-const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
+const siteUrl = Astro.site?.origin ?? ''
 ---
 
 <article>
@@ -46,15 +43,15 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
 
   <section
     class="giscus mx-auto mt-10 w-full"
-    data-dark-css={giscusDarkCss}
-    data-light-css={giscusLightCss}
+    style="min-height: 300px;"
+    data-dark-theme={`${siteUrl}/giscus-dark.css`}
+    data-light-theme={`${siteUrl}/giscus-light.css`}
   ></section>
   <script>
     function getGiscusTheme() {
       const section = document.querySelector('.giscus')!
       const isDark = document.documentElement.classList.contains('dark')
-      const css = isDark ? section.getAttribute('data-dark-css')! : section.getAttribute('data-light-css')!
-      return `data:text/css;base64,${btoa(css)}`
+      return isDark ? section.getAttribute('data-dark-theme')! : section.getAttribute('data-light-theme')!
     }
 
     function setGiscusTheme(theme: string) {
@@ -88,13 +85,22 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
       document.querySelector('.giscus')?.appendChild(script)
     }
 
-    // Watch for theme toggles
-    const themeObserver = new MutationObserver(() => {
-      setGiscusTheme(getGiscusTheme())
-    })
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-
-    loadGiscus()
+    // Load giscus only when comments section enters viewport
+    const giscusSection = document.querySelector('.giscus')
+    if (giscusSection) {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          observer.disconnect()
+          loadGiscus()
+          // Watch for theme toggles only after giscus loads
+          const themeObserver = new MutationObserver(() => {
+            setGiscusTheme(getGiscusTheme())
+          })
+          themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+        }
+      }, { rootMargin: '200px' })
+      observer.observe(giscusSection)
+    }
   </script>
 
 

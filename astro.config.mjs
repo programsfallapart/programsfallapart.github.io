@@ -11,9 +11,7 @@ import rehypeExternalLinks from 'rehype-external-links'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://programsfallapart.com',
-  prefetch: {
-    prefetchAll: true,
-  },
+  prefetch: true,
   image: {
    service: passthroughImageService(),
  },
@@ -46,14 +44,14 @@ export default defineConfig({
       devOptions: { enabled: false },
       workbox: {
         navigateFallback: '/404',
-        globPatterns: ['**/*'],
+        globPatterns: ['**/*.{js,css,woff2,svg,ico}'],
         navigateFallbackDenylist: [/.*\.xml$/],
       },
-      includeAssets: ['**/*'],
+      includeAssets: ['**/*.{woff2,svg,ico}'],
       manifest: {
         name: 'Programs Fall Apart',
         short_name: 'Programs Fall Apart',
-        description: '',
+        description: 'A blog about programming, software engineering, and the search for understanding',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
