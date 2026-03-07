@@ -42,7 +42,7 @@ export default defineConfig({
     sitemap(),
     tailwind({ applyBaseStyles: false }),
     AstroPWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       devOptions: { enabled: false },
       workbox: {
         navigateFallback: '/404',
