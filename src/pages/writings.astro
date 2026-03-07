@@ -7,6 +7,9 @@ import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD } from "@utils/date-helper";
 import { getPostLink } from "@utils/post-link";
 import { navLinks, isActivePath } from "@utils/nav-links";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const { active } = require("../../palettes.config.cjs");
 
 const allPosts = await getAllPosts();
 const allEssays = await getAllEssays();
@@ -77,7 +80,7 @@ const description = "Writings - Programs Fall Apart";
     </section>
 
     <!-- Writings list -->
-    <section class="writings-section">
+    <section class="writings-section" data-accent={active.accent} data-primary-dark={active["primary-dark"]}>
       {
         allPosts.map((post) => (
           <div
@@ -116,8 +119,11 @@ const description = "Writings - Programs Fall Apart";
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
+    const writingsSection = document.querySelector<HTMLElement>(".writings-section")!;
     const rows = document.querySelectorAll<HTMLElement>(".writings-section .writing-row");
     const searchInput = document.getElementById("search-input") as HTMLInputElement;
+    const accentColor = writingsSection.dataset.accent!;
+    const primaryDark = writingsSection.dataset.primaryDark!;
 
     const allTagPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
     const filterTagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
@@ -130,7 +136,7 @@ const description = "Writings - Programs Fall Apart";
       if (!query) return text;
       const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const re = new RegExp(`(${escaped})`, "gi");
-      return text.replace(re, '<mark class="search-highlight">$1</mark>');
+      return text.replace(re, `<mark style="background:${accentColor};color:${primaryDark};border-radius:2px;padding:0 2px">$1</mark>`);
     }
 
     function updateTagCounts() {
@@ -280,11 +286,6 @@ const description = "Writings - Programs Fall Apart";
 
   #search-input:focus {
     border-color: theme("colors.primary");
-  }
-
-  :global(mark.search-highlight) {
-    background: color-mix(in srgb, theme("colors.accent") 50%, transparent);
-    color: inherit;
   }
 
   .kind-label {
