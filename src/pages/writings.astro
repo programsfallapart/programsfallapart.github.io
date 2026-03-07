@@ -79,6 +79,9 @@ const description = "Writings - Programs Fall Apart";
       <input type="text" id="search-input" placeholder="Search writings..." autocomplete="off" spellcheck="false" />
     </section>
 
+    <!-- Result count -->
+    <p class="result-count mb-4"></p>
+
     <!-- Writings list -->
     <section class="writings-section" data-accent={active.accent} data-primary-dark={active["primary-dark"]}>
       {
@@ -124,6 +127,7 @@ const description = "Writings - Programs Fall Apart";
     const searchInput = document.getElementById("search-input") as HTMLInputElement;
     const accentColor = writingsSection.dataset.accent!;
     const primaryDark = writingsSection.dataset.primaryDark!;
+    const resultCount = document.querySelector<HTMLElement>(".result-count")!;
 
     const allTagPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
     const filterTagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
@@ -152,6 +156,7 @@ const description = "Writings - Programs Fall Apart";
       allTagPill?.classList.toggle("active", showAllTags);
       filterTagPills.forEach((p) => p.classList.toggle("active", activeTags.has(p.dataset.tag!)));
 
+      let visible = 0;
       rows.forEach((row) => {
         const kind = row.dataset.kind!;
         const tags: string[] = JSON.parse(row.dataset.tags || "[]");
@@ -162,9 +167,13 @@ const description = "Writings - Programs Fall Apart";
         const tagMatch = showAllTags || tags.some((t) => activeTags.has(t));
         const searchMatch = !searchQuery || title.toLowerCase().includes(searchQuery.toLowerCase());
 
-        row.style.display = catMatch && tagMatch && searchMatch ? "" : "none";
+        const show = catMatch && tagMatch && searchMatch;
+        row.style.display = show ? "" : "none";
+        if (show) visible++;
         link.innerHTML = searchQuery && searchMatch ? highlightText(title, searchQuery) : title;
       });
+
+      resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;
     }
 
     searchInput.addEventListener("input", () => {
@@ -197,6 +206,8 @@ const description = "Writings - Programs Fall Apart";
         updateVisibility();
       });
     });
+
+    updateVisibility();
   });
 </script>
 
@@ -286,6 +297,13 @@ const description = "Writings - Programs Fall Apart";
 
   #search-input:focus {
     border-color: theme("colors.primary");
+  }
+
+  .result-count {
+    font-family: "JetBrains Mono";
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: theme("colors.muted");
   }
 
   .kind-label {
