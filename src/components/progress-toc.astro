@@ -55,10 +55,6 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     cursor: pointer;
   }
 
-  .progress-toc:hover .progress-lines {
-    display: none;
-  }
-
   .toc-line {
     height: 2px;
     width: 20px;
@@ -86,18 +82,39 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 
   .toc-panel {
     display: none;
-    max-width: calc(10vw - 3rem);
+    max-width: 280px;
     max-height: 60vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .toc-panel {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: #333;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
 
   .toc-panel::-webkit-scrollbar {
     display: none;
   }
 
-  .progress-toc:hover .toc-panel {
+  @media (any-hover: hover) {
+    .progress-toc:hover .toc-panel {
+      display: block;
+    }
+    .progress-toc:hover .progress-lines {
+      display: none;
+    }
+  }
+
+  .toc-panel.open {
     display: block;
   }
 
@@ -121,6 +138,8 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     text-decoration: none;
     line-height: 1.8;
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -138,7 +157,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 
   @media screen and (max-width: 1400px) {
     .progress-toc {
-      display: none;
+      left: 0.5rem;
     }
   }
 </style>
@@ -157,13 +176,8 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     );
 
     const h2Elements: Element[] = [];
-    lines.forEach((line, i) => {
-      if (h2s[i]) {
-        h2Elements.push(h2s[i]);
-        line.addEventListener('click', () => {
-          h2s[i].scrollIntoView({ behavior: 'smooth' });
-        });
-      }
+    lines.forEach((_, i) => {
+      if (h2s[i]) h2Elements.push(h2s[i]);
     });
 
     const allHeadingElements: Element[] = [];
@@ -211,6 +225,21 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 
     window.addEventListener('scroll', update, { passive: true });
     update();
+
+    // Tap to toggle panel on touch devices
+    const linesEl = document.getElementById('progress-lines');
+    const panel = document.getElementById('toc-panel');
+    if (linesEl && panel) {
+      linesEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!progressToc.contains(e.target as Node)) {
+          panel.classList.remove('open');
+        }
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
