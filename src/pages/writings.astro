@@ -18,14 +18,14 @@ const allTags = [
   ].filter(Boolean)),
 ] as string[];
 
-const tagCounts = allTags.reduce(
+const tagCountsByCategory = allTags.reduce(
   (acc, tag) => {
-    acc[tag] =
-      allPosts.filter((p) => p.data.tags?.includes(tag)).length +
-      allEssays.filter((e) => e.data.tags?.includes(tag)).length;
+    const posts = allPosts.filter((p) => p.data.tags?.includes(tag)).length;
+    const essays = allEssays.filter((e) => e.data.tags?.includes(tag)).length;
+    acc[tag] = { all: posts + essays, posts, essays };
     return acc;
   },
-  {} as Record<string, number>
+  {} as Record<string, { all: number; posts: number; essays: number }>
 );
 
 const title = "Writings";
@@ -57,9 +57,15 @@ const description = "Writings - Programs Fall Apart";
       <button class="tag-pill active" data-tag="all">All</button>
       {
         allTags.map((tag) => (
-          <button class="tag-pill" data-tag={tag}>
+          <button
+            class="tag-pill"
+            data-tag={tag}
+            data-count-all={tagCountsByCategory[tag].all}
+            data-count-posts={tagCountsByCategory[tag].posts}
+            data-count-essays={tagCountsByCategory[tag].essays}
+          >
             {tag.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-            <sup class="tag-count">{tagCounts[tag]}</sup>
+            <sup class="tag-count">{tagCountsByCategory[tag].all}</sup>
           </button>
         ))
       }
@@ -127,6 +133,14 @@ const description = "Writings - Programs Fall Apart";
       return text.replace(re, '<mark class="search-highlight">$1</mark>');
     }
 
+    function updateTagCounts() {
+      filterTagPills.forEach((pill) => {
+        const count = pill.dataset[`count${activeCat.charAt(0).toUpperCase() + activeCat.slice(1)}`] || "0";
+        const sup = pill.querySelector(".tag-count");
+        if (sup) sup.textContent = count;
+      });
+    }
+
     function updateVisibility() {
       const showAllTags = activeTags.size === 0;
       allTagPill?.classList.toggle("active", showAllTags);
@@ -156,6 +170,7 @@ const description = "Writings - Programs Fall Apart";
       btn.addEventListener("click", () => {
         activeCat = btn.dataset.cat!;
         catBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        updateTagCounts();
         updateVisibility();
       });
     });
