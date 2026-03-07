@@ -43,11 +43,16 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
       <ProgressToc headings={headings} />
       <article>
         <h1 class="mt-8 text-center">{essay.data.title}</h1>
-        <div class="mono inline-flex items-center gap-2 my-3" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
-          {essay.data.tags.flatMap((tag, index, array) => [
-            <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
-            index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
-          ])}
+        <div class="flex items-baseline my-3">
+          <div class="mono inline-flex items-center gap-2 flex-1 text-left" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
+            <span class="text-muted">essay</span>
+          </div>
+          <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
+            {essay.data.tags.flatMap((tag, index, array) => [
+              <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
+              index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
+            ])}
+          </div>
         </div>
         <div style="margin-bottom: 1.5rem;" />
         <Content />

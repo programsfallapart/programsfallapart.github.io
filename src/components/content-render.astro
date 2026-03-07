@@ -21,7 +21,11 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
   {
     from === 'post' ? (
         <div class="flex items-baseline my-3">
-          <div class="date-mono flex-1 text-left">{getFormatDate(post.data.date)}</div>
+          <div class="mono inline-flex items-center gap-2 flex-1 text-left" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
+            <span class="text-muted">post</span>
+            <span class="text-muted">&middot;</span>
+            <span class="date-mono">{getFormatDate(post.data.date)}</span>
+          </div>
           <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             {post.data.tags.flatMap((tag, index, array) => [
               <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
