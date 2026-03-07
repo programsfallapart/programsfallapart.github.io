@@ -141,46 +141,6 @@ main.tufte {
 
 main.tufte article {
   position: relative;
-  @media screen and (min-width: 1100px) {
-    padding-right: 33%;
-  }
-}
-
-.sidenote {
-  color: theme('colors.muted');
-  text-align: justify;
-  font-size: 0.85rem;
-
-  @media screen and (min-width: 1100px) {
-    position: absolute;
-    right: 0;
-    width: 28%;
-  }
-
-  @media screen and (max-width: 1099px) {
-    display: none;
-  }
-}
-
-.sidenote-number {
-  font-weight: bold;
-  font-size: 0.6rem;
-  color: theme('colors.accent');
-  margin-right: 0.2rem;
-  border-radius: 2px;
-  transition: outline-color 0.2s ease;
-}
-
-.highlight {
-  outline: 2px solid Highlight;
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-.sidenote-backref {
-  text-decoration: none;
-  font-size: 0.6rem;
-  margin-left: 0.15rem;
 }
 
 a[data-footnote-ref] {
@@ -201,17 +161,6 @@ section[data-footnotes] {
 
   @media screen and (max-width: 900px) {
     font-size: 0.963rem;
-  }
-}
-
-section[data-footnotes] ol {
-  list-style: none;
-  padding-left: 0;
-}
-
-@media screen and (min-width: 1100px) {
-  section[data-footnotes].sidenotes-active {
-    display: none;
   }
 }
 

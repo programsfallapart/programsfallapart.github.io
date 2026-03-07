@@ -184,44 +184,68 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     tocLinks.forEach((link) => {
       const slug = link.dataset.slug;
       const heading = document.getElementById(slug || '');
-      if (heading) {
-        allHeadingElements.push(heading);
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          heading.scrollIntoView({ behavior: 'smooth' });
-        });
-      }
+      if (heading) allHeadingElements.push(heading);
     });
 
-    const update = () => {
-      let activeLineIndex = -1;
-      h2Elements.forEach((h, idx) => {
-        if (h.getBoundingClientRect().top <= 100) activeLineIndex = idx;
-      });
+    let skipUpdate = false;
 
-      // If scrolled to the bottom, activate the last heading
-      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50;
-      if (atBottom && h2Elements.length > 0) activeLineIndex = h2Elements.length - 1;
-
+    function setActive(lineIdx: number, tocIdx: number) {
       lines.forEach((line, i) => {
         line.classList.remove('active', 'passed');
-        if (i === activeLineIndex) {
-          line.classList.add('active');
-        } else if (i < activeLineIndex) {
-          line.classList.add('passed');
-        }
+        if (i === lineIdx) line.classList.add('active');
+        else if (i < lineIdx) line.classList.add('passed');
+      });
+      tocLinks.forEach((a, i) => {
+        a.classList.toggle('active', i === tocIdx);
+      });
+    }
+
+    function update() {
+      if (skipUpdate) return;
+
+      let activeLineIndex = -1;
+      h2Elements.forEach((h, idx) => {
+        if (h.getBoundingClientRect().top <= window.innerHeight * 0.5) activeLineIndex = idx;
       });
 
       let activeTocIndex = -1;
       allHeadingElements.forEach((h, idx) => {
-        if (h.getBoundingClientRect().top <= 100) activeTocIndex = idx;
+        if (h.getBoundingClientRect().top <= window.innerHeight * 0.5) activeTocIndex = idx;
       });
-      if (atBottom && allHeadingElements.length > 0) activeTocIndex = allHeadingElements.length - 1;
 
-      tocLinks.forEach((a, i) => {
-        a.classList.toggle('active', i === activeTocIndex);
-      });
-    };
+      setActive(activeLineIndex, activeTocIndex);
+    }
+
+    tocLinks.forEach((link, tocIdx) => {
+      const slug = link.dataset.slug;
+      const heading = document.getElementById(slug || '');
+      if (heading) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          // Find the h2 line index: for h3s, use the parent h2
+          let lineIdx = h2Elements.indexOf(heading);
+          if (lineIdx === -1) {
+            // h3 clicked — find the preceding h2
+            for (let i = tocIdx - 1; i >= 0; i--) {
+              const prev = allHeadingElements[i];
+              const prevLineIdx = h2Elements.indexOf(prev);
+              if (prevLineIdx !== -1) { lineIdx = prevLineIdx; break; }
+            }
+          }
+
+          // Set active immediately and block scroll updates briefly
+          skipUpdate = true;
+          setActive(lineIdx, tocIdx);
+          heading.scrollIntoView({ behavior: 'smooth' });
+
+          const panel = document.getElementById('toc-panel');
+          if (panel) panel.classList.remove('open');
+
+          setTimeout(() => { skipUpdate = false; }, 800);
+        });
+      }
+    });
 
     window.addEventListener('scroll', update, { passive: true });
     update();
