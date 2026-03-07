@@ -8,9 +8,12 @@ tags:
   - typescript
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam id dolor id nibh ultricies vehicula ut id elit. Maecenas sed diam eget risus varius blandit sit amet non magna.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit[^1]. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam id dolor id nibh ultricies vehicula ut id elit. Maecenas sed diam eget risus varius blandit sit amet non magna.
 
-Cras mattis consectetur purus sit amet fermentum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla sed consectetur.
+Cras mattis consectetur purus sit amet fermentum[^2]. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla sed consectetur.
+
+[^1]: This is a sidenote about static typing and its origins in the ML family of languages.
+[^2]: See Hoare's 2009 paper "Null References: The Billion Dollar Mistake" for more on this topic.
 
 ## The Compiler Is Your Friend
 
@@ -33,9 +36,11 @@ Donec id elit non mi porta gravida at eget metus. Praesent commodo cursus magna,
 
 ## Algebraic Data Types
 
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+Morbi leo risus, porta ac consectetur ac, vestibulum at eros[^3]. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
 
 Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+
+[^3]: Algebraic data types were first introduced in Hope (1980) and later refined in Standard ML and Haskell. The key insight is that types form an algebra: sum types (tagged unions) correspond to addition, product types (tuples, records) correspond to multiplication, and function types correspond to exponentiation. This algebraic structure gives us powerful reasoning tools — for instance, the number of inhabitants of a type can be computed using these operations, which helps verify exhaustiveness of pattern matching and detect dead code at compile time.
 
 ```rust
 enum Shape {

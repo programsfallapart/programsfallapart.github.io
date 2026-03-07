@@ -24,12 +24,13 @@ export async function getStaticPaths() {
 }
 
 const { post, prev, next } = Astro.props
-const { headings } = await render(post)
+const { headings: rawHeadings } = await render(post)
+const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description ?? ''}>
   <body>
-  <main>
+  <main class="tufte">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>

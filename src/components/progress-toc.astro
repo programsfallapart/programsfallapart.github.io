@@ -144,18 +144,20 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  function initToc() {
     const progressToc = document.getElementById('progress-toc');
     if (!progressToc) return;
 
     const lines = progressToc.querySelectorAll<HTMLElement>('.toc-line');
     const tocLinks = progressToc.querySelectorAll<HTMLAnchorElement>('#toc-list a');
 
-    // Map lines to h2 heading elements in the DOM
+    // Exclude footnotes-section h2 from the list
+    const h2s = Array.from(document.querySelectorAll('article h2')).filter(
+      (h) => !h.closest('[data-footnotes]')
+    );
+
     const h2Elements: Element[] = [];
     lines.forEach((line, i) => {
-      // Find the corresponding h2 by matching order
-      const h2s = document.querySelectorAll('article h2');
       if (h2s[i]) {
         h2Elements.push(h2s[i]);
         line.addEventListener('click', () => {
@@ -164,7 +166,6 @@ const h2Headings = headings.filter((h) => h.depth === 2)
       }
     });
 
-    // Map all toc links to their heading elements
     const allHeadingElements: Element[] = [];
     tocLinks.forEach((link) => {
       const slug = link.dataset.slug;
@@ -179,7 +180,6 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     });
 
     const update = () => {
-      // Update progress lines based on h2 positions
       let activeLineIndex = -1;
       h2Elements.forEach((h, idx) => {
         if (h.getBoundingClientRect().top <= 100) activeLineIndex = idx;
@@ -194,7 +194,6 @@ const h2Headings = headings.filter((h) => h.depth === 2)
         }
       });
 
-      // Update TOC links based on all heading positions
       let activeTocIndex = -1;
       allHeadingElements.forEach((h, idx) => {
         if (h.getBoundingClientRect().top <= 100) activeTocIndex = idx;
@@ -207,5 +206,11 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 
     window.addEventListener('scroll', update, { passive: true });
     update();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initToc);
+  } else {
+    initToc();
+  }
 </script>
