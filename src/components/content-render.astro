@@ -1,11 +1,11 @@
 ---
-import type { PostModel } from '@interfaces/post-model'
+import type { PostModel, EssayModel } from '@interfaces/post-model'
 import { getFormatDate } from '@utils/date-helper'
 import { render } from 'astro:content'
 import fs from 'node:fs'
 
 interface Props {
-  post: PostModel
+  post: PostModel | EssayModel
   from?: string
 }
 
@@ -17,14 +17,18 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
 ---
 
 <article>
-  <h1 class:list={['mt-8', { 'text-center': from && from === 'post' }]}>{post.data.title}</h1>
+  <h1 class:list={['mt-8', { 'text-center': from === 'post' || from === 'essay' }]}>{post.data.title}</h1>
   {
-    from === 'post' ? (
+    (from === 'post' || from === 'essay') ? (
         <div class="flex items-baseline my-3">
           <div class="mono inline-flex items-center gap-2 flex-1 text-left" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
-            <span class="text-muted">post</span>
-            <span class="text-muted">&middot;</span>
-            <span class="date-mono">{getFormatDate(post.data.date)}</span>
+            <span class="text-muted">{from}</span>
+            {from === 'post' && 'date' in post.data && (
+              <>
+                <span class="text-muted">&middot;</span>
+                <span class="date-mono">{getFormatDate(post.data.date)}</span>
+              </>
+            )}
           </div>
           <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             {post.data.tags.flatMap((tag, index, array) => [

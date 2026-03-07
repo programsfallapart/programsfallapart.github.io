@@ -11,19 +11,17 @@ import { render } from 'astro:content'
 
 interface Props {
   post: PostModel
-  prev: PostModel | undefined
-  next: PostModel | undefined
 }
 
 export async function getStaticPaths() {
   const posts = await getAllPosts()
-  return posts.map((post, index) => ({
+  return posts.map((post) => ({
     params: { slug: post.data.abbrlink },
-    props: { post, prev: posts[index - 1], next: posts[index + 1] },
+    props: { post },
   }))
 }
 
-const { post, prev, next } = Astro.props
+const { post } = Astro.props
 const { headings: rawHeadings } = await render(post)
 const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
@@ -43,36 +41,6 @@ const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
       <ProgressToc headings={headings} />
       <ContentRender post={post} from="post" />
     </section>
-
-      <hr class="separator" style="margin-top: 3rem;" />
-      <div class="post-nav flex flex-wrap justify-between gap-x-12 py-2">
-        {
-          prev ? (
-            <a
-              class="post-nav-link flex-1 truncate text-left"
-              href={'/posts/' + prev.data.abbrlink}
-            >
-              <span class="post-nav-label">&larr; Previous</span>
-              <span class="post-nav-title">{prev.data.title}</span>
-            </a>
-          ) : (
-            <span class="flex-1" />
-          )
-        }
-        {
-          next ? (
-            <a
-              class="post-nav-link flex-1 truncate text-right"
-              href={'/posts/' + next.data.abbrlink}
-            >
-              <span class="post-nav-label">Next &rarr;</span>
-              <span class="post-nav-title">{next.data.title}</span>
-            </a>
-          ) : (
-            <span class="flex-1" />
-          )
-        }
-      </div>
     </main>
   </body>
 </BaseLayout>

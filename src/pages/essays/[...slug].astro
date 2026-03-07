@@ -1,4 +1,5 @@
 ---
+import ContentRender from '@components/content-render.astro'
 import ProgressToc from '@components/progress-toc.astro'
 import AvatarImage from '@components/avatar-image.astro'
 import ThemeButton from '@components/theme-button.astro'
@@ -7,7 +8,6 @@ import BaseLayout from '@layouts/base-layout.astro'
 import { getAllEssays } from '@utils/all-essays'
 import { navLinks, isActivePath } from '@utils/nav-links'
 import { render } from 'astro:content'
-import fs from 'node:fs'
 
 interface Props {
   essay: EssayModel
@@ -22,15 +22,13 @@ export async function getStaticPaths() {
 }
 
 const { essay } = Astro.props
-const { Content, headings } = await render(essay)
-
-const giscusDarkCss = fs.readFileSync('public/giscus-dark.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
-const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').replace(/\/\*!.*?\*\/\s*/s, '')
+const { headings: rawHeadings } = await render(essay)
+const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
 <BaseLayout title={essay.data.title} description={essay.data.description ?? ''}>
   <body>
-  <main>
+  <main class="tufte">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
@@ -41,75 +39,8 @@ const giscusLightCss = fs.readFileSync('public/giscus-light.css', 'utf-8').repla
     <hr class="separator" />
     <section class="my-10">
       <ProgressToc headings={headings} />
-      <article>
-        <h1 class="mt-8 text-center">{essay.data.title}</h1>
-        <div class="flex items-baseline my-3">
-          <div class="mono inline-flex items-center gap-2 flex-1 text-left" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
-            <span class="text-muted">essay</span>
-          </div>
-          <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
-            {essay.data.tags.flatMap((tag, index, array) => [
-              <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
-              index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
-            ])}
-          </div>
-        </div>
-        <div style="margin-bottom: 1.5rem;" />
-        <Content />
-
-        <section
-          class="giscus mx-auto mt-10 w-full"
-          data-dark-css={giscusDarkCss}
-          data-light-css={giscusLightCss}
-        ></section>
-      </article>
+      <ContentRender post={essay} from="essay" />
     </section>
   </main>
   </body>
 </BaseLayout>
-
-<script>
-  function getGiscusTheme() {
-    const section = document.querySelector('.giscus')!
-    const isDark = document.documentElement.classList.contains('dark')
-    const css = isDark ? section.getAttribute('data-dark-css')! : section.getAttribute('data-light-css')!
-    return `data:text/css;base64,${btoa(css)}`
-  }
-
-  function setGiscusTheme(theme: string) {
-    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
-    iframe?.contentWindow?.postMessage(
-      { giscus: { setConfig: { theme } } },
-      'https://giscus.app'
-    )
-  }
-
-  function loadGiscus() {
-    const existing = document.querySelector('script[src="https://giscus.app/client.js"]')
-    if (existing) existing.remove()
-
-    const script = document.createElement('script')
-    script.src = 'https://giscus.app/client.js'
-    script.setAttribute('data-repo', 'programsfallapart/programsfallapart.github.io')
-    script.setAttribute('data-repo-id', 'R_kgDOLtiadA')
-    script.setAttribute('data-category', 'General')
-    script.setAttribute('data-category-id', 'DIC_kwDOLtiadM4Ceq7K')
-    script.setAttribute('data-mapping', 'url')
-    script.setAttribute('data-strict', '1')
-    script.setAttribute('data-reactions-enabled', '1')
-    script.setAttribute('data-emit-metadata', '0')
-    script.setAttribute('data-input-position', 'top')
-    script.setAttribute('data-theme', getGiscusTheme())
-    script.setAttribute('data-lang', 'en')
-    script.setAttribute('crossorigin', 'anonymous')
-    script.async = true
-    document.querySelector('.giscus')?.appendChild(script)
-  }
-
-  const themeObserver = new MutationObserver(() => {
-    setGiscusTheme(getGiscusTheme())
-  })
-  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-
-  document.addEventListener('DOMContentLoaded', loadGiscus)
-</script>

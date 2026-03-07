@@ -8,11 +8,15 @@ description: Why programs fall apart and what we can do about it
 order: 1
 ---
 
-Every sufficiently complex program carries within it the seeds of its own decay. This is not a flaw in engineering — it is a law of nature applied to code.
+Every sufficiently complex program carries within it the seeds of its own decay[^1]. This is not a flaw in engineering — it is a law of nature applied to code.
+
+[^1]: This idea echoes Lehman's laws of software evolution (1974), which observe that programs must continually adapt or become progressively less useful in their environment.
 
 ## The Second Law of Software
 
-Just as thermodynamic systems tend toward disorder, software systems tend toward complexity. Each patch, each feature, each "quick fix" increases the entropy of the whole. What began as a clean architecture becomes, over time, a labyrinth of special cases.
+Just as thermodynamic systems tend toward disorder, software systems tend toward complexity[^2]. Each patch, each feature, each "quick fix" increases the entropy of the whole. What began as a clean architecture becomes, over time, a labyrinth of special cases.
+
+[^2]: The analogy to thermodynamic entropy is more than metaphorical. Boltzmann's insight was that disorder is overwhelmingly more probable than order — there are far more ways for a system to be disordered than ordered. The same applies to codebases: the space of "messy but working" configurations vastly outnumbers the space of "clean and correct" ones.
 
 The question is not whether your program will fall apart — it will. The question is whether you can build systems that degrade gracefully, that reveal their fractures before they shatter.
 
@@ -42,7 +46,9 @@ At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praese
 
 ## The Beauty of Failure
 
-There is something honest about a program that fails clearly. A panic with a stack trace is more trustworthy than silent corruption. Rust understood this: make failure explicit, make the programmer confront every edge case, and the result is software that wears its fragility on its sleeve.
+There is something honest about a program that fails clearly[^3]. A panic with a stack trace is more trustworthy than silent corruption. Rust understood this: make failure explicit, make the programmer confront every edge case, and the result is software that wears its fragility on its sleeve.
+
+[^3]: Erlang's "let it crash" philosophy takes this further — rather than trying to prevent failure, design systems that recover from it automatically. Joe Armstrong called this "programming for the normal case" and letting supervisors handle the rest.
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
 

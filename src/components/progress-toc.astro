@@ -86,7 +86,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 
   .toc-panel {
     display: none;
-    max-width: calc(20vw - 4rem);
+    max-width: calc(10vw - 3rem);
     max-height: 60vh;
     overflow-y: auto;
     overflow-x: hidden;
@@ -136,7 +136,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     padding-left: 1rem;
   }
 
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1400px) {
     .progress-toc {
       display: none;
     }
@@ -185,6 +185,10 @@ const h2Headings = headings.filter((h) => h.depth === 2)
         if (h.getBoundingClientRect().top <= 100) activeLineIndex = idx;
       });
 
+      // If scrolled to the bottom, activate the last heading
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50;
+      if (atBottom && h2Elements.length > 0) activeLineIndex = h2Elements.length - 1;
+
       lines.forEach((line, i) => {
         line.classList.remove('active', 'passed');
         if (i === activeLineIndex) {
@@ -198,6 +202,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
       allHeadingElements.forEach((h, idx) => {
         if (h.getBoundingClientRect().top <= 100) activeTocIndex = idx;
       });
+      if (atBottom && allHeadingElements.length > 0) activeTocIndex = allHeadingElements.length - 1;
 
       tocLinks.forEach((a, i) => {
         a.classList.toggle('active', i === activeTocIndex);
