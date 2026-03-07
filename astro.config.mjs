@@ -3,9 +3,10 @@ import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
 import { defineConfig, passthroughImageService } from 'astro/config'
+import expressiveCode from 'astro-expressive-code'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
 import rehypeExternalLinks from 'rehype-external-links'
-import rehypePrism from 'rehype-prism-plus'
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,13 +18,26 @@ export default defineConfig({
    service: passthroughImageService(),
  },
   markdown: {
-    syntaxHighlight: false,
     rehypePlugins: [
-      [rehypePrism, { showLineNumbers: true }],
       [rehypeExternalLinks, { rel: 'nofollow', target: '_blank' }],
     ],
   },
   integrations: [
+    expressiveCode({
+      themes: ['vitesse-light', 'vitesse-dark'],
+      themeCssSelector: (theme) => {
+        return theme.type === 'dark' ? '.dark' : ':root:not(.dark)'
+      },
+      plugins: [pluginLineNumbers()],
+      defaultProps: {
+        showLineNumbers: true,
+      },
+      styleOverrides: {
+        borderRadius: '0.1rem',
+        codeFontFamily: "'JetBrains Mono', monospace",
+        codeFontSize: '0.8rem',
+      },
+    }),
     mdx(),
     sitemap(),
     tailwind({ applyBaseStyles: false }),

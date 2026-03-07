@@ -1,12 +1,8 @@
 ---
 import ThemeButton from '@components/theme-button.astro'
+import { navLinks } from '@utils/nav-links'
 
-const links = [
-  { url: '/', title: 'Home' },
-  { url: '/tags', title: 'Tags' },
-  { url: '/archive', title: 'Archive' },
-  { url: '/about', title: 'About' },
-]
+const links = navLinks
 
 const isCurrentPage = (url: string) => {
   const pathname = Astro.url.pathname

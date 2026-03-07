@@ -1,0 +1,140 @@
+---
+import BaseLayout from "@layouts/base-layout.astro";
+import AvatarImage from "@components/avatar-image.astro";
+import ThemeButton from "@components/theme-button.astro";
+import { getAllPosts } from "@utils/all-posts";
+import { formatedYMD } from "@utils/date-helper";
+import { getPostLink } from "@utils/post-link";
+import { navLinks } from "@utils/nav-links";
+
+const allPosts = await getAllPosts();
+
+const uniqueTags = [
+  ...new Set(allPosts.flatMap((post) => post.data.tags).filter(Boolean)),
+] as string[];
+
+const tagCounts = uniqueTags.reduce(
+  (acc, tag) => {
+    acc[tag] = allPosts.filter((p) => p.data.tags?.includes(tag)).length;
+    return acc;
+  },
+  {} as Record<string, number>
+);
+
+const title = "All Posts";
+const description = "All Posts - Programs Fall Apart";
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="flex flex-col items-center justify-center">
+      <AvatarImage />
+    </section>
+    <section class="nav-links my-10 flex items-center justify-center gap-10">
+      {navLinks.map((item) => <a href={item.url}>{item.title}</a>)}
+      <ThemeButton class="absolute right-0" />
+    </section>
+    <hr class="separator" />
+
+    <!-- Tag filter pills -->
+    <section class="tags-bar flex flex-wrap gap-2 mb-8">
+      <button class="tag-pill active" data-tag="all">All</button>
+      {
+        uniqueTags.map((tag) => (
+          <button class="tag-pill" data-tag={tag}>
+            {tag.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+            <sup class="tag-count">{tagCounts[tag]}</sup>
+          </button>
+        ))
+      }
+    </section>
+
+    <!-- Posts list grouped by month -->
+    <section class="posts-section">
+      {
+        allPosts.map((post) => (
+          <div
+            class="post-row flex items-baseline gap-x-4"
+            data-tags={JSON.stringify(post.data.tags || [])}
+            data-date={post.data.date.toISOString()}
+          >
+            <span class="date-mono">{formatedYMD(post.data.date)}</span>
+            <a href={getPostLink(post)} class="flex-1 truncate">
+              {post.data.title}
+            </a>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const pills = document.querySelectorAll<HTMLButtonElement>(".tag-pill");
+    const rows = document.querySelectorAll<HTMLElement>(".posts-section .post-row");
+
+    const allPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
+    const tagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
+    const activeTags = new Set<string>();
+
+    function updateVisibility() {
+      const showAll = activeTags.size === 0;
+      allPill?.classList.toggle("active", showAll);
+      tagPills.forEach((p) => p.classList.toggle("active", activeTags.has(p.dataset.tag!)));
+
+      rows.forEach((row) => {
+        if (showAll) {
+          row.style.display = "";
+        } else {
+          const tags: string[] = JSON.parse(row.dataset.tags || "[]");
+          row.style.display = tags.some((t) => activeTags.has(t)) ? "" : "none";
+        }
+      });
+    }
+
+    allPill?.addEventListener("click", () => {
+      activeTags.clear();
+      updateVisibility();
+    });
+
+    tagPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const tag = pill.dataset.tag!;
+        if (activeTags.has(tag)) {
+          activeTags.delete(tag);
+        } else {
+          activeTags.add(tag);
+        }
+        updateVisibility();
+      });
+    });
+  });
+</script>
+
+<style>
+  .tag-pill {
+    font-family: "JetBrains Mono";
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid theme("colors.muted");
+    border-radius: 999px;
+    background: transparent;
+    color: theme("colors.muted");
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .tag-pill:hover,
+  .tag-pill.active {
+    color: theme("colors.primary");
+    border-color: theme("colors.primary");
+  }
+
+  .tag-count {
+    font-size: 0.55rem;
+    margin-left: 0.2rem;
+    opacity: 0.7;
+  }
+</style>

@@ -52,6 +52,7 @@ const palettes = {
   // Oxide-inspired — green accent, navy darks
   oxide: {
     primary: '#48d597',
+    'primary-on-light': '#2d9d6a',
     accent: '#e0a458',
     muted: '#8b949e',
     'primary-dark': '#181c21',
@@ -60,10 +61,18 @@ const palettes = {
     border: { light: '#d1d5db', dark: '#2d333b' },
     code: { bg: '#2d333b', 'bg-dark': '#22272e', text: '#e6edf3' },
     logo: {
-      text: '#e6edf3',
-      accent: '#9fbbe0',
-      bars: ['#f0f2f6', '#e5e9f2', '#c7d4ea', '#9fbbe0'],
-      particles: ['#9fbbe0', '#e0a458', '#c7d4ea', '#9fbbe0'],
+      dark: {
+        text: '#e6edf3',
+        accent: '#9fbbe0',
+        bars: ['#f0f2f6', '#e5e9f2', '#c7d4ea', '#9fbbe0'],
+        particles: ['#9fbbe0', '#e0a458', '#c7d4ea', '#9fbbe0'],
+      },
+      light: {
+        text: '#3d4f5f',
+        accent: '#7a9ab8',
+        bars: ['#d5dce6', '#c4ced9', '#a8b8cc', '#8a9db5'],
+        particles: ['#8a9db5', '#c8935f', '#a8b8cc', '#8a9db5'],
+      },
     },
     giscus: {
       dark: {
