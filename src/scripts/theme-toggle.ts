@@ -8,7 +8,7 @@ document.addEventListener('astro:page-load', () => {
   themeBtn?.addEventListener('click', () => {
     document.documentElement.classList.toggle('dark')
     const isDark = document.documentElement.classList.contains('dark')
-    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+    try { localStorage.setItem('theme', isDark ? 'dark' : 'light') } catch (_) {}
     syncThemePressed()
   })
 })

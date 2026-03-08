@@ -31,6 +31,7 @@ export default defineConfig({
       defaultProps: {
         showLineNumbers: true,
       },
+      emitExternalStylesheet: false,
       styleOverrides: {
         borderRadius: '0.1rem',
         codeFontFamily: "'JetBrains Mono', monospace",
