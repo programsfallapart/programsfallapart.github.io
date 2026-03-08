@@ -1,6 +1,3 @@
-@font-serif: 'EB Garamond';
-@font-mono: 'JetBrains Mono';
-
 // Inline code inside paragraphs, list items, and bold text
 p code,
 li code,
@@ -27,6 +24,19 @@ strong code {
 pre {
   letter-spacing: normal;
   border-radius: 0.3rem;
+}
+
+// Shared h2 section heading style (used in article + footnotes)
+.h2-section-heading() {
+  font-family: @font-mono;
+  font-size: 0.9rem;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: theme('colors.primary');
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border-strong);
 }
 
 // Blog post article content
@@ -80,15 +90,7 @@ article {
   }
 
   h2 {
-    font-family: @font-mono;
-    font-size: 0.9rem;
-    font-weight: normal;
-    letter-spacing: 2px;
-    color: theme('colors.primary');
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--color-border-strong);
+    .h2-section-heading();
   }
 
   h3 {
@@ -196,15 +198,7 @@ section[data-footnotes] {
   h2#footnote-label {
     all: unset;
     display: block;
-    font-family: @font-mono;
-    font-size: 0.9rem;
-    font-weight: normal;
-    letter-spacing: 2px;
-    color: theme('colors.primary');
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--color-border-strong);
+    .h2-section-heading();
   }
 
   ol li::marker {

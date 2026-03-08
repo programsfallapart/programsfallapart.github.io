@@ -1,36 +1,6 @@
-@font-serif: 'EB Garamond';
-@font-mono: 'JetBrains Mono';
-
 // Utility: monospace font
 .mono {
   font-family: @font-mono;
-}
-
-// Header navigation links
-.nav-links {
-  flex-wrap: wrap;
-
-  a {
-    font-family: @font-mono;
-    font-size: 0.7rem;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    color: theme('colors.muted');
-
-    &.text-primary {
-      color: theme('colors.primary');
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    gap: 1.5rem !important;
-
-    a {
-      font-size: 0.6rem;
-      letter-spacing: 2px;
-    }
-  }
 }
 
 // Date labels across the blog
