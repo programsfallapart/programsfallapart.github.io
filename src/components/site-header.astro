@@ -30,7 +30,9 @@ const currentPath = Astro.url.pathname;
   <MusicButton />
 </nav>
 <p class="now-playing" id="nowPlayingBar">
+  <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
   <span id="nowPlaying">&nbsp;</span>
+  <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
 </p>
 <hr class="separator" />
 
@@ -42,7 +44,10 @@ const currentPath = Astro.url.pathname;
   }
 
   .now-playing {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     font-family: "JetBrains Mono", monospace;
     letter-spacing: -0.02em;
     font-size: 0.5rem;
@@ -50,5 +55,15 @@ const currentPath = Astro.url.pathname;
     margin: 0 0 0.75rem;
     user-select: all;
     visibility: hidden;
+  }
+
+  .track-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    padding: 0 0.15rem;
+    line-height: 1;
   }
 </style>

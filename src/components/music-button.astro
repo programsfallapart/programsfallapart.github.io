@@ -51,6 +51,18 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
     }
   }
 
+  function skipTrack(direction: number) {
+    if (tracks.length === 0) return
+    const wasPlaying = !audio.paused
+    currentIndex = (currentIndex + direction + tracks.length) % tracks.length
+    loadTrack(currentIndex)
+    if (wasPlaying) audio.play()
+    syncUI()
+  }
+
+  function handlePrev() { skipTrack(-1) }
+  function handleNext() { skipTrack(1) }
+
   function syncUI() {
     const musicBtn = document.getElementById('musicToggle')
     const playIcon = document.querySelector('.music-play') as SVGElement
@@ -72,6 +84,17 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
 
     musicBtn.removeEventListener('click', handleClick)
     musicBtn.addEventListener('click', handleClick)
+
+    const prevBtn = document.getElementById('prevTrack')
+    const nextBtn = document.getElementById('nextTrack')
+    if (prevBtn) {
+      prevBtn.removeEventListener('click', handlePrev)
+      prevBtn.addEventListener('click', handlePrev)
+    }
+    if (nextBtn) {
+      nextBtn.removeEventListener('click', handleNext)
+      nextBtn.addEventListener('click', handleNext)
+    }
   }
 
   document.addEventListener('astro:page-load', syncUI)
