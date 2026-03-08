@@ -12,7 +12,7 @@ function loadTrack(index: number) {
   if (tracks.length === 0) return
   audio.src = tracks[index]
   const nowPlaying = document.getElementById('nowPlaying')
-  if (nowPlaying) nowPlaying.innerHTML = `<span style="color:var(--color-accent-muted)">${index + 1}/${tracks.length}.</span> ${trackDisplayName(tracks[index])}`
+  if (nowPlaying) nowPlaying.innerHTML = `<span style="color:var(--color-accent)">${index + 1}/${tracks.length}.</span> ${trackDisplayName(tracks[index])}`
 }
 
 audio.addEventListener('ended', () => {
@@ -59,7 +59,7 @@ function syncUI() {
   if (playIcon) playIcon.style.display = playing ? 'none' : ''
   if (pauseIcon) pauseIcon.style.display = playing ? '' : 'none'
   if (nowPlayingBar) nowPlayingBar.style.visibility = playing ? 'visible' : 'hidden'
-  if (nowPlaying && playing) nowPlaying.innerHTML = `<span style="color:var(--color-accent-muted)">${currentIndex + 1}/${tracks.length}.</span> ${trackDisplayName(tracks[currentIndex] || '')}`
+  if (nowPlaying && playing) nowPlaying.innerHTML = `<span style="color:var(--color-accent)">${currentIndex + 1}/${tracks.length}.</span> ${trackDisplayName(tracks[currentIndex] || '')}`
   musicBtn.setAttribute('aria-pressed', String(playing))
   musicBtn.setAttribute('aria-label', playing ? 'Pause ambient music' : 'Play ambient music')
 
