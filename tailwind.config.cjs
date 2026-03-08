@@ -8,7 +8,7 @@ module.exports = {
       colors: {
         primary: 'var(--color-primary)',
         accent: active.accent,
-        muted: active.muted,
+        muted: 'var(--color-muted)',
         'primary-dark': active['primary-dark'],
         'primary-gray': active['primary-gray'],
         'primary-white': active['primary-white'],

@@ -15,10 +15,10 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 ---
 
 {h2Headings.length > 0 && (
-  <div id="progress-toc" class="progress-toc">
-    <div id="progress-lines" class="progress-lines">
-      {h2Headings.map(() => (
-        <div class="toc-line" />
+  <div id="progress-toc" class="progress-toc" role="navigation" aria-label="Table of contents">
+    <div id="progress-lines" class="progress-lines" role="group" aria-label="Reading progress">
+      {h2Headings.map((h, i) => (
+        <div class="toc-line" role="presentation" aria-hidden="true" />
       ))}
     </div>
     <div id="toc-panel" class="toc-panel">

@@ -1,6 +1,6 @@
 ---
 import type { PostModel, EssayModel } from '@interfaces/post-model'
-import { getFormatDate } from '@utils/date-helper'
+import { getFormatDate, isoDate } from '@utils/date-helper'
 import { render } from 'astro:content'
 interface Props {
   post: PostModel | EssayModel
@@ -23,7 +23,7 @@ const siteUrl = Astro.site?.origin ?? ''
             {from === 'post' && 'date' in post.data && (
               <>
                 <span class="text-muted">&middot;</span>
-                <span class="date-mono">{getFormatDate(post.data.date)}</span>
+                <time class="date-mono" datetime={isoDate(post.data.date)}>{getFormatDate(post.data.date)}</time>
               </>
             )}
           </div>
@@ -44,6 +44,7 @@ const siteUrl = Astro.site?.origin ?? ''
   <section
     class="giscus mx-auto mt-10 w-full"
     style="min-height: 300px;"
+    aria-label="Comments"
     data-dark-theme={`${siteUrl}/giscus-dark.css`}
     data-light-theme={`${siteUrl}/giscus-light.css`}
   ></section>
