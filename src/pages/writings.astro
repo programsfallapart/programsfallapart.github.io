@@ -5,9 +5,6 @@ import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD, isoDate } from "@utils/date-helper";
 import { getPostLink } from "@utils/post-link";
-import { createRequire } from "node:module";
-const require = createRequire(import.meta.url);
-const { active } = require("../../palettes.config.cjs");
 
 const allPosts = await getAllPosts();
 const allEssays = await getAllEssays();
@@ -98,11 +95,7 @@ const description = "Writings - Programs Fall Apart";
     <p class="result-count mb-4" aria-live="polite"></p>
 
     <!-- Writings list -->
-    <section
-      class="writings-section"
-      data-accent={active.accent}
-      data-primary-dark={active["primary-dark"]}
-    >
+    <section class="writings-section">
       {
         allPosts.map((post) => (
           <div
@@ -141,18 +134,18 @@ const description = "Writings - Programs Fall Apart";
 </BaseLayout>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  function initWritings() {
     const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
     const writingsSection =
-      document.querySelector<HTMLElement>(".writings-section")!;
+      document.querySelector<HTMLElement>(".writings-section");
+    if (!writingsSection) return;
+
     const rows = document.querySelectorAll<HTMLElement>(
       ".writings-section .writing-row",
     );
     const searchInput = document.getElementById(
       "search-input",
     ) as HTMLInputElement;
-    const accentColor = writingsSection.dataset.accent!;
-    const primaryDark = writingsSection.dataset.primaryDark!;
     const resultCount = document.querySelector<HTMLElement>(".result-count")!;
 
     const allTagPill = document.querySelector<HTMLButtonElement>(
@@ -228,7 +221,7 @@ const description = "Writings - Programs Fall Apart";
       searchTimer = window.setTimeout(() => {
         searchQuery = searchInput.value.trim();
         updateVisibility();
-      }, 150);
+      }, 100);
     });
 
     catBtns.forEach((btn) => {
@@ -262,7 +255,9 @@ const description = "Writings - Programs Fall Apart";
     });
 
     updateVisibility();
-  });
+  }
+
+  document.addEventListener("astro:page-load", initWritings);
 </script>
 
 <style>
