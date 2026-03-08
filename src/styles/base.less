@@ -1,0 +1,84 @@
+// Font variables (shared across all style files)
+@font-serif: 'EB Garamond';
+@font-mono: 'JetBrains Mono';
+
+// CSS custom properties
+:root {
+  --color-primary: #2d9d6a;
+  --color-accent: #c8935f;
+  --color-muted: #656d76;
+  --color-border: #e5e7eb;
+}
+.dark {
+  --color-primary: #48d597;
+  --color-accent: #e0a458;
+  --color-muted: #8b949e;
+  --color-border: #2a2a2a;
+}
+
+// Base font size, scales down on mobile
+html {
+  font-size: 17px;
+
+  @media screen and (max-width: 900px) {
+    font-size: 15px;
+  }
+}
+
+// Default body font
+body {
+  font-family: @font-serif;
+  line-height: 1.75;
+}
+
+// Global link styling
+a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (any-hover: hover) {
+  a:hover {
+    color: theme('colors.primary');
+  }
+}
+
+// Focus styles for keyboard navigation
+:focus-visible {
+  outline: 2px solid theme('colors.primary');
+  outline-offset: 2px;
+}
+
+// Disable view transition animation for instant page switches
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+// Respect reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Skip-to-content link
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: theme('colors.primary');
+  color: theme('colors.primary-dark');
+  text-decoration: none;
+  font-family: @font-mono;
+  font-size: 0.75rem;
+
+  &:focus {
+    top: 0;
+  }
+}

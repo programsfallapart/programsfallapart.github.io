@@ -1,0 +1,237 @@
+@font-serif: 'EB Garamond';
+@font-mono: 'JetBrains Mono';
+
+// Inline code inside paragraphs, list items, and bold text
+p code,
+li code,
+strong code {
+  font-size: 0.75em;
+  white-space: nowrap;
+  color: #e4e4e7;
+  background-color: #374151;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  margin: 0 0.1rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  overflow-x: auto;
+}
+
+// Code blocks
+.expressive-code {
+  max-width: 90%;
+  margin-inline: auto;
+}
+
+pre {
+  letter-spacing: normal;
+  border-radius: 0.3rem;
+}
+
+// Blog post article content
+article {
+  text-align: left;
+
+  p {
+    letter-spacing: 0.2px;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  li {
+    letter-spacing: 0.2px;
+    margin: 0.125rem 0;
+  }
+
+  blockquote {
+    letter-spacing: 0.2px;
+    margin: 1.5rem 0 !important;
+    padding: 0.75rem 1.25rem;
+    border-left: 2px solid theme('colors.muted');
+    border-radius: 0;
+  }
+
+  ul {
+    list-style: disc;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 2rem;
+  }
+
+  ol {
+    list-style: decimal;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 2rem;
+  }
+
+  p + ul,
+  p + ol {
+    margin-top: -0.75rem;
+  }
+
+  h1 {
+    font-family: @font-serif;
+    font-size: 1.6rem;
+    font-weight: normal;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.primary');
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  h3 {
+    font-family: @font-mono;
+    font-size: 0.8rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.muted');
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h4 {
+    font-family: @font-mono;
+    font-size: 0.75rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  h5 {
+    font-family: @font-mono;
+    font-size: 0.7rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h6 {
+    font-family: @font-mono;
+    font-size: 0.65rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: theme('colors.muted');
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  li > ul {
+    padding-left: 1.25rem;
+  }
+
+  li > p {
+    display: inline;
+  }
+
+  hr {
+    width: 30%;
+    margin: 1rem auto;
+    border-top: 3px dotted #282c34;
+  }
+
+  .table-wrapper {
+    max-width: 100%;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    white-space: nowrap;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #374151;
+  }
+
+  td {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #374151;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 5px;
+  }
+}
+
+// Footnotes
+a[data-footnote-ref] {
+  color: theme('colors.accent');
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+@media (any-hover: hover) {
+  a[data-footnote-ref]:hover {
+    color: theme('colors.primary');
+  }
+}
+
+section[data-footnotes] {
+  color: theme('colors.muted');
+  text-align: left;
+
+  h2#footnote-label {
+    all: unset;
+    display: block;
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.primary');
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  ol li::marker {
+    color: theme('colors.accent');
+  }
+
+  a.data-footnote-backref {
+    color: theme('colors.primary');
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-size: 0.7em;
+  }
+
+  @media screen and (max-width: 900px) {
+    font-size: 0.963rem;
+  }
+}
+
+// Dark mode overrides
+.dark {
+  p code,
+  li code,
+  strong code {
+    background-color: #282c34;
+  }
+
+  blockquote {
+    border-left-color: theme('colors.primary-gray');
+  }
+}

@@ -1,0 +1,74 @@
+@font-serif: 'EB Garamond';
+@font-mono: 'JetBrains Mono';
+
+// Utility: monospace font
+.mono {
+  font-family: @font-mono;
+}
+
+// Header navigation links
+.nav-links {
+  flex-wrap: wrap;
+
+  a {
+    font-family: @font-mono;
+    font-size: 0.7rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: theme('colors.muted');
+
+    &.text-primary {
+      color: theme('colors.primary');
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 1.5rem !important;
+
+    a {
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+    }
+  }
+}
+
+// Date labels across the blog
+.date-mono {
+  font-family: @font-mono;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  color: theme('colors.muted');
+}
+
+// Section titles like "Last Posts", tag names, archive month groups
+.section-heading {
+  font-family: @font-mono;
+  font-size: 0.7rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: theme('colors.muted');
+}
+
+// Individual post row in post lists
+.post-row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+
+  a {
+    font-family: @font-serif;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+  }
+}
+
+// Thin horizontal rule used between page sections
+.separator {
+  width: 60%;
+  height: 1px;
+  margin: 1rem auto 5rem;
+  border: none;
+  background: linear-gradient(to right, transparent, var(--color-border), transparent);
+}
