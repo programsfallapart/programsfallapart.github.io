@@ -24,7 +24,7 @@ const { headings: rawHeadings } = await render(essay)
 const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
-<BaseLayout title={essay.data.title} description={essay.data.description ?? ''}>
+<BaseLayout title={essay.data.title} description={essay.data.description ?? ''} hasComments>
   <main id="main-content" class="tufte">
     <SiteHeader />
     <section class="my-10">

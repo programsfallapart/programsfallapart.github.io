@@ -7,11 +7,12 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  hasComments?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image } = Astro.props;
+const { title, description, image, hasComments } = Astro.props;
 ---
 
 <head>
@@ -34,7 +35,7 @@ const { title, description, image } = Astro.props;
   <meta name="color-scheme" content="light dark" />
 
   <!-- Resource hints -->
-  <link rel="preconnect" href="https://giscus.app" crossorigin />
+  {hasComments && <link rel="preconnect" href="https://giscus.app" crossorigin />}
 
   <!-- Fonts (self-hosted) -->
   <link rel="preload" href="/fonts/eb-garamond/eb-garamond-latin.woff2" as="font" type="font/woff2" crossorigin />

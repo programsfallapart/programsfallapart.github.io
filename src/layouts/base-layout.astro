@@ -3,11 +3,11 @@ import BaseHead from '@components/html-head.astro'
 import ScrollButton from '@components/scroll-button.astro'
 import SiteFooter from '@components/site-footer.astro'
 
-const { title, description } = Astro.props.frontmatter || Astro.props
+const { title, description, hasComments } = Astro.props.frontmatter || Astro.props
 ---
 
 <html lang="en">
-  <BaseHead title={title} description={description} />
+  <BaseHead title={title} description={description} hasComments={hasComments} />
   <body class="bg-primary-white text-primary-dark dark:bg-primary-dark dark:text-[#e4e4e7]">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <slot />
