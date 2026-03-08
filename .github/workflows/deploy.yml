@@ -28,6 +28,12 @@ jobs:
           path: ~/.bun/install/cache
           key: bun-${{ hashFiles('package.json') }}
           restore-keys: bun-
+      - name: Cache Astro build
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-${{ hashFiles('src/**/*') }}
+          restore-keys: astro-
       - name: Install & Build
         run: rm -f bun.lock && bun install && bun run build
       - name: Upload artifact

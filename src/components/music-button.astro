@@ -14,17 +14,11 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
   </svg>
 </button>
 
-<audio id="ambientAudio" preload="none"></audio>
+<audio id="ambientAudio" preload="none" transition:persist></audio>
 
 <script>
-  const musicBtn = document.getElementById('musicToggle')
   const audio = document.getElementById('ambientAudio') as HTMLAudioElement
-  const playIcon = document.querySelector('.music-play') as SVGElement
-  const pauseIcon = document.querySelector('.music-pause') as SVGElement
-  const nowPlaying = document.getElementById('nowPlaying') as HTMLElement
-  const nowPlayingBar = document.getElementById('nowPlayingBar') as HTMLElement
-
-  const tracks: string[] = JSON.parse(musicBtn?.dataset.tracks || '[]')
+  let tracks: string[] = []
   let currentIndex = 0
 
   audio.volume = 0.3
@@ -36,7 +30,8 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
   function loadTrack(index: number) {
     if (tracks.length === 0) return
     audio.src = tracks[index]
-    nowPlaying.textContent = trackDisplayName(tracks[index])
+    const nowPlaying = document.getElementById('nowPlaying')
+    if (nowPlaying) nowPlaying.textContent = trackDisplayName(tracks[index])
   }
 
   audio.addEventListener('ended', () => {
@@ -45,24 +40,41 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
     audio.play()
   })
 
-  function updateIcon(playing: boolean) {
-    playIcon.style.display = playing ? 'none' : ''
-    pauseIcon.style.display = playing ? '' : 'none'
-    nowPlayingBar.style.visibility = playing ? 'visible' : 'hidden'
-    musicBtn?.setAttribute('aria-pressed', String(playing))
-    musicBtn?.setAttribute('aria-label', playing ? 'Pause ambient music' : 'Play ambient music')
-  }
-
-  musicBtn?.addEventListener('click', () => {
+  function handleClick() {
     if (audio.paused) {
       if (!audio.src || audio.src === location.href) loadTrack(currentIndex)
       audio.play()
-      updateIcon(true)
+      syncUI()
     } else {
       audio.pause()
-      updateIcon(false)
+      syncUI()
     }
-  })
+  }
+
+  function syncUI() {
+    const musicBtn = document.getElementById('musicToggle')
+    const playIcon = document.querySelector('.music-play') as SVGElement
+    const pauseIcon = document.querySelector('.music-pause') as SVGElement
+    const nowPlaying = document.getElementById('nowPlaying')
+    const nowPlayingBar = document.getElementById('nowPlayingBar')
+
+    if (!musicBtn) return
+
+    tracks = JSON.parse(musicBtn.dataset.tracks || '[]')
+    const playing = !audio.paused
+
+    if (playIcon) playIcon.style.display = playing ? 'none' : ''
+    if (pauseIcon) pauseIcon.style.display = playing ? '' : 'none'
+    if (nowPlayingBar) nowPlayingBar.style.visibility = playing ? 'visible' : 'hidden'
+    if (nowPlaying && playing) nowPlaying.textContent = trackDisplayName(tracks[currentIndex] || '')
+    musicBtn.setAttribute('aria-pressed', String(playing))
+    musicBtn.setAttribute('aria-label', playing ? 'Pause ambient music' : 'Play ambient music')
+
+    musicBtn.removeEventListener('click', handleClick)
+    musicBtn.addEventListener('click', handleClick)
+  }
+
+  document.addEventListener('astro:page-load', syncUI)
 </script>
 
 <style>
