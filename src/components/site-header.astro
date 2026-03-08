@@ -4,37 +4,49 @@ import ThemeButton from "@components/theme-button.astro";
 import MusicButton from "@components/music-button.astro";
 import { navLinks, isActivePath } from "@utils/nav-links";
 
+interface Props {
+  isHome?: boolean
+}
+
+const { isHome = false } = Astro.props
 const currentPath = Astro.url.pathname;
 ---
 
-<section class="flex flex-col items-center justify-center">
-  <AvatarImage />
-</section>
-<nav
-  class="nav-links mt-10 mb-4 flex items-center justify-center gap-10"
-  aria-label="Main"
->
-  {
-    navLinks.map((item) => (
-      <a
-        href={item.url}
-        class:list={[{ "text-primary": isActivePath(item.url, currentPath) }]}
-        aria-current={isActivePath(item.url, currentPath) ? "page" : undefined}
-      >
-        {item.title}
-      </a>
-    ))
-  }
-  <span class="nav-divider" aria-hidden="true"></span>
-  <ThemeButton />
-  <MusicButton />
-</nav>
-<p class="now-playing" id="nowPlayingBar">
-  <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
-  <span id="nowPlaying">&nbsp;</span>
-  <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
-</p>
-<hr class="separator" />
+<header>
+  {isHome ? (
+    <h1 class="sr-only">Programs Fall Apart</h1>
+  ) : (
+    <p class="sr-only">Programs Fall Apart</p>
+  )}
+  <section class="flex flex-col items-center justify-center">
+    <AvatarImage />
+  </section>
+  <nav
+    class="nav-links mt-10 mb-4 flex items-center justify-center gap-10"
+    aria-label="Main"
+  >
+    {
+      navLinks.map((item) => (
+        <a
+          href={item.url}
+          class:list={[{ "text-primary": isActivePath(item.url, currentPath) }]}
+          aria-current={isActivePath(item.url, currentPath) ? "page" : undefined}
+        >
+          {item.title}
+        </a>
+      ))
+    }
+    <span class="nav-divider" aria-hidden="true"></span>
+    <ThemeButton />
+    <MusicButton />
+  </nav>
+  <p class="now-playing" id="nowPlayingBar">
+    <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
+    <span id="nowPlaying">&nbsp;</span>
+    <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
+  </p>
+  <hr class="separator" />
+</header>
 
 <style>
   .nav-divider {
