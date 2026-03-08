@@ -6,6 +6,7 @@ import expressiveCode from 'astro-expressive-code'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
 import rehypeExternalLinks from 'rehype-external-links'
+import rehypeHeadingNumbers from './src/plugins/rehype-heading-numbers'
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
   markdown: {
     rehypePlugins: [
       [rehypeExternalLinks, { rel: 'nofollow', target: '_blank' }],
+      rehypeHeadingNumbers,
     ],
   },
   integrations: [
