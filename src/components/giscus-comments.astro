@@ -11,10 +11,11 @@ const siteUrl = Astro.site?.origin ?? ''
 ></section>
 
 <script>
-  function getGiscusTheme() {
-    const section = document.querySelector('.giscus')!
+  function getGiscusTheme(): string {
+    const section = document.querySelector('.giscus')
+    if (!section) return ''
     const isDark = document.documentElement.classList.contains('dark')
-    return isDark ? section.getAttribute('data-dark-theme')! : section.getAttribute('data-light-theme')!
+    return (isDark ? section.getAttribute('data-dark-theme') : section.getAttribute('data-light-theme')) ?? ''
   }
 
   function setGiscusTheme(theme: string) {

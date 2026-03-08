@@ -9,7 +9,7 @@ function initListFilter() {
   const searchInput = document.getElementById(
     "search-input",
   ) as HTMLInputElement | null;
-  const resultCount = document.querySelector<HTMLElement>(".result-count")!;
+  const resultCount = document.querySelector<HTMLElement>(".result-count");
 
   const allCatBtn = document.querySelector<HTMLButtonElement>(
     '.cat-btn[data-cat="all"]',
@@ -26,10 +26,10 @@ function initListFilter() {
 
   const rowData = Array.from(rows).map((row) => ({
     el: row,
-    kind: row.dataset.kind!,
+    kind: row.dataset.kind ?? "",
     tags: JSON.parse(row.dataset.tags || "[]") as string[],
-    title: row.dataset.title || "",
-    link: row.querySelector("a")!,
+    title: row.dataset.title ?? "",
+    link: row.querySelector("a"),
   }));
 
   let searchQuery = "";
@@ -50,7 +50,7 @@ function initListFilter() {
     allCatBtn?.classList.toggle("active", noCats);
     allCatBtn?.setAttribute("aria-pressed", String(noCats));
     filterCatBtns.forEach((b) => {
-      const isActive = activeCats.has(b.dataset.cat!);
+      const isActive = activeCats.has(b.dataset.cat ?? "");
       b.classList.toggle("active", isActive);
       b.setAttribute("aria-pressed", String(isActive));
     });
@@ -58,7 +58,7 @@ function initListFilter() {
     allTagPill?.classList.toggle("active", noTags);
     allTagPill?.setAttribute("aria-pressed", String(noTags));
     filterTagPills.forEach((p) => {
-      const isActive = activeTags.has(p.dataset.tag!);
+      const isActive = activeTags.has(p.dataset.tag ?? "");
       p.classList.toggle("active", isActive);
       p.setAttribute("aria-pressed", String(isActive));
     });
@@ -97,20 +97,20 @@ function initListFilter() {
       const show = catMatch && tagMatch && searchMatch;
       el.style.display = show ? "" : "none";
       if (show) visible++;
-      link.innerHTML =
+      if (link) link.innerHTML =
         searchQuery && searchMatch
           ? highlightText(title, searchQuery)
           : title;
     });
 
-    resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;
+    if (resultCount) resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;
   }
 
   let searchTimer: number;
   searchInput?.addEventListener("input", () => {
     clearTimeout(searchTimer);
     searchTimer = window.setTimeout(() => {
-      searchQuery = searchInput!.value.trim();
+      searchQuery = searchInput?.value.trim() ?? "";
       updateVisibility();
     }, 100);
   });
@@ -123,7 +123,7 @@ function initListFilter() {
 
   filterCatBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const cat = btn.dataset.cat!;
+      const cat = btn.dataset.cat ?? "";
       if (activeCats.has(cat)) {
         activeCats.delete(cat);
       } else {
@@ -141,7 +141,7 @@ function initListFilter() {
 
   filterTagPills.forEach((pill) => {
     pill.addEventListener("click", () => {
-      const tag = pill.dataset.tag!;
+      const tag = pill.dataset.tag ?? "";
       if (activeTags.has(tag)) {
         activeTags.delete(tag);
       } else {

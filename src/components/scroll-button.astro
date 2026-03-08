@@ -16,8 +16,10 @@
 </svg>
 <script>
   const pageScroll = () => {
-    const navIcon = document.querySelector('.nav-icon')!
-    if (!navIcon) return
+    const _el = document.querySelector<HTMLElement>('.nav-icon')
+    if (!_el) return
+    const navIcon = _el
+
     if (document.documentElement.scrollHeight !== document.documentElement.clientHeight) {
       navIcon.classList.remove('hidden')
     }
@@ -50,12 +52,12 @@
     }
 
     navIcon.addEventListener('click', handleActivate)
-    navIcon.addEventListener('keydown', ((e: KeyboardEvent) => {
+    navIcon.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
         handleActivate()
       }
-    }) as EventListener)
+    })
   }
   document.addEventListener('astro:page-load', pageScroll)
 </script>

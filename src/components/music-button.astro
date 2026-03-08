@@ -17,7 +17,9 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
 <audio id="ambientAudio" preload="none" transition:persist></audio>
 
 <script>
-  const audio = document.getElementById('ambientAudio') as HTMLAudioElement
+  const audioEl = document.getElementById('ambientAudio')
+  if (!(audioEl instanceof HTMLAudioElement)) throw new Error('Missing #ambientAudio')
+  const audio: HTMLAudioElement = audioEl
   let tracks: string[] = []
   let currentIndex = 0
 
@@ -65,8 +67,8 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
 
   function syncUI() {
     const musicBtn = document.getElementById('musicToggle')
-    const playIcon = document.querySelector('.music-play') as SVGElement
-    const pauseIcon = document.querySelector('.music-pause') as SVGElement
+    const playIcon = document.querySelector<HTMLElement>('.music-play')
+    const pauseIcon = document.querySelector<HTMLElement>('.music-pause')
     const nowPlaying = document.getElementById('nowPlaying')
     const nowPlayingBar = document.getElementById('nowPlayingBar')
 
