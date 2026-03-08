@@ -22,7 +22,7 @@ export default defineConfig({
   },
   integrations: [
     expressiveCode({
-      themes: ['vitesse-light', 'vitesse-dark'],
+      themes: ['catppuccin-mocha','catppuccin-latte'],
       themeCssSelector: (theme) => {
         return theme.type === 'dark' ? '.dark' : ':root:not(.dark)'
       },

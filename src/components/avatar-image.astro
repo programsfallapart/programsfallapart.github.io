@@ -1,9 +1,12 @@
 ---
 import { createRequire } from 'node:module'
-const require = createRequire(import.meta.url)
-const { active } = require('../../palettes.config.cjs')
+const cjsRequire = createRequire(import.meta.url)
+const { active } = cjsRequire('../../palettes.config.cjs')
 const ld = active.logo.dark
 const ll = active.logo.light
+
+const logos = import.meta.glob('./logos/*.astro', { eager: true })
+const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
 ---
 
 <div class="site-logo mt-8 mb-1 select-none flex justify-center" style={`--lt:${ll.text};--la:${ll.accent};--lb1:${ll.bars[0]};--lb2:${ll.bars[1]};--lb3:${ll.bars[2]};--lb4:${ll.bars[3]};--lp1:${ll.particles[0]};--lp2:${ll.particles[1]};--lp3:${ll.particles[2]};--lp4:${ll.particles[3]};--dt:${ld.text};--da:${ld.accent};--db1:${ld.bars[0]};--db2:${ld.bars[1]};--db3:${ld.bars[2]};--db4:${ld.bars[3]};--dp1:${ld.particles[0]};--dp2:${ld.particles[1]};--dp3:${ld.particles[2]};--dp4:${ld.particles[3]}`}>
@@ -11,14 +14,7 @@ const ll = active.logo.light
     <style>
       .logo-text { font-family: 'EB Garamond', serif; font-size: 38px; }
     </style>
-    <rect class="logo-bar-4" x="10" y="80" width="120" height="18" rx="4"/>
-    <rect class="logo-bar-3" x="10" y="58" width="120" height="18" rx="4"/>
-    <rect class="logo-bar-2" x="10" y="36" width="120" height="18" rx="4"/>
-    <rect class="logo-bar-1" x="10" y="14" width="120" height="18" rx="4" transform="rotate(-10 70 23)"/>
-    <rect class="logo-p1" x="140" y="10" width="8" height="8"/>
-    <rect class="logo-p2" x="152" y="18" width="6" height="6"/>
-    <rect class="logo-p3" x="146" y="28" width="7" height="7"/>
-    <rect class="logo-p4" x="160" y="32" width="5" height="5"/>
+    {LogoIcon && <LogoIcon />}
     <text x="178" y="55" class="logo-text logo-text-primary">programs</text>
     <text x="178" y="95" class="logo-text logo-text-accent">fall apart</text>
   </svg>
@@ -39,25 +35,25 @@ const ll = active.logo.light
 
   .site-logo :global(.logo-text-primary) { fill: var(--lt); }
   .site-logo :global(.logo-text-accent) { fill: var(--la); }
-  .site-logo :global(.logo-bar-1) { fill: var(--lb1); }
-  .site-logo :global(.logo-bar-2) { fill: var(--lb2); }
-  .site-logo :global(.logo-bar-3) { fill: var(--lb3); }
-  .site-logo :global(.logo-bar-4) { fill: var(--lb4); }
-  .site-logo :global(.logo-p1) { fill: var(--lp1); }
-  .site-logo :global(.logo-p2) { fill: var(--lp2); }
-  .site-logo :global(.logo-p3) { fill: var(--lp3); }
-  .site-logo :global(.logo-p4) { fill: var(--lp4); }
+  .site-logo :global(.logo-bar-1) { fill: var(--lb1); color: var(--lb1); }
+  .site-logo :global(.logo-bar-2) { fill: var(--lb2); color: var(--lb2); }
+  .site-logo :global(.logo-bar-3) { fill: var(--lb3); color: var(--lb3); }
+  .site-logo :global(.logo-bar-4) { fill: var(--lb4); color: var(--lb4); }
+  .site-logo :global(.logo-p1) { fill: var(--lp1); color: var(--lp1); }
+  .site-logo :global(.logo-p2) { fill: var(--lp2); color: var(--lp2); }
+  .site-logo :global(.logo-p3) { fill: var(--lp3); color: var(--lp3); }
+  .site-logo :global(.logo-p4) { fill: var(--lp4); color: var(--lp4); }
 
   :global(.dark) .site-logo :global(.logo-text-primary) { fill: var(--dt); }
   :global(.dark) .site-logo :global(.logo-text-accent) { fill: var(--da); }
-  :global(.dark) .site-logo :global(.logo-bar-1) { fill: var(--db1); }
-  :global(.dark) .site-logo :global(.logo-bar-2) { fill: var(--db2); }
-  :global(.dark) .site-logo :global(.logo-bar-3) { fill: var(--db3); }
-  :global(.dark) .site-logo :global(.logo-bar-4) { fill: var(--db4); }
-  :global(.dark) .site-logo :global(.logo-p1) { fill: var(--dp1); }
-  :global(.dark) .site-logo :global(.logo-p2) { fill: var(--dp2); }
-  :global(.dark) .site-logo :global(.logo-p3) { fill: var(--dp3); }
-  :global(.dark) .site-logo :global(.logo-p4) { fill: var(--dp4); }
+  :global(.dark) .site-logo :global(.logo-bar-1) { fill: var(--db1); color: var(--db1); }
+  :global(.dark) .site-logo :global(.logo-bar-2) { fill: var(--db2); color: var(--db2); }
+  :global(.dark) .site-logo :global(.logo-bar-3) { fill: var(--db3); color: var(--db3); }
+  :global(.dark) .site-logo :global(.logo-bar-4) { fill: var(--db4); color: var(--db4); }
+  :global(.dark) .site-logo :global(.logo-p1) { fill: var(--dp1); color: var(--dp1); }
+  :global(.dark) .site-logo :global(.logo-p2) { fill: var(--dp2); color: var(--dp2); }
+  :global(.dark) .site-logo :global(.logo-p3) { fill: var(--dp3); color: var(--dp3); }
+  :global(.dark) .site-logo :global(.logo-p4) { fill: var(--dp4); color: var(--dp4); }
 
   .epigraph {
     margin: 0.5rem auto 0;

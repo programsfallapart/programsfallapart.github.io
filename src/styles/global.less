@@ -122,9 +122,11 @@ body {
 
 // Thin horizontal rule used between page sections
 .separator {
-  margin: 2rem 0;
+  width: 60%;
+  height: 1px;
+  margin: 1rem auto 5rem;
   border: none;
-  border-top: 1px solid var(--color-border);
+  background: linear-gradient(to right, transparent, var(--color-border), transparent);
 }
 
 // Main content area layout
@@ -252,6 +254,11 @@ strong code {
 }
 
 // Code blocks
+.expressive-code {
+  max-width: 90%;
+  margin-inline: auto;
+}
+
 pre {
   letter-spacing: normal;
   border-radius: 0.3rem;

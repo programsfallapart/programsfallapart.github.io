@@ -1,11 +1,9 @@
 ---
-import AvatarImage from "@components/avatar-image.astro";
-import ThemeButton from "@components/theme-button.astro";
+import SiteHeader from "@components/site-header.astro";
 import BaseLayout from "@layouts/base-layout.astro";
 import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD, isoDate } from "@utils/date-helper";
-import { navLinks, isActivePath } from "@utils/nav-links";
 import { getPostLink } from "@utils/post-link";
 
 const latestPosts = (await getAllPosts()).slice(0, 5);
@@ -17,19 +15,10 @@ const description = "Home - Programs Fall Apart";
 
 <BaseLayout title={title} description={description}>
   <main id="main-content">
-    <section class="flex flex-col items-center justify-center">
-      <AvatarImage />
-    </section>
-    <nav class="nav-links my-10 flex items-center justify-center gap-10" aria-label="Main">
-      {navLinks.map((item) => (
-        <a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]} aria-current={isActivePath(item.url, Astro.url.pathname) ? 'page' : undefined}>{item.title}</a>
-      ))}
-      <ThemeButton class="absolute right-0" />
-    </nav>
-    <hr class="separator" />
+    <SiteHeader />
 
     <!-- Latest Essays -->
-    <section class="my-16">
+    <section class="mb-20">
       <h2 class="section-heading text-center mb-8">
         <a href="/writings" class="heading-link">Latest Essays</a>
       </h2>
@@ -47,7 +36,7 @@ const description = "Home - Programs Fall Apart";
     </section>
 
     <!-- Latest Posts -->
-    <section class="my-20">
+    <section class="my-24">
       <h2 class="section-heading text-center mb-8">
         <a href="/writings" class="heading-link">Latest Posts</a>
       </h2>
