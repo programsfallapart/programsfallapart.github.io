@@ -46,6 +46,15 @@ const description = "About - Programs Fall Apart";
       <p class="about-footnote">
         * Yes, I know it's called X now. No, I will not be calling it that.
       </p>
+
+      <div class="credits">
+        <h3>Credits</h3>
+        <ul>
+          <li>Fonts: <a href="https://fonts.google.com/specimen/EB+Garamond" target="_blank" rel="noopener noreferrer">EB Garamond</a>, <a href="https://fonts.google.com/specimen/Cormorant+Garamond" target="_blank" rel="noopener noreferrer">Cormorant Garamond</a>, <a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener noreferrer">JetBrains Mono</a></li>
+          <li>Music: classical recordings from <a href="https://www.classicals.de" target="_blank" rel="noopener noreferrer">classicals.de</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a></li>
+          <li>Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a></li>
+        </ul>
+      </div>
     </section>
   </main>
 </BaseLayout>
@@ -56,5 +65,34 @@ const description = "About - Programs Fall Apart";
     font-size: 0.75rem;
     color: var(--color-muted);
     margin-top: 2rem;
+  }
+
+  .credits {
+    margin-top: 4rem;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .credits h3 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .credits ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .credits li {
+    margin-bottom: 0.35rem;
+  }
+
+  .credits a {
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>
