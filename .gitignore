@@ -20,6 +20,9 @@ src/content/drafts/
 .env
 .env.production
 
+# audio files (hosted separately)
+public/audio/
+
 # macOS-specific files
 .DS_Store
 .idea/

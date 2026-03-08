@@ -1,0 +1,85 @@
+---
+const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
+  (p) => p.replace('/public', '')
+)
+---
+
+<button id="musicToggle" aria-label="Play ambient music" aria-pressed="false" data-tracks={JSON.stringify(audioFiles)}>
+  <svg width="18px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="music-icon music-play" d="M8 5v14l11-7z" />
+    <g class="music-icon music-pause" style="display:none">
+      <rect x="6" y="4" width="4" height="16" />
+      <rect x="14" y="4" width="4" height="16" />
+    </g>
+  </svg>
+</button>
+
+<audio id="ambientAudio" preload="none"></audio>
+
+<script>
+  const musicBtn = document.getElementById('musicToggle')
+  const audio = document.getElementById('ambientAudio') as HTMLAudioElement
+  const playIcon = document.querySelector('.music-play') as SVGElement
+  const pauseIcon = document.querySelector('.music-pause') as SVGElement
+  const nowPlaying = document.getElementById('nowPlaying') as HTMLElement
+  const nowPlayingBar = document.getElementById('nowPlayingBar') as HTMLElement
+
+  const tracks: string[] = JSON.parse(musicBtn?.dataset.tracks || '[]')
+  let currentIndex = 0
+
+  audio.volume = 0.3
+
+  function trackDisplayName(path: string): string {
+    return decodeURIComponent(path.split('/').pop()?.replace('.mp3', '') || '')
+  }
+
+  function loadTrack(index: number) {
+    if (tracks.length === 0) return
+    audio.src = tracks[index]
+    nowPlaying.textContent = trackDisplayName(tracks[index])
+  }
+
+  audio.addEventListener('ended', () => {
+    currentIndex = (currentIndex + 1) % tracks.length
+    loadTrack(currentIndex)
+    audio.play()
+  })
+
+  function updateIcon(playing: boolean) {
+    playIcon.style.display = playing ? 'none' : ''
+    pauseIcon.style.display = playing ? '' : 'none'
+    nowPlayingBar.style.visibility = playing ? 'visible' : 'hidden'
+    musicBtn?.setAttribute('aria-pressed', String(playing))
+    musicBtn?.setAttribute('aria-label', playing ? 'Pause ambient music' : 'Play ambient music')
+  }
+
+  musicBtn?.addEventListener('click', () => {
+    if (audio.paused) {
+      if (!audio.src || audio.src === location.href) loadTrack(currentIndex)
+      audio.play()
+      updateIcon(true)
+    } else {
+      audio.pause()
+      updateIcon(false)
+    }
+  })
+</script>
+
+<style>
+  #musicToggle {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .music-icon {
+    fill: black;
+  }
+
+  :global(.dark) .music-icon {
+    fill: white;
+  }
+</style>
