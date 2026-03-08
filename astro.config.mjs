@@ -1,4 +1,3 @@
-import AstroPWA from '@vite-pwa/astro'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwind from '@astrojs/tailwind'
@@ -39,24 +38,5 @@ export default defineConfig({
     mdx(),
     sitemap(),
     tailwind({ applyBaseStyles: false }),
-    AstroPWA({
-      registerType: 'autoUpdate',
-      devOptions: { enabled: false },
-      workbox: {
-        navigateFallback: '/404',
-        globPatterns: ['**/*.{js,css,woff2,svg,ico}'],
-        navigateFallbackDenylist: [/.*\.xml$/],
-      },
-      includeAssets: ['**/*.{woff2,svg,ico}'],
-      manifest: {
-        name: 'Programs Fall Apart',
-        short_name: 'Programs Fall Apart',
-        description: 'A blog about programming, software engineering, and the search for understanding',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
-        display: 'standalone',
-        icons: [],
-      },
-    }),
   ],
 })

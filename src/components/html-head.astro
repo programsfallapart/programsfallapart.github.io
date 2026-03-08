@@ -1,7 +1,6 @@
 ---
 import "@styles/global.less";
 import { ClientRouter } from "astro:transitions";
-import { pwaInfo } from "virtual:pwa-info";
 
 interface Props {
   title: string;
@@ -61,6 +60,4 @@ const { title, description, image, hasComments } = Astro.props;
 
   <title>{title}</title>
   <ClientRouter />
-
-{pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 </head>
