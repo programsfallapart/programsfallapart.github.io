@@ -1,11 +1,7 @@
 ---
-import ContentRender from '@components/content-render.astro'
-import ProgressToc from '@components/progress-toc.astro'
-import SiteHeader from '@components/site-header.astro'
+import ContentLayout from '@layouts/content-layout.astro'
 import type { EssayModel } from '@interfaces/post-model'
-import BaseLayout from '@layouts/base-layout.astro'
 import { getAllEssays } from '@utils/all-essays'
-import { render } from 'astro:content'
 
 interface Props {
   essay: EssayModel
@@ -20,16 +16,6 @@ export async function getStaticPaths() {
 }
 
 const { essay } = Astro.props
-const { headings: rawHeadings } = await render(essay)
-const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
-<BaseLayout title={essay.data.title} description={essay.data.description ?? ''} hasComments>
-  <main id="main-content" class="tufte">
-    <SiteHeader />
-    <section class="my-10">
-      <ProgressToc headings={headings} />
-      <ContentRender post={essay} from="essay" />
-    </section>
-  </main>
-</BaseLayout>
+<ContentLayout entry={essay} from="essay" />

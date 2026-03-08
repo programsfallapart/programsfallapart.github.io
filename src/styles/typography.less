@@ -7,8 +7,8 @@ li code,
 strong code {
   font-size: 0.75em;
   white-space: nowrap;
-  color: #e4e4e7;
-  background-color: #374151;
+  color: var(--color-code-fg);
+  background-color: var(--color-code-bg);
   display: inline-block;
   vertical-align: middle;
   max-width: 100%;
@@ -88,7 +88,7 @@ article {
     margin-top: 3rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #374151;
+    border-bottom: 1px solid var(--color-border-strong);
   }
 
   h3 {
@@ -142,7 +142,7 @@ article {
   hr {
     width: 30%;
     margin: 1rem auto;
-    border-top: 3px dotted #282c34;
+    border-top: 3px dotted var(--color-border-strong);
   }
 
   .table-wrapper {
@@ -161,13 +161,13 @@ article {
     font-size: 0.85rem;
     font-weight: bold;
     padding: 0.4rem 0.6rem;
-    border: 1px solid #374151;
+    border: 1px solid var(--color-border-strong);
   }
 
   td {
     font-size: 0.85rem;
     padding: 0.4rem 0.6rem;
-    border: 1px solid #374151;
+    border: 1px solid var(--color-border-strong);
   }
 
   img {
@@ -204,7 +204,7 @@ section[data-footnotes] {
     margin-top: 3rem;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #374151;
+    border-bottom: 1px solid var(--color-border-strong);
   }
 
   ol li::marker {
@@ -225,12 +225,6 @@ section[data-footnotes] {
 
 // Dark mode overrides
 .dark {
-  p code,
-  li code,
-  strong code {
-    background-color: #282c34;
-  }
-
   blockquote {
     border-left-color: theme('colors.primary-gray');
   }

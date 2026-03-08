@@ -1,0 +1,27 @@
+---
+import ContentRender from '@components/content-render.astro'
+import ProgressToc from '@components/progress-toc.astro'
+import SiteHeader from '@components/site-header.astro'
+import BaseLayout from '@layouts/base-layout.astro'
+import type { PostModel, EssayModel } from '@interfaces/post-model'
+import { render } from 'astro:content'
+
+interface Props {
+  entry: PostModel | EssayModel
+  from: 'post' | 'essay'
+}
+
+const { entry, from } = Astro.props
+const { headings: rawHeadings } = await render(entry)
+const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description ?? ''} hasComments>
+  <main id="main-content" class="tufte">
+    <SiteHeader />
+    <section class="my-10">
+      <ProgressToc headings={headings} />
+      <ContentRender post={entry} from={from} />
+    </section>
+  </main>
+</BaseLayout>
