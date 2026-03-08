@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: 'var(--color-primary)',
-        accent: active.accent,
+        accent: 'var(--color-accent)',
         muted: 'var(--color-muted)',
         'primary-dark': active['primary-dark'],
         'primary-gray': active['primary-gray'],

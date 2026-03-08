@@ -19,12 +19,14 @@ const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
     <text x="178" y="95" class="logo-text logo-text-accent">fall apart</text>
   </svg>
 </div>
-<div class="epigraph" lang="fr">
-  <p class="epigraph-text">
-    &#8220;Non pas des v&#233;rit&#233;s acquises, mais l&#8217;id&#233;e d&#8217;une recherche libre&#8221;
-  </p>
-  <p class="epigraph-author">&#8212; Maurice Merleau-Ponty</p>
-</div>
+<figure class="epigraph" lang="fr">
+  <blockquote>
+    <p class="epigraph-text">
+      &#8220;Non pas des v&#233;rit&#233;s acquises, mais l&#8217;id&#233;e d&#8217;une recherche libre&#8221;
+    </p>
+  </blockquote>
+  <figcaption class="epigraph-author">&#8212; <cite>Maurice Merleau-Ponty</cite></figcaption>
+</figure>
 
 <style>
   .site-logo :global(svg) {
@@ -60,6 +62,11 @@ const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
     width: auto;
     text-align: center;
     white-space: nowrap;
+  }
+
+  .epigraph blockquote {
+    margin: 0;
+    padding: 0;
   }
 
   .epigraph-text {

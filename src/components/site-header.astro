@@ -42,7 +42,7 @@ const currentPath = Astro.url.pathname;
   </nav>
   <p class="now-playing" id="nowPlayingBar">
     <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
-    <span id="nowPlaying">&nbsp;</span>
+    <span id="nowPlaying" aria-live="polite">&nbsp;</span>
     <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
   </p>
   <hr class="separator" />

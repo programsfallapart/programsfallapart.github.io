@@ -9,9 +9,19 @@ const { title, description, hasComments } = Astro.props.frontmatter || Astro.pro
 <html lang="en">
   <BaseHead title={title} description={description} hasComments={hasComments} />
   <body class="bg-primary-white text-primary-dark dark:bg-primary-dark dark:text-[#e4e4e7]">
-    <a href="#main-content" class="skip-link">Skip to content</a>
+    <a href="#main-content" class="skip-link" data-skip-link>Skip to content</a>
     <slot />
     <SiteFooter />
     <ScrollButton />
+    <script>
+      document.querySelector('[data-skip-link]')?.addEventListener('click', (e) => {
+        e.preventDefault()
+        const main = document.getElementById('main-content')
+        if (main) {
+          main.focus()
+          main.scrollIntoView()
+        }
+      })
+    </script>
   </body>
 </html>

@@ -36,8 +36,8 @@ const { page } = Astro.props
 ---
 
 <BaseLayout title={tags ?? 'tag'} description="blog tag">
-  <main id="main-content">
-    <SiteHeader />
+  <SiteHeader />
+  <main id="main-content" tabindex="-1">
     <h1 class="sr-only">Tags: {tags}</h1>
     <section class="py-5">
       <span class="section-heading">{tags}</span>

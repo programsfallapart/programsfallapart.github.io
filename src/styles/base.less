@@ -4,9 +4,9 @@
 
 // CSS custom properties
 :root {
-  --color-primary: #2d9d6a;
-  --color-accent: #c8935f;
-  --color-accent-muted: #c8935f99;
+  --color-primary: #237d54;
+  --color-accent: #8b6934;
+  --color-accent-muted: #8b693499;
   --color-muted: #656d76;
   --color-border: #e5e7eb;
   --color-border-strong: #374151;
@@ -55,6 +55,11 @@ a {
 :focus-visible {
   outline: 2px solid theme('colors.primary');
   outline-offset: 2px;
+}
+
+// Skip-link target should not show focus outline
+main[tabindex="-1"]:focus {
+  outline: none;
 }
 
 // Disable view transition animation for instant page switches

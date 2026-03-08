@@ -17,8 +17,8 @@ const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description ?? ''} hasComments>
-  <main id="main-content" class="tufte">
-    <SiteHeader />
+  <SiteHeader />
+  <main id="main-content" tabindex="-1" class="tufte">
     <section class="my-10">
       <ProgressToc headings={headings} />
       <ContentRender post={entry} from={from} />
