@@ -26,4 +26,19 @@ const essays = defineCollection({
   }),
 })
 
-export const collections = { posts, essays }
+const bookmarks = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/bookmarks' }),
+  schema: z.object({
+    isDraft: z.boolean().optional(),
+    title: z.string(),
+    url: z.string().url().optional(),
+    type: z.enum(['blog-post', 'video', 'paper', 'book', 'course']),
+    image: z.string().optional(),
+    rating: z.number().min(1).max(3).optional(),
+    tags: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    date: z.date().optional(),
+  }),
+})
+
+export const collections = { posts, essays, bookmarks }

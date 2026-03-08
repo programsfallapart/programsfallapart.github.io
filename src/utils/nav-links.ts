@@ -1,6 +1,7 @@
 export const navLinks = [
   { url: '/', title: 'Home' },
   { url: '/writings', title: 'Writings' },
+  { url: '/bookmarks', title: 'Bookmarks' },
   { url: '/about', title: 'About' },
 ]
 

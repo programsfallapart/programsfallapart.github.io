@@ -1,0 +1,199 @@
+---
+import BaseLayout from "@layouts/base-layout.astro";
+import SiteHeader from "@components/site-header.astro";
+import { getAllBookmarks } from "@utils/all-bookmarks";
+import { formatedYMD, isoDate } from "@utils/date-helper";
+import { computeTagCounts } from "@utils/tag-counts";
+
+const allBookmarks = await getAllBookmarks();
+
+const allTypes = [...new Set(allBookmarks.map((b) => b.data.type))];
+
+const allTags = [
+  ...new Set(allBookmarks.flatMap((b) => b.data.tags || []).filter(Boolean)),
+] as string[];
+
+const tagCountsByType = computeTagCounts(
+  allTags,
+  allBookmarks.map((b) => ({ tags: b.data.tags || [], category: b.data.type })),
+  allTypes,
+);
+
+const title = "Bookmarks";
+const description =
+  "A curated collection of articles, videos, papers, books, and courses worth revisiting.";
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader />
+  <main id="main-content" tabindex="-1">
+    <h1 class="sr-only">Bookmarks</h1>
+
+    <!-- Type filter -->
+    <div
+      class="category-toggle flex justify-center gap-0 my-8"
+      role="group"
+      aria-label="Filter by type"
+    >
+      <button class="cat-btn active" data-cat="all" aria-pressed="true"
+        >All</button
+      >
+      {
+        allTypes.map((type) => (
+          <button class="cat-btn" data-cat={type} aria-pressed="false">
+            {type.replace(/-/g, " ")}
+          </button>
+        ))
+      }
+    </div>
+
+    <!-- Tag filter pills -->
+    {
+      allTags.length > 0 && (
+        <div
+          class="tags-bar flex flex-wrap gap-2 mb-8"
+          role="group"
+          aria-label="Filter by tag"
+        >
+          <button class="tag-pill active" data-tag="all" aria-pressed="true">
+            All
+          </button>
+          {allTags.map((tag) => (
+            <button
+              class="tag-pill"
+              data-tag={tag}
+              aria-pressed="false"
+              data-count-all={tagCountsByType[tag].all}
+              {...Object.fromEntries(
+                allTypes.map((type) => [
+                  `data-count-${type}`,
+                  tagCountsByType[tag][type],
+                ]),
+              )}
+            >
+              {tag.replace(/-/g, " ")}
+              <sup class="tag-count">{tagCountsByType[tag].all}</sup>
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    <!-- Search -->
+    <section class="search-bar mb-8">
+      <label for="search-input" class="sr-only">Search bookmarks</label>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search bookmarks..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </section>
+
+    <!-- Rating legend -->
+    <div class="rating-legend">
+      <p class="rating-intro">
+        Rated by impact on my thinking (which, yes, is like grading my own
+        homework)
+      </p>
+      <div class="rating-stars">
+        <span><span class="bookmark-rating" aria-hidden="true">★☆☆</span> Caught my eye</span>
+        <span><span class="bookmark-rating" aria-hidden="true">★★☆</span> Stayed with me</span>
+        <span><span class="bookmark-rating" aria-hidden="true">★★★</span> Rewired me</span>
+      </div>
+    </div>
+
+    <!-- Result count -->
+    <p class="result-count mb-4" aria-live="polite"></p>
+
+    <!-- Bookmarks list -->
+    <section class="writings-section bookmarks-section">
+      {
+        allBookmarks.map((bookmark) => {
+          const displayTitle = bookmark.data.title || bookmark.data.url;
+          return (
+            <div
+              class="writing-row flex items-baseline gap-x-8"
+              data-kind={bookmark.data.type}
+              data-tags={JSON.stringify(bookmark.data.tags || [])}
+              data-title={displayTitle}
+            >
+              <span class="kind-label">
+                {bookmark.data.type.replace(/-/g, " ")}
+              </span>
+              <a
+                href={bookmark.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex-1 truncate"
+              >
+                {displayTitle}
+                <span class="sr-only"> (opens in new tab)</span>
+              </a>
+              {bookmark.data.rating && (
+                <span
+                  class="bookmark-rating"
+                  role="img"
+                  aria-label={`Rating: ${bookmark.data.rating} out of 3, ${["Caught my eye", "Stayed with me", "Rewired me"][bookmark.data.rating - 1]}`}
+                >
+                  {"★".repeat(bookmark.data.rating)}
+                  {"☆".repeat(3 - bookmark.data.rating)}
+                </span>
+              )}
+              {bookmark.data.date && (
+                <time
+                  class="date-mono"
+                  datetime={isoDate(bookmark.data.date as Date)}
+                >
+                  {formatedYMD(bookmark.data.date as Date)}
+                </time>
+              )}
+            </div>
+          );
+        })
+      }
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  import "../scripts/list-filter";
+</script>
+
+<style>
+  .bookmarks-section {
+    contain: layout;
+  }
+
+  .kind-label {
+    width: 5rem;
+  }
+
+  .rating-legend {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-family: "JetBrains Mono";
+    font-size: 0.55rem;
+    letter-spacing: 0.5px;
+    color: theme("colors.muted");
+  }
+
+  .rating-intro {
+    margin-bottom: 0.4rem;
+  }
+
+  .rating-stars {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .bookmark-rating {
+    font-size: 0.55rem;
+    color: var(--color-accent);
+    letter-spacing: -1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+</style>

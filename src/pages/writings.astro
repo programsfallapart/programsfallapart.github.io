@@ -5,6 +5,7 @@ import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD, isoDate } from "@utils/date-helper";
 import { getPostLink } from "@utils/post-link";
+import { computeTagCounts } from "@utils/tag-counts";
 
 const allPosts = await getAllPosts();
 const allEssays = await getAllEssays();
@@ -18,14 +19,15 @@ const allTags = [
   ),
 ] as string[];
 
-const tagCountsByCategory = allTags.reduce(
-  (acc, tag) => {
-    const posts = allPosts.filter((p) => p.data.tags?.includes(tag)).length;
-    const essays = allEssays.filter((e) => e.data.tags?.includes(tag)).length;
-    acc[tag] = { all: posts + essays, posts, essays };
-    return acc;
-  },
-  {} as Record<string, { all: number; posts: number; essays: number }>,
+const categories = ["posts", "essays"];
+
+const tagCountsByCategory = computeTagCounts(
+  allTags,
+  [
+    ...allPosts.map((p) => ({ tags: p.data.tags || [], category: "posts" })),
+    ...allEssays.map((e) => ({ tags: e.data.tags || [], category: "essays" })),
+  ],
+  categories,
 );
 
 const title = "Writings";
@@ -73,7 +75,7 @@ const description = "Writings on software engineering, system design, and the co
             data-count-posts={tagCountsByCategory[tag].posts}
             data-count-essays={tagCountsByCategory[tag].essays}
           >
-            {tag.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+            {tag.replace(/-/g, " ")}
             <sup class="tag-count">{tagCountsByCategory[tag].all}</sup>
           </button>
         ))
@@ -127,6 +129,7 @@ const description = "Writings on software engineering, system design, and the co
             <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
               {essay.data.title}
             </a>
+            <span class="date-mono">-</span>
           </div>
         ))
       }
@@ -135,133 +138,16 @@ const description = "Writings on software engineering, system design, and the co
 </BaseLayout>
 
 <script>
-  import "../scripts/writings-filter";
+  import "../scripts/list-filter";
 </script>
 
 <style>
-  .cat-btn {
-    font-family: "JetBrains Mono";
-    font-size: 0.65rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 0.35rem 1rem;
-    border: 1px solid theme("colors.muted");
-    background: transparent;
-    color: theme("colors.muted");
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .cat-btn:first-child {
-    border-radius: 4px 0 0 4px;
-  }
-
-  .cat-btn:last-child {
-    border-radius: 0 4px 4px 0;
-  }
-
-  .cat-btn + .cat-btn {
-    border-left: none;
-  }
-
-  .cat-btn:hover,
-  .cat-btn.active {
-    color: theme("colors.primary");
-    border-color: theme("colors.primary");
-  }
-
-  .cat-btn.active + .cat-btn {
-    border-left-color: theme("colors.primary");
-  }
-
-  .tag-pill {
-    font-family: "JetBrains Mono";
-    font-size: 0.6rem;
-    letter-spacing: 1px;
-    padding: 0.2rem 0.6rem;
-    border: 1px solid theme("colors.muted");
-    border-radius: 999px;
-    background: transparent;
-    color: theme("colors.muted");
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .tag-pill:hover,
-  .tag-pill.active {
-    color: theme("colors.primary");
-    border-color: theme("colors.primary");
-  }
-
-  .tag-count {
-    font-size: 0.55rem;
-    margin-left: 0.2rem;
-    opacity: 0.7;
-  }
-
-  .writing-row {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .writing-row a {
-    text-decoration: none;
-  }
-
-  #search-input {
-    width: 100%;
-    font-family: "JetBrains Mono";
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid theme("colors.muted");
-    border-radius: 4px;
-    background: transparent;
-    color: inherit;
-    transition: border-color 0.15s ease;
-  }
-
-  #search-input::placeholder {
-    color: theme("colors.muted");
-    opacity: 0.6;
-  }
-
-  #search-input:focus {
-    border-color: theme("colors.primary");
-    outline: 2px solid theme("colors.primary");
-    outline-offset: 2px;
-  }
-
-  .result-count {
-    font-family: "JetBrains Mono";
-    font-size: 0.6rem;
-    letter-spacing: 1px;
-    color: theme("colors.muted");
-  }
-
   .writings-section {
     contain: layout;
   }
 
   .kind-label {
-    font-family: "JetBrains Mono";
-    font-size: 0.55rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: theme("colors.muted");
-    white-space: nowrap;
     width: 3rem;
-    flex-shrink: 0;
   }
 
-  .writing-row .date-mono {
-    font-size: 0.55rem;
-  }
-
-  :global(.search-highlight) {
-    background: theme("colors.accent");
-    color: theme("colors.primary-dark");
-    border-radius: 2px;
-    padding: 0 2px;
-  }
 </style>

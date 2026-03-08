@@ -1,5 +1,4 @@
-function initWritings() {
-  const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
+function initListFilter() {
   const writingsSection =
     document.querySelector<HTMLElement>(".writings-section");
   if (!writingsSection) return;
@@ -9,9 +8,15 @@ function initWritings() {
   );
   const searchInput = document.getElementById(
     "search-input",
-  ) as HTMLInputElement;
+  ) as HTMLInputElement | null;
   const resultCount = document.querySelector<HTMLElement>(".result-count")!;
 
+  const allCatBtn = document.querySelector<HTMLButtonElement>(
+    '.cat-btn[data-cat="all"]',
+  );
+  const filterCatBtns = document.querySelectorAll<HTMLButtonElement>(
+    '.cat-btn:not([data-cat="all"])',
+  );
   const allTagPill = document.querySelector<HTMLButtonElement>(
     '.tag-pill[data-tag="all"]',
   );
@@ -19,7 +24,6 @@ function initWritings() {
     '.tag-pill:not([data-tag="all"])',
   );
 
-  // Pre-parse tags once instead of on every filter
   const rowData = Array.from(rows).map((row) => ({
     el: row,
     kind: row.dataset.kind!,
@@ -28,8 +32,8 @@ function initWritings() {
     link: row.querySelector("a")!,
   }));
 
-  let activeCat = "all";
   let searchQuery = "";
+  const activeCats = new Set<string>();
   const activeTags = new Set<string>();
 
   function highlightText(text: string, query: string): string {
@@ -39,31 +43,54 @@ function initWritings() {
     return text.replace(re, `<mark class="search-highlight">$1</mark>`);
   }
 
-  function updateTagCounts() {
-    filterTagPills.forEach((pill) => {
-      const count =
-        pill.dataset[
-          `count${activeCat.charAt(0).toUpperCase() + activeCat.slice(1)}`
-        ] || "0";
-      const sup = pill.querySelector(".tag-count");
-      if (sup) sup.textContent = count;
-    });
-  }
+  function syncButtons() {
+    const noCats = activeCats.size === 0;
+    const noTags = activeTags.size === 0;
 
-  function updateVisibility() {
-    const showAllTags = activeTags.size === 0;
-    allTagPill?.classList.toggle("active", showAllTags);
-    allTagPill?.setAttribute("aria-pressed", String(showAllTags));
+    allCatBtn?.classList.toggle("active", noCats);
+    allCatBtn?.setAttribute("aria-pressed", String(noCats));
+    filterCatBtns.forEach((b) => {
+      const isActive = activeCats.has(b.dataset.cat!);
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-pressed", String(isActive));
+    });
+
+    allTagPill?.classList.toggle("active", noTags);
+    allTagPill?.setAttribute("aria-pressed", String(noTags));
     filterTagPills.forEach((p) => {
       const isActive = activeTags.has(p.dataset.tag!);
       p.classList.toggle("active", isActive);
       p.setAttribute("aria-pressed", String(isActive));
     });
+  }
+
+  function updateTagCounts() {
+    filterTagPills.forEach((pill) => {
+      const sup = pill.querySelector(".tag-count");
+      if (!sup) return;
+      if (activeCats.size === 0) {
+        sup.textContent = pill.dataset.countAll || "0";
+      } else {
+        let total = 0;
+        activeCats.forEach((cat) => {
+          const key = `count-${cat}`.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+          total += parseInt(pill.dataset[key] || "0", 10);
+        });
+        sup.textContent = String(total);
+      }
+    });
+  }
+
+  function updateVisibility() {
+    const showAllCats = activeCats.size === 0;
+    const showAllTags = activeTags.size === 0;
+
+    syncButtons();
 
     let visible = 0;
     const query = searchQuery.toLowerCase();
     rowData.forEach(({ el, kind, tags, title, link }) => {
-      const catMatch = activeCat === "all" || kind === activeCat;
+      const catMatch = showAllCats || activeCats.has(kind);
       const tagMatch = showAllTags || tags.some((t) => activeTags.has(t));
       const searchMatch = !searchQuery || title.toLowerCase().includes(query);
 
@@ -80,22 +107,28 @@ function initWritings() {
   }
 
   let searchTimer: number;
-  searchInput.addEventListener("input", () => {
+  searchInput?.addEventListener("input", () => {
     clearTimeout(searchTimer);
     searchTimer = window.setTimeout(() => {
-      searchQuery = searchInput.value.trim();
+      searchQuery = searchInput!.value.trim();
       updateVisibility();
     }, 100);
   });
 
-  catBtns.forEach((btn) => {
+  allCatBtn?.addEventListener("click", () => {
+    activeCats.clear();
+    updateTagCounts();
+    updateVisibility();
+  });
+
+  filterCatBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      activeCat = btn.dataset.cat!;
-      catBtns.forEach((b) => {
-        const isActive = b === btn;
-        b.classList.toggle("active", isActive);
-        b.setAttribute("aria-pressed", String(isActive));
-      });
+      const cat = btn.dataset.cat!;
+      if (activeCats.has(cat)) {
+        activeCats.delete(cat);
+      } else {
+        activeCats.add(cat);
+      }
       updateTagCounts();
       updateVisibility();
     });
@@ -121,4 +154,4 @@ function initWritings() {
   updateVisibility();
 }
 
-document.addEventListener("astro:page-load", initWritings);
+document.addEventListener("astro:page-load", initListFilter);

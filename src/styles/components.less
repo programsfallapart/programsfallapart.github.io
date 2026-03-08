@@ -64,6 +64,122 @@
   }
 }
 
+// Category toggle buttons
+.cat-btn {
+  font-family: @font-mono;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0.35rem 1rem;
+  border: 1px solid theme('colors.muted');
+  background: transparent;
+  color: theme('colors.muted');
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:first-child { border-radius: 4px 0 0 4px; }
+  &:last-child { border-radius: 0 4px 4px 0; }
+  & + & { border-left: none; }
+
+  &:hover, &.active {
+    color: theme('colors.primary');
+    border-color: theme('colors.primary');
+  }
+
+  &.active + & {
+    border-left-color: theme('colors.primary');
+  }
+}
+
+// Tag filter pills
+.tag-pill {
+  font-family: @font-mono;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid theme('colors.muted');
+  border-radius: 999px;
+  background: transparent;
+  color: theme('colors.muted');
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover, &.active {
+    color: theme('colors.primary');
+    border-color: theme('colors.primary');
+  }
+}
+
+.tag-count {
+  font-size: 0.55rem;
+  margin-left: 0.2rem;
+  opacity: 0.7;
+}
+
+// Search input
+.search-bar input {
+  width: 100%;
+  font-family: @font-mono;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid theme('colors.muted');
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  transition: border-color 0.15s ease;
+
+  &::placeholder {
+    color: theme('colors.muted');
+    opacity: 0.6;
+  }
+
+  &:focus {
+    border-color: theme('colors.primary');
+    outline: 2px solid theme('colors.primary');
+    outline-offset: 2px;
+  }
+}
+
+// Search highlight
+.search-highlight {
+  background: theme('colors.accent');
+  color: theme('colors.primary-dark');
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+// Result count label
+.result-count {
+  font-family: @font-mono;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: theme('colors.muted');
+}
+
+// Row-based list items (used in Writings + Bookmarks)
+.writing-row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+
+  a { text-decoration: none; }
+
+  &[data-hidden] { display: none; }
+
+  .date-mono { font-size: 0.55rem; }
+}
+
+// Type/kind label in rows
+.kind-label {
+  font-family: @font-mono;
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: theme('colors.muted');
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 // Thin horizontal rule used between page sections
 .separator {
   width: 60%;
