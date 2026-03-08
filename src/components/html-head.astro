@@ -58,6 +58,7 @@ const { title, description, image, hasComments } = Astro.props;
   <meta property="twitter:description" content={description} />
   {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
 
+  {description && <meta name="description" content={description} />}
   <title>{title}</title>
   <ClientRouter />
 </head>

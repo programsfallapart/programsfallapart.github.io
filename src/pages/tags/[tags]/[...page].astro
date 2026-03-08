@@ -35,7 +35,7 @@ const { tags } = Astro.params
 const { page } = Astro.props
 ---
 
-<BaseLayout title={tags ?? 'tag'} description="blog tag">
+<BaseLayout title={tags ?? 'tag'} description={`Writings on ${tags}.`}>
   <SiteHeader />
   <main id="main-content" tabindex="-1">
     <h1 class="sr-only">Tags: {tags}</h1>

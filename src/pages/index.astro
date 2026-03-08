@@ -10,7 +10,7 @@ const latestPosts = (await getAllPosts()).slice(0, 5);
 const latestEssays = (await getAllEssays()).slice(0, 5);
 
 const title = "Programs Fall Apart";
-const description = "Home - Programs Fall Apart";
+const description = "Software examined slowly. Writings on programming, architecture, and the connections between disciplines that specialization taught us to ignore.";
 ---
 
 <BaseLayout title={title} description={description}>
@@ -25,7 +25,10 @@ const description = "Home - Programs Fall Apart";
         {
           latestEssays.map((essay) => (
             <div class="post-row flex items-baseline gap-x-8">
-              <a class="flex-1 truncate" href={`/essays/${essay.data.abbrlink}`}>
+              <a
+                class="flex-1 truncate"
+                href={`/essays/${essay.data.abbrlink}`}
+              >
                 {essay.data.title}
               </a>
             </div>
@@ -46,7 +49,12 @@ const description = "Home - Programs Fall Apart";
               <a class="flex-1 truncate" href={getPostLink(post)}>
                 {post.data.title}
               </a>
-              <time class="date-mono date-small" datetime={isoDate(post.data.date)}>{formatedYMD(post.data.date)}</time>
+              <time
+                class="date-mono date-small"
+                datetime={isoDate(post.data.date)}
+              >
+                {formatedYMD(post.data.date)}
+              </time>
             </div>
           ))
         }
