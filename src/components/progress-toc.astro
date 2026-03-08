@@ -275,9 +275,5 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initToc);
-  } else {
-    initToc();
-  }
+  document.addEventListener('astro:page-load', initToc)
 </script>
