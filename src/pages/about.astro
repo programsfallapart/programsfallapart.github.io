@@ -9,14 +9,14 @@ const description = "About - Programs Fall Apart";
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
+  <main id="main-content">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
-    <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
+    <nav class="nav-links my-10 flex items-center justify-center gap-10" aria-label="Main">
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]} aria-current={isActivePath(item.url, Astro.url.pathname) ? 'page' : undefined}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
-    </section>
+    </nav>
     <hr class="separator" />
     <section>
       <div>
@@ -44,7 +44,8 @@ const description = "About - Programs Fall Apart";
           >, or <a
             href="https://twitter.com/pfa_amira"
             target="_blank"
-            >twitter</a
+            rel="noopener noreferrer"
+            >twitter <span class="sr-only">(opens in new tab)</span></a
           > away. Let’s see where this rabbit hole goes.
         </p>
       </div>

@@ -8,8 +8,8 @@ interface Props {
 const { page } = Astro.props
 ---
 
-<span class="mono" style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">
-{page.url.prev ? <a href={page.url.prev}>Prev</a> : null}
-{!page.url.prev && !page.url.next ? null : page.currentPage}
-{page.url.next ? <a href={page.url.next}>Next</a> : null}
-</span>
+<nav aria-label="Pagination" class="mono" style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">
+{page.url.prev ? <a href={page.url.prev} aria-label={`Previous page, page ${page.currentPage - 1}`}>Prev</a> : null}
+{!page.url.prev && !page.url.next ? null : <span aria-current="page">{page.currentPage}</span>}
+{page.url.next ? <a href={page.url.next} aria-label={`Next page, page ${page.currentPage + 1}`}>Next</a> : null}
+</nav>

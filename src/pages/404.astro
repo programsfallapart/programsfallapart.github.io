@@ -9,14 +9,14 @@ const description = 'Page Not Found'
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
+  <main id="main-content">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
-    <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
+    <nav class="nav-links my-10 flex items-center justify-center gap-10" aria-label="Main">
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]} aria-current={isActivePath(item.url, Astro.url.pathname) ? 'page' : undefined}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
-    </section>
+    </nav>
     <hr class="separator" />
     <section class="mono flex justify-center py-10 text-4xl text-muted" style="letter-spacing: 10px; text-transform: uppercase;">404</section>
   </main>

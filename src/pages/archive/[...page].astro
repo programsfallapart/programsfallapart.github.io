@@ -4,7 +4,7 @@ import type { Page, PaginateFunction } from 'astro'
 import Pagination from '@components/pagination.astro'
 import BaseLayout from '@layouts/base-layout.astro'
 import { getAllPosts } from '@utils/all-posts'
-import { formatedYMD } from '@utils/date-helper'
+import { formatedYMD, isoDate } from '@utils/date-helper'
 import { getPostLink } from '@utils/post-link'
 import AvatarImage from "../../components/avatar-image.astro";
 import ThemeButton from "../../components/theme-button.astro";
@@ -33,24 +33,24 @@ const grouped = page.data.reduce((acc: Record<string, typeof page.data>, post) =
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
+  <main id="main-content">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
-    <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>))}
+    <nav class="nav-links my-10 flex items-center justify-center gap-10" aria-label="Main">
+      {navLinks.map((item) => (<a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]} aria-current={isActivePath(item.url, Astro.url.pathname) ? 'page' : undefined}>{item.title}</a>))}
       <ThemeButton class="absolute right-0" />
-    </section>
+    </nav>
     <hr class="separator" />
     <section>
       {
         Object.entries(grouped).map(([monthYear, posts]) => (
           <div class="mb-10">
-            <h3 class="section-heading mb-4">{monthYear}</h3>
+            <h2 class="section-heading mb-4">{monthYear}</h2>
             <div class="flex flex-col">
               {posts.map((post) => (
-                <div class="post-row flex items-baseline gap-x-4">
-                  <span class="date-mono">{formatedYMD(post.data.date)}</span>
+                <div class="post-row flex items-baseline gap-x-8">
+                  <time class="date-mono" datetime={isoDate(post.data.date)}>{formatedYMD(post.data.date)}</time>
                   <a href={getPostLink(post)} class="flex-1 truncate">
                     {post.data.title}
                   </a>

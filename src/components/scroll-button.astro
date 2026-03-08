@@ -6,6 +6,9 @@
   p-id="9313"
   width="45"
   height="45"
+  role="button"
+  tabindex="0"
+  aria-label="Scroll to top or bottom"
 >
   <path
     d="M535.12 442.432v210.016a16 16 0 0 1-16 16h-16.16a16 16 0 0 1-16-16V440.208l-32.88 32.864a16 16 0 0 1-11.312 4.688h-28.304a14.464 14.464 0 0 1-10.24-24.688l97.824-97.808a11.136 11.136 0 0 1 15.744 0l97.808 97.808a14.464 14.464 0 0 1-10.24 24.688h-28.288a16 16 0 0 1-11.312-4.688l-30.64-30.64zM512 800c159.056 0 288-128.944 288-288s-128.944-288-288-288-288 128.944-288 288 128.944 288 288 288z m0 48c-185.568 0-336-150.432-336-336s150.432-336 336-336 336 150.432 336 336-150.432 336-336 336z"
@@ -27,27 +30,30 @@
         if (window.scrollY !== 0) {
           navIcon.classList.remove('rotate-180')
           navIcon.classList.add('to-down', 'rotate-0')
+          navIcon.setAttribute('aria-label', 'Scroll to top')
         } else {
           navIcon.classList.add('rotate-180')
           navIcon.classList.remove('to-down', 'rotate-0')
+          navIcon.setAttribute('aria-label', 'Scroll to bottom')
         }
         scrollTicking = false
       })
     }, { passive: true })
 
-    navIcon.addEventListener('click', () => {
-      // 页面总高
+    function handleActivate() {
       const totalH = document.body.scrollHeight || document.documentElement.scrollHeight
       if (navIcon.classList.contains('to-down')) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
-        window.scrollTo({
-          top: totalH,
-          behavior: 'smooth',
-        })
+        window.scrollTo({ top: totalH, behavior: 'smooth' })
+      }
+    }
+
+    navIcon.addEventListener('click', handleActivate)
+    navIcon.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        handleActivate()
       }
     })
   }

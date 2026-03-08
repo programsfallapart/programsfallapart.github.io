@@ -4,7 +4,7 @@ import AvatarImage from "@components/avatar-image.astro";
 import ThemeButton from "@components/theme-button.astro";
 import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
-import { formatedYMD } from "@utils/date-helper";
+import { formatedYMD, isoDate } from "@utils/date-helper";
 import { getPostLink } from "@utils/post-link";
 import { navLinks, isActivePath } from "@utils/nav-links";
 import { createRequire } from "node:module";
@@ -15,10 +15,12 @@ const allPosts = await getAllPosts();
 const allEssays = await getAllEssays();
 
 const allTags = [
-  ...new Set([
-    ...allPosts.flatMap((p) => p.data.tags),
-    ...allEssays.flatMap((e) => e.data.tags),
-  ].filter(Boolean)),
+  ...new Set(
+    [
+      ...allPosts.flatMap((p) => p.data.tags),
+      ...allEssays.flatMap((e) => e.data.tags),
+    ].filter(Boolean),
+  ),
 ] as string[];
 
 const tagCountsByCategory = allTags.reduce(
@@ -28,7 +30,7 @@ const tagCountsByCategory = allTags.reduce(
     acc[tag] = { all: posts + essays, posts, essays };
     return acc;
   },
-  {} as Record<string, { all: number; posts: number; essays: number }>
+  {} as Record<string, { all: number; posts: number; essays: number }>,
 );
 
 const title = "Writings";
@@ -36,33 +38,65 @@ const description = "Writings - Programs Fall Apart";
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
+  <main id="main-content">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
-    <section class="nav-links my-10 flex items-center justify-center gap-10">
-      {navLinks.map((item) => (
-        <a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>
-      ))}
+    <nav
+      class="nav-links my-10 flex items-center justify-center gap-10"
+      aria-label="Main"
+    >
+      {
+        navLinks.map((item) => (
+          <a
+            href={item.url}
+            class:list={[
+              { "text-primary": isActivePath(item.url, Astro.url.pathname) },
+            ]}
+            aria-current={
+              isActivePath(item.url, Astro.url.pathname) ? "page" : undefined
+            }
+          >
+            {item.title}
+          </a>
+        ))
+      }
       <ThemeButton class="absolute right-0" />
-    </section>
+    </nav>
     <hr class="separator" />
 
     <!-- Category toggle -->
-    <section class="category-toggle flex justify-center gap-0 my-8">
-      <button class="cat-btn active" data-cat="all">All</button>
-      <button class="cat-btn" data-cat="posts">Posts</button>
-      <button class="cat-btn" data-cat="essays">Essays</button>
-    </section>
+    <div
+      class="category-toggle flex justify-center gap-0 my-8"
+      role="group"
+      aria-label="Filter by category"
+    >
+      <button class="cat-btn active" data-cat="all" aria-pressed="true"
+        >All</button
+      >
+      <button class="cat-btn" data-cat="posts" aria-pressed="false"
+        >Posts</button
+      >
+      <button class="cat-btn" data-cat="essays" aria-pressed="false"
+        >Essays</button
+      >
+    </div>
 
     <!-- Tag filter pills -->
-    <section class="tags-bar flex flex-wrap gap-2 mb-8">
-      <button class="tag-pill active" data-tag="all">All</button>
+    <div
+      class="tags-bar flex flex-wrap gap-2 mb-8"
+      role="group"
+      aria-label="Filter by tag"
+    >
+      <button class="tag-pill active" data-tag="all" aria-pressed="true"
+        >All</button
+      >
       {
         allTags.map((tag) => (
           <button
             class="tag-pill"
             data-tag={tag}
+            aria-pressed="false"
             data-count-all={tagCountsByCategory[tag].all}
             data-count-posts={tagCountsByCategory[tag].posts}
             data-count-essays={tagCountsByCategory[tag].essays}
@@ -72,18 +106,29 @@ const description = "Writings - Programs Fall Apart";
           </button>
         ))
       }
-    </section>
+    </div>
 
     <!-- Search -->
     <section class="search-bar mb-8">
-      <input type="text" id="search-input" placeholder="Search writings..." autocomplete="off" spellcheck="false" />
+      <label for="search-input" class="sr-only">Search writings</label>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search writings..."
+        autocomplete="off"
+        spellcheck="false"
+      />
     </section>
 
     <!-- Result count -->
-    <p class="result-count mb-4"></p>
+    <p class="result-count mb-4" aria-live="polite"></p>
 
     <!-- Writings list -->
-    <section class="writings-section" data-accent={active.accent} data-primary-dark={active["primary-dark"]}>
+    <section
+      class="writings-section"
+      data-accent={active.accent}
+      data-primary-dark={active["primary-dark"]}
+    >
       {
         allPosts.map((post) => (
           <div
@@ -96,7 +141,9 @@ const description = "Writings - Programs Fall Apart";
             <a href={getPostLink(post)} class="flex-1 truncate">
               {post.data.title}
             </a>
-            <span class="date-mono">{formatedYMD(post.data.date)}</span>
+            <time class="date-mono" datetime={isoDate(post.data.date)}>
+              {formatedYMD(post.data.date)}
+            </time>
           </div>
         ))
       }
@@ -122,15 +169,24 @@ const description = "Writings - Programs Fall Apart";
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const catBtns = document.querySelectorAll<HTMLButtonElement>(".cat-btn");
-    const writingsSection = document.querySelector<HTMLElement>(".writings-section")!;
-    const rows = document.querySelectorAll<HTMLElement>(".writings-section .writing-row");
-    const searchInput = document.getElementById("search-input") as HTMLInputElement;
+    const writingsSection =
+      document.querySelector<HTMLElement>(".writings-section")!;
+    const rows = document.querySelectorAll<HTMLElement>(
+      ".writings-section .writing-row",
+    );
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
     const accentColor = writingsSection.dataset.accent!;
     const primaryDark = writingsSection.dataset.primaryDark!;
     const resultCount = document.querySelector<HTMLElement>(".result-count")!;
 
-    const allTagPill = document.querySelector<HTMLButtonElement>('.tag-pill[data-tag="all"]');
-    const filterTagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill:not([data-tag="all"])');
+    const allTagPill = document.querySelector<HTMLButtonElement>(
+      '.tag-pill[data-tag="all"]',
+    );
+    const filterTagPills = document.querySelectorAll<HTMLButtonElement>(
+      '.tag-pill:not([data-tag="all"])',
+    );
 
     // Pre-parse tags once instead of on every filter
     const rowData = Array.from(rows).map((row) => ({
@@ -149,12 +205,15 @@ const description = "Writings - Programs Fall Apart";
       if (!query) return text;
       const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const re = new RegExp(`(${escaped})`, "gi");
-      return text.replace(re, `<mark style="background:${accentColor};color:${primaryDark};border-radius:2px;padding:0 2px">$1</mark>`);
+      return text.replace(re, `<mark class="search-highlight">$1</mark>`);
     }
 
     function updateTagCounts() {
       filterTagPills.forEach((pill) => {
-        const count = pill.dataset[`count${activeCat.charAt(0).toUpperCase() + activeCat.slice(1)}`] || "0";
+        const count =
+          pill.dataset[
+            `count${activeCat.charAt(0).toUpperCase() + activeCat.slice(1)}`
+          ] || "0";
         const sup = pill.querySelector(".tag-count");
         if (sup) sup.textContent = count;
       });
@@ -163,7 +222,12 @@ const description = "Writings - Programs Fall Apart";
     function updateVisibility() {
       const showAllTags = activeTags.size === 0;
       allTagPill?.classList.toggle("active", showAllTags);
-      filterTagPills.forEach((p) => p.classList.toggle("active", activeTags.has(p.dataset.tag!)));
+      allTagPill?.setAttribute("aria-pressed", String(showAllTags));
+      filterTagPills.forEach((p) => {
+        const isActive = activeTags.has(p.dataset.tag!);
+        p.classList.toggle("active", isActive);
+        p.setAttribute("aria-pressed", String(isActive));
+      });
 
       let visible = 0;
       const query = searchQuery.toLowerCase();
@@ -175,7 +239,10 @@ const description = "Writings - Programs Fall Apart";
         const show = catMatch && tagMatch && searchMatch;
         el.style.display = show ? "" : "none";
         if (show) visible++;
-        link.innerHTML = searchQuery && searchMatch ? highlightText(title, searchQuery) : title;
+        link.innerHTML =
+          searchQuery && searchMatch
+            ? highlightText(title, searchQuery)
+            : title;
       });
 
       resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;
@@ -193,7 +260,11 @@ const description = "Writings - Programs Fall Apart";
     catBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         activeCat = btn.dataset.cat!;
-        catBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        catBtns.forEach((b) => {
+          const isActive = b === btn;
+          b.classList.toggle("active", isActive);
+          b.setAttribute("aria-pressed", String(isActive));
+        });
         updateTagCounts();
         updateVisibility();
       });
@@ -281,6 +352,15 @@ const description = "Writings - Programs Fall Apart";
     opacity: 0.7;
   }
 
+  .writing-row {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+
+    a {
+      text-decoration: none;
+    }
+  }
+
   .writing-row a {
     text-decoration: none;
   }
@@ -295,7 +375,6 @@ const description = "Writings - Programs Fall Apart";
     border-radius: 4px;
     background: transparent;
     color: inherit;
-    outline: none;
     transition: border-color 0.15s ease;
   }
 
@@ -306,6 +385,8 @@ const description = "Writings - Programs Fall Apart";
 
   #search-input:focus {
     border-color: theme("colors.primary");
+    outline: 2px solid theme("colors.primary");
+    outline-offset: 2px;
   }
 
   .result-count {
@@ -328,5 +409,16 @@ const description = "Writings - Programs Fall Apart";
     white-space: nowrap;
     width: 3rem;
     flex-shrink: 0;
+  }
+
+  .writing-row .date-mono {
+    font-size: 0.55rem;
+  }
+
+  :global(.search-highlight) {
+    background: theme("colors.accent");
+    color: theme("colors.primary-dark");
+    border-radius: 2px;
+    padding: 0 2px;
   }
 </style>

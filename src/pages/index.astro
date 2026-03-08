@@ -4,7 +4,7 @@ import ThemeButton from "@components/theme-button.astro";
 import BaseLayout from "@layouts/base-layout.astro";
 import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
-import { formatedYMD } from "@utils/date-helper";
+import { formatedYMD, isoDate } from "@utils/date-helper";
 import { navLinks, isActivePath } from "@utils/nav-links";
 import { getPostLink } from "@utils/post-link";
 
@@ -16,16 +16,16 @@ const description = "Home - Programs Fall Apart";
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
+  <main id="main-content">
     <section class="flex flex-col items-center justify-center">
       <AvatarImage />
     </section>
-    <section class="nav-links my-10 flex items-center justify-center gap-10">
+    <nav class="nav-links my-10 flex items-center justify-center gap-10" aria-label="Main">
       {navLinks.map((item) => (
-        <a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]}>{item.title}</a>
+        <a href={item.url} class:list={[{ 'text-primary': isActivePath(item.url, Astro.url.pathname) }]} aria-current={isActivePath(item.url, Astro.url.pathname) ? 'page' : undefined}>{item.title}</a>
       ))}
       <ThemeButton class="absolute right-0" />
-    </section>
+    </nav>
     <hr class="separator" />
 
     <!-- Latest Essays -->
@@ -36,7 +36,7 @@ const description = "Home - Programs Fall Apart";
       <div class="flex flex-col">
         {
           latestEssays.map((essay) => (
-            <div class="post-row flex items-baseline gap-x-4">
+            <div class="post-row flex items-baseline gap-x-8">
               <a class="flex-1 truncate" href={`/essays/${essay.data.abbrlink}`}>
                 {essay.data.title}
               </a>
@@ -54,11 +54,11 @@ const description = "Home - Programs Fall Apart";
       <div class="flex flex-col">
         {
           latestPosts.map((post) => (
-            <div class="post-row flex items-baseline gap-x-4">
-              <span class="date-mono">{formatedYMD(post.data.date)}</span>
+            <div class="post-row flex items-baseline gap-x-8">
               <a class="flex-1 truncate" href={getPostLink(post)}>
                 {post.data.title}
               </a>
+              <time class="date-mono date-small" datetime={isoDate(post.data.date)}>{formatedYMD(post.data.date)}</time>
             </div>
           ))
         }
@@ -75,5 +75,9 @@ const description = "Home - Programs Fall Apart";
 
   .heading-link:hover {
     color: theme("colors.primary");
+  }
+
+  .date-small {
+    font-size: 0.55rem;
   }
 </style>

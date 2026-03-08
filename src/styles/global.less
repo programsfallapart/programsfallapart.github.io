@@ -15,9 +15,31 @@
 // Primary color — muted in light mode, vibrant in dark
 :root {
   --color-primary: #2d9d6a;
+  --color-muted: #656d76;
+  --color-border: #e5e7eb;
 }
 .dark {
   --color-primary: #48d597;
+  --color-muted: #8b949e;
+  --color-border: #2a2a2a;
+}
+
+// Skip-to-content link
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: theme('colors.primary');
+  color: theme('colors.primary-dark');
+  text-decoration: none;
+  font-family: @font-mono;
+  font-size: 0.75rem;
+
+  &:focus {
+    top: 0;
+  }
 }
 
 // Base font size, scales down on mobile
@@ -88,8 +110,8 @@ body {
 
 // Individual post row in post lists
 .post-row {
-  padding: 0.7rem 0;
-  border-bottom: 1px solid @border-light;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
 
   a {
     font-family: @font-serif;
@@ -97,19 +119,12 @@ body {
     letter-spacing: 0.3px;
   }
 }
-.dark .post-row {
-  border-bottom-color: @border-dark;
-}
 
 // Thin horizontal rule used between page sections
 .separator {
   margin: 2rem 0;
   border: none;
-  border-top: 1px solid @border-light;
-}
-
-.dark .separator {
-  border-top-color: @border-dark;
+  border-top: 1px solid var(--color-border);
 }
 
 // Main content area layout
@@ -144,6 +159,7 @@ main.tufte article {
 }
 
 a[data-footnote-ref] {
+  color: theme('colors.accent');
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -156,8 +172,33 @@ a[data-footnote-ref] {
 
 section[data-footnotes] {
   color: theme('colors.muted');
-  text-align: justify;
-  font-size: 0.85rem;
+  text-align: left;
+  // font-size: 0.85rem;
+
+  h2#footnote-label {
+    all: unset;
+    display: block;
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.primary');
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  ol li::marker {
+    color: theme('colors.accent');
+  }
+
+  a.data-footnote-backref {
+    color: theme('colors.primary');
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-size: 0.7em;
+  }
 
   @media screen and (max-width: 900px) {
     font-size: 0.963rem;
@@ -177,6 +218,22 @@ a {
   }
 }
 
+// Focus styles for keyboard navigation
+:focus-visible {
+  outline: 2px solid theme('colors.primary');
+  outline-offset: 2px;
+}
+
+// Respect reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 // Inline code inside paragraphs, list items, and bold text
 p code,
 li code,
@@ -191,27 +248,18 @@ strong code {
   margin: 0 0.1rem;
   padding: 0.1rem 0.4rem;
   border-radius: 0.3rem;
-  overflow-x: scroll;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  overflow-x: auto;
 }
 
 // Code blocks
 pre {
   letter-spacing: normal;
   border-radius: 0.3rem;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 // Blog post article content
 article {
-  text-align: justify;
+  text-align: left;
 
   // Body text
   p {
