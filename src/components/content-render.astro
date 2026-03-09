@@ -28,7 +28,7 @@ const { Content } = await render(post)
           </div>
           <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             {post.data.tags.flatMap((tag, index, array) => [
-              <a href={`/tags/${tag}`} class="text-accent">{tag}</a>,
+              <a href={`/writings/?tag=${tag}`} class="text-accent">{tag}</a>,
               index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
             ])}
           </div>

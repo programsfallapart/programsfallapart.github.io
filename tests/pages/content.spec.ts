@@ -13,37 +13,31 @@ for (const { type, path } of contentPages) {
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     })
 
-    test('renders code blocks with syntax highlighting', async ({ page }) => {
-      await page.goto(path)
-      const codeBlock = page.locator('pre code').first()
-      await expect(codeBlock).toBeVisible()
-    })
-
-    test('article contains tag links pointing to the tags route', async ({ page }) => {
+    test('article contains tag links pointing to the writings route', async ({ page }) => {
       await page.goto(path)
       const article = page.locator('article')
-      const tagLinks = article.locator('a[href^="/tags/"]')
+      const tagLinks = article.locator('a[href*="/writings/?tag="]')
       await expect(tagLinks.first()).toBeVisible()
 
       await expect.poll(async () => {
         const links = await tagLinks.all()
         for (const link of links) {
           const href = await link.getAttribute('href') ?? ''
-          if (!href.startsWith('/tags/')) return false
+          if (!href.startsWith('/writings/?tag=')) return false
         }
         return links.length > 0
       }).toBe(true)
     })
-    test('clicking a tag link navigates to the tags page', async ({ page }) => {
+    test('clicking a tag link navigates to writings with that tag pre-selected', async ({ page }) => {
       await page.goto(path)
       const article = page.locator('article')
-      const firstTagLink = article.locator('a[href^="/tags/"]').first()
+      const firstTagLink = article.locator('a[href*="/writings/?tag="]').first()
       await expect(firstTagLink).toBeVisible()
-      const href = await firstTagLink.getAttribute('href') ?? ''
+      const tagName = await firstTagLink.textContent() ?? ''
 
       await firstTagLink.click()
-      await expect(page).toHaveURL(new RegExp(href))
-      await expect(page.locator('[data-post-row]').first()).toBeVisible()
+      await expect(page).toHaveURL(new RegExp(`/writings/\\?tag=${tagName}`))
+      await expect(page.locator(`.tag-pill[data-tag="${tagName}"]`)).toHaveAttribute('aria-pressed', 'true')
     })
   })
 }
@@ -54,6 +48,11 @@ test.describe('Blog post', () => {
     await expect(page.locator('article time')).toBeVisible()
   })
 
+  test('renders code blocks with syntax highlighting', async ({ page }) => {
+    await page.goto('/posts/f108c748/')
+    const codeBlock = page.locator('pre code').first()
+    await expect(codeBlock).toBeVisible()
+  })
 })
 
 test.describe('Essay', () => {

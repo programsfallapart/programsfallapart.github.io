@@ -48,14 +48,18 @@ test.describe('Home page', () => {
     }).toBe(true)
   })
 
-  test('clicking a section heading navigates to the writings page', async ({ page }) => {
+  test('clicking "Latest Essays" heading navigates to writings with essays pre-selected', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('heading', { name: /latest essays/i }).getByRole('link').click()
-    await expect(page).toHaveURL(/\/writings\/?$/)
+    await expect(page).toHaveURL(/\/writings\/\?category=essays/)
+    await expect(page.locator('.cat-btn[data-cat="essays"]')).toHaveAttribute('aria-pressed', 'true')
+  })
 
+  test('clicking "Latest Posts" heading navigates to writings with posts pre-selected', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('heading', { name: /latest posts/i }).getByRole('link').click()
-    await expect(page).toHaveURL(/\/writings\/?$/)
+    await expect(page).toHaveURL(/\/writings\/\?category=posts/)
+    await expect(page.locator('.cat-btn[data-cat="posts"]')).toHaveAttribute('aria-pressed', 'true')
   })
 
   test('each section shows at most 5 entries', async ({ page }) => {

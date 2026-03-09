@@ -158,6 +158,28 @@ function initListFilter() {
     });
   });
 
+  // Pre-select category/tag from URL query params
+  const params = new URLSearchParams(window.location.search);
+  const catParam = params.get("category");
+  const tagParam = params.get("tag");
+
+  if (catParam) {
+    filterCatBtns.forEach((btn) => {
+      if (btn.dataset.cat === catParam) {
+        activeCats.add(catParam);
+      }
+    });
+    updateTagCounts();
+  }
+
+  if (tagParam) {
+    filterTagPills.forEach((pill) => {
+      if (pill.dataset.tag === tagParam) {
+        activeTags.add(tagParam);
+      }
+    });
+  }
+
   updateVisibility();
 }
 
