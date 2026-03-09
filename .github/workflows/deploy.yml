@@ -25,10 +25,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install & Build
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json bun.lock
+          node --version
+          npm --version
+          npm install --include=optional
+          npm run build
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-      - name: Install & Build
-        run: bun install --frozen-lockfile && bun run build
+        with:
+          bun-version: latest
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
       - name: Run Playwright tests
