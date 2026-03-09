@@ -28,7 +28,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
       - name: Install & Build
-        run: rm -f bun.lock && bun install && bun run build
+        run: bun install --frozen-lockfile && bun run build
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
       - name: Run Playwright tests
