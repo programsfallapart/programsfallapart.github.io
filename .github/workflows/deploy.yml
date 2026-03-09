@@ -21,9 +21,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,16 +45,22 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Get Playwright version
+        id: pw-version
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+
       - name: Cache Playwright browsers
         id: playwright-cache
         uses: actions/cache@v4
         with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          path: ${{ github.workspace }}/.pw-browsers
+          key: ${{ runner.os }}-playwright-${{ steps.pw-version.outputs.version }}
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
 
       - name: Install Playwright OS deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
@@ -65,6 +68,8 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test --workers=50%
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
