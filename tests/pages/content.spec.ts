@@ -37,7 +37,117 @@ for (const { type, path } of contentPages) {
 
       await firstTagLink.click()
       await expect(page).toHaveURL(new RegExp(`/writings/\\?tag=${tagName}`))
-      await expect(page.locator(`.tag-pill[data-tag="${tagName}"]`)).toHaveAttribute('aria-pressed', 'true')
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      await expect(tagGroup.locator(`button[data-tag="${tagName}"]`)).toHaveAttribute('aria-pressed', 'true')
+    })
+
+    // --- Heading numbering ---
+
+    test('every article h2 and h3 starts with a section number', async ({ page }) => {
+      await page.goto(path)
+      const headings = page.locator('article :is(h2, h3):not([data-footnotes] *)')
+      await expect(headings.first()).toBeVisible()
+
+      await expect.poll(async () => {
+        const all = await headings.all()
+        for (const heading of all) {
+          const text = (await heading.textContent()) ?? ''
+          if (!/^\d+(\.\d+)?\. /.test(text)) return false
+        }
+        return all.length > 0
+      }).toBe(true)
+    })
+
+    // --- Table of Contents ---
+
+    test('TOC navigation landmark is present with accessible label', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      await expect(toc).toBeAttached()
+    })
+
+    test('TOC progress lines match the number of content H2 headings in the article', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      const linesGroup = toc.getByRole('group', { name: /reading progress/i })
+      const lines = linesGroup.locator('[role="presentation"]')
+      await expect.poll(async () => {
+        const allH2 = await page.locator('article h2').count()
+        const footnoteH2 = await page.locator('article [data-footnotes] h2').count()
+        const h2Count = allH2 - footnoteH2
+        const lineCount = await lines.count()
+        return h2Count > 0 && lineCount === h2Count
+      }).toBe(true)
+    })
+
+    test('TOC panel contains links matching article headings', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      const tocLinks = toc.locator('a[data-slug]')
+      await expect(tocLinks.first()).toBeAttached()
+
+      await expect.poll(async () => {
+        const links = await tocLinks.all()
+        for (const link of links) {
+          const slug = await link.getAttribute('data-slug')
+          if (!slug) return false
+          const heading = page.locator(`article [id="${slug}"]`)
+          if ((await heading.count()) === 0) return false
+        }
+        return links.length > 0
+      }).toBe(true)
+    })
+
+    test('TOC panel shows on hover and hides when moving away', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      const tocLinks = toc.locator('a[data-slug]')
+
+      await expect(tocLinks.first()).not.toBeVisible()
+      await toc.hover()
+      await expect(tocLinks.first()).toBeVisible()
+
+      await page.locator('article').hover()
+      await expect(tocLinks.first()).not.toBeVisible()
+    })
+
+    test('clicking a TOC link scrolls to the corresponding heading', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      await toc.hover()
+      const tocLink = toc.locator('a[data-slug]').first()
+      const slug = await tocLink.getAttribute('data-slug')
+      await tocLink.click()
+
+      await expect.poll(async () => {
+        const heading = page.locator(`article [id="${slug}"]`)
+        const box = await heading.boundingBox()
+        return box !== null && box.y >= -10 && box.y < 300
+      }).toBe(true)
+    })
+
+    test('every TOC link text starts with a section number', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      const tocLinks = toc.locator('a[data-slug]')
+      await expect(tocLinks.first()).toBeAttached()
+
+      await expect.poll(async () => {
+        const links = await tocLinks.all()
+        for (const link of links) {
+          const text = (await link.textContent()) ?? ''
+          if (!/^\d+(\.\d+)?\. /.test(text)) return false
+        }
+        return links.length > 0
+      }).toBe(true)
+    })
+
+    test('progress lines are decorative and hidden from screen readers', async ({ page }) => {
+      await page.goto(path)
+      const toc = page.getByRole('navigation', { name: /table of contents/i })
+      const linesGroup = toc.getByRole('group', { name: /reading progress/i })
+      const firstLine = linesGroup.locator('[aria-hidden="true"]').first()
+      await expect(firstLine).toBeAttached()
     })
   })
 }

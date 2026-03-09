@@ -47,5 +47,82 @@ for (const { name, path } of pages) {
       await page.goto(path)
       await expect(page.locator('footer')).toBeVisible()
     })
+
+    // --- Music player ---
+
+    test('music toggle button is visible with correct initial state', async ({ page }) => {
+      await page.goto(path)
+      const musicBtn = page.getByRole('button', { name: /play ambient music/i })
+      await expect(musicBtn).toBeVisible()
+      await expect(musicBtn).toHaveAttribute('aria-pressed', 'false')
+    })
+
+    test('clicking music toggle starts playback and updates aria state', async ({ page }) => {
+      await page.goto(path)
+      const musicBtn = page.locator('#musicToggle')
+      await musicBtn.click()
+      await expect(musicBtn).toHaveAttribute('aria-pressed', 'true')
+      await expect(musicBtn).toHaveAttribute('aria-label', /pause ambient music/i)
+    })
+
+    test('now playing bar appears when music is playing', async ({ page }) => {
+      await page.goto(path)
+      await page.locator('#musicToggle').click()
+      const nowPlaying = page.locator('#nowPlaying')
+      await expect(nowPlaying).toBeVisible()
+      await expect(nowPlaying).not.toBeEmpty()
+    })
+
+    test('prev and next track buttons are accessible', async ({ page }) => {
+      await page.goto(path)
+      await page.locator('#musicToggle').click()
+      await expect(page.getByRole('button', { name: /previous track/i })).toBeVisible()
+      await expect(page.getByRole('button', { name: /next track/i })).toBeVisible()
+    })
+
+    test('clicking next track changes the displayed track name', async ({ page }) => {
+      await page.goto(path)
+      await page.locator('#musicToggle').click()
+      const nowPlaying = page.locator('#nowPlaying')
+      await expect(nowPlaying).not.toBeEmpty()
+      const firstTrack = await nowPlaying.textContent()
+
+      await page.getByRole('button', { name: /next track/i }).click()
+      await expect(nowPlaying).not.toHaveText(firstTrack!)
+    })
+
+    test('clicking music toggle again pauses playback', async ({ page }) => {
+      await page.goto(path)
+      const musicBtn = page.locator('#musicToggle')
+      await musicBtn.click()
+      await expect(musicBtn).toHaveAttribute('aria-pressed', 'true')
+
+      await musicBtn.click()
+      await expect(musicBtn).toHaveAttribute('aria-pressed', 'false')
+      await expect(musicBtn).toHaveAttribute('aria-label', /play ambient music/i)
+    })
+
+    test('now playing region has aria-live for screen readers', async ({ page }) => {
+      await page.goto(path)
+      const nowPlaying = page.locator('#nowPlaying')
+      await expect(nowPlaying).toHaveAttribute('aria-live', 'polite')
+    })
   })
 }
+
+test('music continues playing the same track after navigating to another page', async ({ page }) => {
+  await page.goto('/')
+  const musicBtn = page.locator('#musicToggle')
+  await musicBtn.click()
+  await expect(musicBtn).toHaveAttribute('aria-pressed', 'true')
+
+  const nowPlaying = page.locator('#nowPlaying')
+  await expect(nowPlaying).not.toBeEmpty()
+  const trackBefore = await nowPlaying.textContent()
+
+  await page.getByRole('navigation', { name: /main/i }).getByRole('link', { name: 'About' }).click()
+  await expect(page).toHaveURL(/\/about/)
+
+  await expect(musicBtn).toHaveAttribute('aria-pressed', 'true')
+  await expect(nowPlaying).toHaveText(trackBefore!)
+})
