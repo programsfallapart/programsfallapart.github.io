@@ -1,12 +1,15 @@
 import { defineConfig } from '@playwright/test'
 
+const isCI = !!process.env.CI
+
 export default defineConfig({
   testDir: './tests',
+  testIgnore: ['**/*.test.ts'],
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'list',
+  forbidOnly: isCI,
+  retries: isCI ? 1 : 0,
+  workers: isCI ? 1 : undefined,
+  reporter: isCI ? [['./tests/reporters/progress-reporter.ts']] : 'list',
 
   use: {
     baseURL: 'http://localhost:4321',
@@ -25,9 +28,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: process.env.CI ? 'npx astro preview' : 'npm run build && npm run preview',
+    command: isCI ? 'npx astro preview' : 'npm run build && npm run preview',
     port: 4321,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !isCI,
     timeout: 30_000,
   },
 })
