@@ -25,7 +25,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run build && npm run preview',
+    command: process.env.CI ? 'npx astro preview' : 'npm run build && npm run preview',
     port: 4321,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
