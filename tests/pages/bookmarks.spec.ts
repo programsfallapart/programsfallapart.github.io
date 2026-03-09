@@ -7,9 +7,9 @@ test.describe('Bookmarks page', () => {
     const bookmarks = page.locator('[data-title]')
     await expect(bookmarks.first()).toBeVisible()
 
-    const ratings = page.locator('[role="img"][aria-label]')
+    const ratings = page.locator('main [role="img"][aria-label*="Rating"]')
     await expect(ratings.first()).toBeVisible()
-    await expect(ratings.first()).toHaveAttribute('aria-label', /rating: \d out of 3/i)
+    await expect(ratings.first()).toHaveAttribute('aria-label', /Rating: \d out of 3/)
   })
 
   test('explains the three rating tiers in a legend', async ({ page }) => {

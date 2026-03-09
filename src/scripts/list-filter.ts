@@ -40,12 +40,23 @@ function initListFilter() {
   let searchQuery = "";
   const activeCats = new Set<string>();
   const activeTags = new Set<string>();
+  let suppressURLSync = false;
 
   function highlightText(text: string, query: string): string {
     if (!query) return text;
     const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const re = new RegExp(`(${escaped})`, "gi");
     return text.replace(re, `<mark class="search-highlight">$1</mark>`);
+  }
+
+  function syncURL() {
+    if (suppressURLSync) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("category");
+    url.searchParams.delete("tag");
+    if (activeCats.size) url.searchParams.set("category", [...activeCats].join(","));
+    if (activeTags.size) url.searchParams.set("tag", [...activeTags].join(","));
+    history.replaceState(null, "", url);
   }
 
   function syncButtons() {
@@ -111,6 +122,7 @@ function initListFilter() {
     });
 
     if (resultCount) resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;
+    syncURL();
   }
 
   let searchTimer: number;
@@ -164,23 +176,27 @@ function initListFilter() {
   const tagParam = params.get("tag");
 
   if (catParam) {
+    const cats = catParam.split(",");
     filterCatBtns.forEach((btn) => {
-      if (btn.dataset.cat === catParam) {
-        activeCats.add(catParam);
+      if (cats.includes(btn.dataset.cat ?? "")) {
+        activeCats.add(btn.dataset.cat!);
       }
     });
     updateTagCounts();
   }
 
   if (tagParam) {
+    const tags = tagParam.split(",");
     filterTagPills.forEach((pill) => {
-      if (pill.dataset.tag === tagParam) {
-        activeTags.add(tagParam);
+      if (tags.includes(pill.dataset.tag ?? "")) {
+        activeTags.add(pill.dataset.tag!);
       }
     });
   }
 
+  suppressURLSync = true;
   updateVisibility();
+  suppressURLSync = false;
 }
 
 document.addEventListener("astro:page-load", initListFilter);

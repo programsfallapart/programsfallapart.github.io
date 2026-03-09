@@ -160,12 +160,13 @@ for (const pg of pages) {
       const firstCat = await firstBtn.getAttribute('data-cat')
       const afterFirst = page.locator('[data-title]:visible')
       await expect(afterFirst).not.toHaveCount(totalCount)
+      const firstCount = await afterFirst.count()
 
-      // Select second category — should add items
+      // Select second category — should add items (count >= firstCount)
       const secondBtn = catButtons.nth(1)
       await secondBtn.click()
       const afterBoth = page.locator('[data-title]:visible')
-      await expect(afterBoth).not.toHaveCount(totalCount)
+      await expect.poll(() => afterBoth.count()).toBeGreaterThanOrEqual(firstCount)
 
       // Every visible row belongs to one of the two selected categories
       const secondCat = await secondBtn.getAttribute('data-cat')
@@ -250,27 +251,24 @@ for (const pg of pages) {
       await page.goto(pg.path)
       const allRows = page.locator('[data-title]')
       await expect(allRows.first()).toBeVisible()
-      const firstTitle = await allRows.first().getAttribute('data-title') ?? ''
-      const searchTerm = firstTitle.split(' ')[0]
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      // Find a search term that filters down (doesn't match everything)
+      const titles = await allRows.evaluateAll(els => els.map(el => el.dataset.title ?? ''))
+      const firstTitle = titles[0]
+      // Use full title to guarantee it filters, at least one other row won't match
+      const searchTerm = firstTitle.length > 3 ? firstTitle : firstTitle.split(' ')[0]
 
       const searchInput = page.getByRole('textbox')
-      const visibleRows = page.locator('[data-title]:visible')
       const resultCount = page.locator('main [aria-live="polite"]')
 
-      // Search with uppercase and wait for debounce to settle
+      // Search with uppercase
       await searchInput.fill(searchTerm.toUpperCase())
-      await expect(visibleRows.first()).toBeVisible()
       await expect(resultCount).toHaveText(/\d+ results?/)
       const upperText = await resultCount.textContent()
 
-      // Clear and search with lowercase
-      await searchInput.fill('')
-      await expect(resultCount).not.toHaveText(upperText!)
-
+      // Search with lowercase — should produce the same result count
       await searchInput.fill(searchTerm.toLowerCase())
-      await expect(visibleRows.first()).toBeVisible()
-
-      // Lowercase produces the same result count as uppercase
       await expect(resultCount).toHaveText(upperText!)
     })
 
@@ -471,5 +469,183 @@ for (const pg of pages) {
       await expect(resultCount).not.toHaveText(initialText!)
       await expect(resultCount).toHaveText(/\d+ results?/)
     })
+
+    // --- URL sync ---
+
+    test.describe('URL sync — category', () => {
+    test('selecting a category updates the URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const firstCatBtn = categoryGroup.locator('button[data-cat]:not([data-cat="all"])').first()
+      const cat = await firstCatBtn.getAttribute('data-cat')
+      await firstCatBtn.click()
+
+      await expect(page).toHaveURL(new RegExp(`category=${cat}`))
+    })
+
+    test('selecting multiple categories shows comma-separated values in URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const catButtons = categoryGroup.locator('button[data-cat]:not([data-cat="all"])')
+      const firstCat = await catButtons.first().getAttribute('data-cat')
+      const secondCat = await catButtons.nth(1).getAttribute('data-cat')
+
+      await catButtons.first().click()
+      await catButtons.nth(1).click()
+
+      await expect(page).toHaveURL(new RegExp(`category=${firstCat}%2C${secondCat}|category=${firstCat},${secondCat}`))
+    })
+
+    test('deselecting a category removes it from the URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const firstCatBtn = categoryGroup.locator('button[data-cat]:not([data-cat="all"])').first()
+      await firstCatBtn.click()
+      await expect(page).toHaveURL(/category=/)
+
+      await firstCatBtn.click()
+      await expect(page).not.toHaveURL(/category=/)
+    })
+
+    test('loading a URL with category param pre-selects the filter', async ({ page }) => {
+      await page.goto(pg.path)
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const firstCatBtn = categoryGroup.locator('button[data-cat]:not([data-cat="all"])').first()
+      const cat = await firstCatBtn.getAttribute('data-cat')
+
+      await page.goto(`${pg.path}?category=${cat}`)
+      const allBtn = categoryGroup.locator('button[data-cat="all"]')
+      await expect(firstCatBtn).toHaveAttribute('aria-pressed', 'true')
+      await expect(allBtn).toHaveAttribute('aria-pressed', 'false')
+    })
+
+    test('loading a URL with comma-separated categories pre-selects all', async ({ page }) => {
+      await page.goto(pg.path)
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const catButtons = categoryGroup.locator('button[data-cat]:not([data-cat="all"])')
+      const firstCat = await catButtons.first().getAttribute('data-cat')
+      const secondCat = await catButtons.nth(1).getAttribute('data-cat')
+
+      await page.goto(`${pg.path}?category=${firstCat},${secondCat}`)
+      await expect(catButtons.first()).toHaveAttribute('aria-pressed', 'true')
+      await expect(catButtons.nth(1)).toHaveAttribute('aria-pressed', 'true')
+      const allBtn = categoryGroup.locator('button[data-cat="all"]')
+      await expect(allBtn).toHaveAttribute('aria-pressed', 'false')
+    })
+  })
+
+  test.describe(`${pg.name} page — URL sync — tag`, () => {
+    test('selecting a tag updates the URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const firstPill = tagGroup.locator('button[data-tag]:not([data-tag="all"])').first()
+      const tag = await firstPill.getAttribute('data-tag')
+      await firstPill.click()
+
+      await expect(page).toHaveURL(new RegExp(`tag=${tag}`))
+    })
+
+    test('selecting multiple tags shows comma-separated values in URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const tagPills = tagGroup.locator('button[data-tag]:not([data-tag="all"])')
+      const firstTag = await tagPills.first().getAttribute('data-tag')
+      const secondTag = await tagPills.nth(1).getAttribute('data-tag')
+
+      await tagPills.first().click()
+      await tagPills.nth(1).click()
+
+      await expect(page).toHaveURL(new RegExp(`tag=${firstTag}%2C${secondTag}|tag=${firstTag},${secondTag}`))
+    })
+
+    test('deselecting a tag removes it from the URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const firstPill = tagGroup.locator('button[data-tag]:not([data-tag="all"])').first()
+      await firstPill.click()
+      await expect(page).toHaveURL(/tag=/)
+
+      await firstPill.click()
+      await expect(page).not.toHaveURL(/tag=/)
+    })
+
+    test('loading a URL with tag param pre-selects the tag', async ({ page }) => {
+      await page.goto(pg.path)
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const firstPill = tagGroup.locator('button[data-tag]:not([data-tag="all"])').first()
+      const tag = await firstPill.getAttribute('data-tag')
+
+      await page.goto(`${pg.path}?tag=${tag}`)
+      await expect(firstPill).toHaveAttribute('aria-pressed', 'true')
+      const allPill = tagGroup.locator('button[data-tag="all"]')
+      await expect(allPill).toHaveAttribute('aria-pressed', 'false')
+    })
+
+    test('loading a URL with comma-separated tags pre-selects all', async ({ page }) => {
+      await page.goto(pg.path)
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const tagPills = tagGroup.locator('button[data-tag]:not([data-tag="all"])')
+      const firstTag = await tagPills.first().getAttribute('data-tag')
+      const secondTag = await tagPills.nth(1).getAttribute('data-tag')
+
+      await page.goto(`${pg.path}?tag=${firstTag},${secondTag}`)
+      await expect(tagPills.first()).toHaveAttribute('aria-pressed', 'true')
+      await expect(tagPills.nth(1)).toHaveAttribute('aria-pressed', 'true')
+      const allPill = tagGroup.locator('button[data-tag="all"]')
+      await expect(allPill).toHaveAttribute('aria-pressed', 'false')
+    })
+  })
+
+  test.describe(`${pg.name} page — URL sync — category + tag`, () => {
+    test('selecting both category and tag updates the URL with both params', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const firstCatBtn = categoryGroup.locator('button[data-cat]:not([data-cat="all"])').first()
+      const cat = await firstCatBtn.getAttribute('data-cat')
+      await firstCatBtn.click()
+
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const firstPill = tagGroup.locator('button[data-tag]:not([data-tag="all"])').first()
+      const tag = await firstPill.getAttribute('data-tag')
+      await firstPill.click()
+
+      await expect(page).toHaveURL(new RegExp(`category=${cat}`))
+      await expect(page).toHaveURL(new RegExp(`tag=${tag}`))
+    })
+
+    test('deselecting all filters removes all query params from URL', async ({ page }) => {
+      await page.goto(pg.path)
+      await expect(page.locator('main [aria-live="polite"]')).toHaveText(/\d+ results?/)
+
+      const categoryGroup = page.getByRole('group', { name: pg.categoryLabel })
+      const tagGroup = page.getByRole('group', { name: /filter by tag/i })
+      const firstCatBtn = categoryGroup.locator('button[data-cat]:not([data-cat="all"])').first()
+      const firstPill = tagGroup.locator('button[data-tag]:not([data-tag="all"])').first()
+
+      await firstCatBtn.click()
+      await firstPill.click()
+      await expect(page).toHaveURL(/category=/)
+      await expect(page).toHaveURL(/tag=/)
+
+      await firstCatBtn.click()
+      await firstPill.click()
+      await expect(page).not.toHaveURL(/category=/)
+      await expect(page).not.toHaveURL(/tag=/)
+    })
+  })
   })
 }

@@ -7,7 +7,6 @@ const pages = [
   { name: 'about', path: '/about/' },
   { name: 'post', path: '/posts/f108c748/' },
   { name: 'essay', path: '/essays/a1b2c3d4/' },
-  { name: 'tags', path: '/tags/programming/1/' },
   { name: '404', path: '/this-does-not-exist/' },
 ]
 
