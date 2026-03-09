@@ -24,13 +24,18 @@ function initListFilter() {
     '.tag-pill:not([data-tag="all"])',
   );
 
-  const rowData = Array.from(rows).map((row) => ({
-    el: row,
-    kind: row.dataset.kind ?? "",
-    tags: JSON.parse(row.dataset.tags || "[]") as string[],
-    title: row.dataset.title ?? "",
-    link: row.querySelector("a"),
-  }));
+  const rowData = Array.from(rows).map((row) => {
+    const link = row.querySelector("a");
+    const srOnly = link?.querySelector(".sr-only");
+    return {
+      el: row,
+      kind: row.dataset.kind ?? "",
+      tags: JSON.parse(row.dataset.tags || "[]") as string[],
+      title: row.dataset.title ?? "",
+      link,
+      linkSuffix: srOnly ? srOnly.outerHTML : "",
+    };
+  });
 
   let searchQuery = "";
   const activeCats = new Set<string>();
@@ -89,7 +94,7 @@ function initListFilter() {
 
     let visible = 0;
     const query = searchQuery.toLowerCase();
-    rowData.forEach(({ el, kind, tags, title, link }) => {
+    rowData.forEach(({ el, kind, tags, title, link, linkSuffix }) => {
       const catMatch = showAllCats || activeCats.has(kind);
       const tagMatch = showAllTags || tags.some((t) => activeTags.has(t));
       const searchMatch = !searchQuery || title.toLowerCase().includes(query);
@@ -97,10 +102,12 @@ function initListFilter() {
       const show = catMatch && tagMatch && searchMatch;
       el.style.display = show ? "" : "none";
       if (show) visible++;
-      if (link) link.innerHTML =
-        searchQuery && searchMatch
+      if (link) {
+        const text = searchQuery && searchMatch
           ? highlightText(title, searchQuery)
           : title;
+        link.innerHTML = text + linkSuffix;
+      }
     });
 
     if (resultCount) resultCount.textContent = `${visible} ${visible === 1 ? "result" : "results"}`;

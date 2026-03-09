@@ -107,7 +107,7 @@ const description = "Writings on software engineering, system design, and the co
             data-tags={JSON.stringify(post.data.tags || [])}
             data-title={post.data.title}
           >
-            <span class="kind-label">post</span>
+            <span class="kind-label" data-kind-label>post</span>
             <a href={getPostLink(post)} class="flex-1 truncate">
               {post.data.title}
             </a>
@@ -125,7 +125,7 @@ const description = "Writings on software engineering, system design, and the co
             data-tags={JSON.stringify(essay.data.tags || [])}
             data-title={essay.data.title}
           >
-            <span class="kind-label">essay</span>
+            <span class="kind-label" data-kind-label>essay</span>
             <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
               {essay.data.title}
             </a>

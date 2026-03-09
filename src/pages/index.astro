@@ -24,13 +24,14 @@ const description = "Software examined slowly. Writings on programming, architec
       <div class="flex flex-col">
         {
           latestEssays.map((essay) => (
-            <div class="post-row flex items-baseline gap-x-8">
+            <div class="post-row flex items-baseline gap-x-8" data-post-row>
               <a
                 class="flex-1 truncate"
                 href={`/essays/${essay.data.abbrlink}`}
               >
                 {essay.data.title}
               </a>
+              <span class="date-mono date-small">-</span>
             </div>
           ))
         }
@@ -45,7 +46,7 @@ const description = "Software examined slowly. Writings on programming, architec
       <div class="flex flex-col">
         {
           latestPosts.map((post) => (
-            <div class="post-row flex items-baseline gap-x-8">
+            <div class="post-row flex items-baseline gap-x-8" data-post-row>
               <a class="flex-1 truncate" href={getPostLink(post)}>
                 {post.data.title}
               </a>

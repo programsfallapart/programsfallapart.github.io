@@ -119,7 +119,7 @@ const description =
               data-tags={JSON.stringify(bookmark.data.tags || [])}
               data-title={displayTitle}
             >
-              <span class="kind-label">
+              <span class="kind-label" data-kind-label>
                 {bookmark.data.type.replace(/-/g, " ")}
               </span>
               <a

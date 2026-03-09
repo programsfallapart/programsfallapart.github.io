@@ -9,6 +9,8 @@
     "new": "node generate.cjs",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "npx playwright test",
+    "test:update": "npx playwright test --update-snapshots",
     "astro": "astro"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/node": "^20.5.9",
     "autoprefixer": "^10.4.14",
     "crc": "^4.3.2",
