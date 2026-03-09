@@ -40,7 +40,7 @@ jobs:
           key: astro-${{ hashFiles('src/**/*') }}
           restore-keys: astro-
       - name: Install & Build
-        run: rm -f bun.lock && bun install && bun run build
+        run: bun install && bun run build
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
       - name: Run Playwright tests
