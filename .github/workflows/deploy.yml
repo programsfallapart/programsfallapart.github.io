@@ -27,20 +27,8 @@ jobs:
           fetch-depth: 1
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-      - name: Cache bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ hashFiles('package.json') }}
-          restore-keys: bun-
-      - name: Cache Astro build
-        uses: actions/cache@v4
-        with:
-          path: node_modules/.astro
-          key: astro-${{ hashFiles('src/**/*') }}
-          restore-keys: astro-
       - name: Install & Build
-        run: bun install && bun run build
+        run: rm -f bun.lock && bun install && bun run build
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
       - name: Run Playwright tests
