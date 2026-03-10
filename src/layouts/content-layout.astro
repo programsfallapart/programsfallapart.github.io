@@ -1,6 +1,6 @@
 ---
 import ContentRender from '@components/content-render.astro'
-import ProgressToc from '@components/progress-toc.astro'
+import SidebarToc from '@components/sidebar-toc.astro'
 import SiteHeader from '@components/site-header.astro'
 import BaseLayout from '@layouts/base-layout.astro'
 import type { PostModel, EssayModel } from '@interfaces/models'
@@ -20,8 +20,8 @@ const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
   <SiteHeader />
   <main id="main-content" tabindex="-1" class="content-layout">
     <section class="my-10">
-      <ProgressToc headings={headings} />
-      <ContentRender post={entry} from={from} />
+      <SidebarToc headings={headings} />
+      <ContentRender post={entry} from={from} headings={headings} />
     </section>
   </main>
 </BaseLayout>

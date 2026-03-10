@@ -15,14 +15,14 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 ---
 
 {h2Headings.length > 0 && (
-  <div id="progress-toc" class="progress-toc" role="navigation" aria-label="Table of contents">
-    <div id="progress-lines" class="progress-lines" role="group" aria-label="Reading progress">
+  <div id="sidebar-toc" class="sidebar-toc" role="navigation" aria-label="Table of contents">
+    <div id="sidebar-toc-lines" class="sidebar-toc-lines" role="group" aria-label="Reading progress">
       {h2Headings.map((h, i) => (
-        <div class="toc-line" role="presentation" aria-hidden="true" />
+        <div class="sidebar-toc-line" role="presentation" aria-hidden="true" />
       ))}
     </div>
-    <div id="toc-panel" class="toc-panel">
-      <ul id="toc-list">
+    <div id="sidebar-toc-panel" class="sidebar-toc-panel">
+      <ul id="sidebar-toc-list">
         {tocHeadings.map((h) => (
           <li>
             <a
@@ -39,8 +39,9 @@ const h2Headings = headings.filter((h) => h.depth === 2)
   </div>
 )}
 
+
 <style>
-  .progress-toc {
+  .sidebar-toc {
     position: fixed;
     left: clamp(1rem, 3vw, 2rem);
     top: 50%;
@@ -49,14 +50,14 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     contain: layout;
   }
 
-  .progress-lines {
+  .sidebar-toc-lines {
     display: flex;
     flex-direction: column;
     gap: 8px;
     cursor: pointer;
   }
 
-  .toc-line {
+  .sidebar-toc-line {
     height: 2px;
     width: 20px;
     background-color: var(--color-border);
@@ -64,16 +65,16 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     transition: width 0.25s ease, background-color 0.25s ease;
   }
 
-  .toc-line.active {
+  .sidebar-toc-line.active {
     width: 36px;
     background-color: theme('colors.primary');
   }
 
-  .toc-line.passed {
+  .sidebar-toc-line.passed {
     background-color: theme('colors.muted');
   }
 
-  .toc-panel {
+  .sidebar-toc-panel {
     display: none;
     max-width: 280px;
     max-height: 60vh;
@@ -87,24 +88,24 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     box-shadow: 0 4px 16px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
   }
 
-  .toc-panel::-webkit-scrollbar {
+  .sidebar-toc-panel::-webkit-scrollbar {
     display: none;
   }
 
   @media (any-hover: hover) {
-    .progress-toc:hover .toc-panel {
+    .sidebar-toc:hover .sidebar-toc-panel {
       display: block;
     }
-    .progress-toc:hover .progress-lines {
+    .sidebar-toc:hover .sidebar-toc-lines {
       display: none;
     }
   }
 
-  .toc-panel.open {
+  .sidebar-toc-panel.open {
     display: block;
   }
 
-  .toc-panel ul {
+  .sidebar-toc-panel ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -113,11 +114,11 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     gap: 6px;
   }
 
-  .toc-panel li {
+  .sidebar-toc-panel li {
     margin: 0;
   }
 
-  .toc-panel a {
+  .sidebar-toc-panel a {
     font-family: 'JetBrains Mono';
     color: theme('colors.muted');
     font-size: 0.6rem;
@@ -129,29 +130,30 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     white-space: nowrap;
   }
 
-  .toc-panel a:hover,
-  .toc-panel a.active {
+  .sidebar-toc-panel a:hover,
+  .sidebar-toc-panel a.active {
     color: theme('colors.primary');
   }
 
-  .toc-panel .toc-h3 {
+  .sidebar-toc-panel .toc-h3 {
     padding-left: 1rem;
   }
 
   @media screen and (max-width: 1200px) {
-    .progress-toc {
+    .sidebar-toc {
       display: none;
     }
   }
+
 </style>
 
 <script>
   function initToc() {
-    const progressToc = document.getElementById('progress-toc');
-    if (!progressToc) return;
+    const sidebarToc = document.getElementById('sidebar-toc');
+    if (!sidebarToc) return;
 
-    const lines = progressToc.querySelectorAll<HTMLElement>('.toc-line');
-    const tocLinks = progressToc.querySelectorAll<HTMLAnchorElement>('#toc-list a');
+    const lines = sidebarToc.querySelectorAll<HTMLElement>('.sidebar-toc-line');
+    const tocLinks = sidebarToc.querySelectorAll<HTMLAnchorElement>('#sidebar-toc-list a');
 
     const h2s = Array.from(document.querySelectorAll('article h2')).filter(
       (h) => !h.closest('[data-footnotes]')
@@ -218,7 +220,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
           setActive(lineIdx, tocIdx);
           heading.scrollIntoView({ behavior: 'smooth' });
 
-          const panel = document.getElementById('toc-panel');
+          const panel = document.getElementById('sidebar-toc-panel');
           if (panel) panel.classList.remove('open');
 
           setTimeout(() => { skipUpdate = false; }, 800);
@@ -237,15 +239,15 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     }, { passive: true });
     update();
 
-    const linesEl = document.getElementById('progress-lines');
-    const panel = document.getElementById('toc-panel');
+    const linesEl = document.getElementById('sidebar-toc-lines');
+    const panel = document.getElementById('sidebar-toc-panel');
     if (linesEl && panel) {
       linesEl.addEventListener('click', (e) => {
         e.stopPropagation();
         panel.classList.toggle('open');
       });
       document.addEventListener('click', (e) => {
-        if (!progressToc.contains(e.target as Node)) {
+        if (!sidebarToc.contains(e.target as Node)) {
           panel.classList.remove('open');
         }
       });

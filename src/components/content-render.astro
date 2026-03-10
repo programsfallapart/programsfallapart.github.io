@@ -1,14 +1,23 @@
 ---
 import type { PostModel, EssayModel } from '@interfaces/models'
 import GiscusComments from '@components/giscus-comments.astro'
+import InlineToc from '@components/inline-toc.astro'
 import { getFormatDate, isoDate } from '@utils/date-helper'
 import { render } from 'astro:content'
+
+interface Heading {
+  depth: number
+  slug: string
+  text: string
+}
+
 interface Props {
   post: PostModel | EssayModel
   from?: string
+  headings?: Heading[]
 }
 
-const { post, from } = Astro.props
+const { post, from, headings = [] } = Astro.props
 const { Content } = await render(post)
 ---
 
@@ -38,6 +47,7 @@ const { Content } = await render(post)
         ''
     )
   }
+  <InlineToc headings={headings} />
   <Content />
   <GiscusComments />
 </article>
