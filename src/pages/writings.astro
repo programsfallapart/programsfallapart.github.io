@@ -102,7 +102,7 @@ const description = "Writings on software engineering, system design, and the co
       {
         allPosts.map((post) => (
           <div
-            class="writing-row flex items-baseline gap-x-8"
+            class="list-row flex items-baseline gap-x-8"
             data-kind="posts"
             data-tags={JSON.stringify(post.data.tags || [])}
             data-title={post.data.title}
@@ -120,7 +120,7 @@ const description = "Writings on software engineering, system design, and the co
       {
         allEssays.map((essay) => (
           <div
-            class="writing-row flex items-baseline gap-x-8"
+            class="list-row flex items-baseline gap-x-8"
             data-kind="essays"
             data-tags={JSON.stringify(essay.data.tags || [])}
             data-title={essay.data.title}
@@ -129,7 +129,6 @@ const description = "Writings on software engineering, system design, and the co
             <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
               {essay.data.title}
             </a>
-            <span class="date-mono">-</span>
           </div>
         ))
       }

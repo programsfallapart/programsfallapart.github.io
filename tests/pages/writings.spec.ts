@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Writings page', () => {
-  test('displays all posts with dates and all essays with a dash instead of a date', async ({ page }) => {
+  test('displays all posts with dates and essays without dates', async ({ page }) => {
     await page.goto('/writings/')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 

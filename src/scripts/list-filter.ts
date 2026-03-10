@@ -4,7 +4,7 @@ function initListFilter() {
   if (!writingsSection) return;
 
   const rows = document.querySelectorAll<HTMLElement>(
-    ".writings-section .writing-row",
+    ".writings-section .list-row",
   );
   const searchInput = document.getElementById(
     "search-input",

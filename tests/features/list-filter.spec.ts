@@ -261,15 +261,16 @@ for (const pg of pages) {
 
       const searchInput = page.getByRole('textbox')
       const resultCount = page.locator('main [aria-live="polite"]')
+      const initialText = await resultCount.textContent()
 
-      // Search with uppercase
+      // Search with uppercase and wait for result count to change
       await searchInput.fill(searchTerm.toUpperCase())
-      await expect(resultCount).toHaveText(/\d+ results?/)
+      await expect.poll(() => resultCount.textContent()).not.toBe(initialText)
       const upperText = await resultCount.textContent()
 
       // Search with lowercase — should produce the same result count
       await searchInput.fill(searchTerm.toLowerCase())
-      await expect(resultCount).toHaveText(upperText!)
+      await expect.poll(() => resultCount.textContent()).toBe(upperText)
     })
 
     test('searching for a nonexistent term shows no results', async ({ page }) => {

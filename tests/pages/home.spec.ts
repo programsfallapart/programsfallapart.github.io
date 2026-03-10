@@ -10,7 +10,7 @@ test.describe('Home page', () => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: /latest essays/i })).toBeVisible()
     const essaysSection = page.locator('section', { has: page.getByRole('heading', { name: /latest essays/i }) })
-    const essayRows = essaysSection.locator('[data-post-row]')
+    const essayRows = essaysSection.locator('[data-list-row]')
     await expect(essayRows.first()).toBeVisible()
 
     await expect.poll(async () => {
@@ -31,7 +31,7 @@ test.describe('Home page', () => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: /latest posts/i })).toBeVisible()
     const postsSection = page.locator('section', { has: page.getByRole('heading', { name: /latest posts/i }) })
-    const postRows = postsSection.locator('[data-post-row]')
+    const postRows = postsSection.locator('[data-list-row]')
     await expect(postRows.first()).toBeVisible()
 
     await expect.poll(async () => {
