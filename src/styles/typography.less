@@ -34,9 +34,7 @@ pre {
   letter-spacing: 2px;
   color: theme('colors.primary');
   margin-top: 3rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--color-border-strong);
+  margin-bottom: 1rem;
 }
 
 // Blog post article content
@@ -198,7 +196,15 @@ section[data-footnotes] {
   h2#footnote-label {
     all: unset;
     display: block;
-    .h2-section-heading();
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: theme('colors.primary');
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border-strong);
   }
 
   ol li::marker {

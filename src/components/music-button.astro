@@ -79,7 +79,7 @@ const audioFiles = Object.keys(import.meta.glob('/public/audio/*.mp3')).map(
 
     if (playIcon) playIcon.style.display = playing ? 'none' : ''
     if (pauseIcon) pauseIcon.style.display = playing ? '' : 'none'
-    if (nowPlayingBar) nowPlayingBar.style.visibility = playing ? 'visible' : 'hidden'
+    if (nowPlayingBar) nowPlayingBar.style.display = playing ? 'flex' : 'none'
     if (nowPlaying && playing) nowPlaying.innerHTML = `<span style="color:var(--color-accent)">${currentIndex + 1}/${tracks.length}.</span> ${trackDisplayName(tracks[currentIndex] || '')}`
     musicBtn.setAttribute('aria-pressed', String(playing))
     musicBtn.setAttribute('aria-label', playing ? 'Pause ambient music' : 'Play ambient music')

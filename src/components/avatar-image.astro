@@ -9,8 +9,8 @@ const logos = import.meta.glob('./logos/*.astro', { eager: true })
 const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
 ---
 
-<div class="site-logo mt-8 mb-1 select-none flex justify-center" style={`--lt:${ll.text};--la:${ll.accent};--lb1:${ll.bars[0]};--lb2:${ll.bars[1]};--lb3:${ll.bars[2]};--lb4:${ll.bars[3]};--lp1:${ll.particles[0]};--lp2:${ll.particles[1]};--lp3:${ll.particles[2]};--lp4:${ll.particles[3]};--dt:${ld.text};--da:${ld.accent};--db1:${ld.bars[0]};--db2:${ld.bars[1]};--db3:${ld.bars[2]};--db4:${ld.bars[3]};--dp1:${ld.particles[0]};--dp2:${ld.particles[1]};--dp3:${ld.particles[2]};--dp4:${ld.particles[3]}`}>
-  <svg width="370" height="122" viewBox="-5 5 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Programs Fall Apart logo">
+<div class="site-logo mt-4 mb-1 select-none flex justify-center" style={`--lt:${ll.text};--la:${ll.accent};--lb1:${ll.bars[0]};--lb2:${ll.bars[1]};--lb3:${ll.bars[2]};--lb4:${ll.bars[3]};--lp1:${ll.particles[0]};--lp2:${ll.particles[1]};--lp3:${ll.particles[2]};--lp4:${ll.particles[3]};--dt:${ld.text};--da:${ld.accent};--db1:${ld.bars[0]};--db2:${ld.bars[1]};--db3:${ld.bars[2]};--db4:${ld.bars[3]};--dp1:${ld.particles[0]};--dp2:${ld.particles[1]};--dp3:${ld.particles[2]};--dp4:${ld.particles[3]}`}>
+  <svg width="300" height="99" viewBox="-5 5 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Programs Fall Apart logo">
     <style>
       .logo-text { font-family: 'EB Garamond', serif; font-size: 38px; }
     </style>
@@ -32,7 +32,7 @@ const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
   .site-logo :global(svg) {
     max-width: 100%;
     height: auto;
-    aspect-ratio: 370 / 122;
+    aspect-ratio: 300 / 99;
   }
 
   .site-logo :global(.logo-text-primary) { fill: var(--lt); }
@@ -58,7 +58,7 @@ const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
   :global(.dark) .site-logo :global(.logo-p4) { fill: var(--dp4); color: var(--dp4); }
 
   .epigraph {
-    margin: 0.5rem auto 0;
+    margin: 0.25rem auto 0;
     width: auto;
     text-align: center;
     white-space: nowrap;

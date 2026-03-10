@@ -22,7 +22,7 @@ const { Content } = await render(post)
 ---
 
 <article>
-  <h1 class:list={['mt-8', { 'text-center': from === 'post' || from === 'essay' }]}>{post.data.title}</h1>
+  <h1 class="mt-8 mb-10">{post.data.title}</h1>
   {
     (from === 'post' || from === 'essay') ? (
         <div class="flex items-baseline my-3">
@@ -38,16 +38,23 @@ const { Content } = await render(post)
           <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             {post.data.tags.flatMap((tag, index, array) => [
               <a href={`/writings/?tag=${tag}`} class="text-accent">{tag}</a>,
-              index < array.length - 1 ? <span class="text-muted">&middot;</span> : null
+              index < array.length - 1 ? <span class="text-muted">|</span> : null
             ])}
           </div>
         </div>
-        <div style="margin-bottom: 1.5rem;" />
+        <div class="metadata-divider" />
     ) : (
         ''
     )
   }
-  <InlineToc headings={headings} />
+  <!-- <InlineToc headings={headings} /> -->
   <Content />
   <GiscusComments />
 </article>
+
+<style>
+  .metadata-divider {
+    border-bottom: 0.5px solid var(--color-muted);
+    margin-bottom: 1.5rem;
+  }
+</style>
