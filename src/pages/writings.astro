@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@layouts/base-layout.astro";
-import SiteHeader from "@components/site-header.astro";
 import { getAllPosts } from "@utils/all-posts";
 import { getAllEssays } from "@utils/all-essays";
 import { formatedYMD, isoDate } from "@utils/date-helper";
@@ -35,105 +34,102 @@ const description = "Writings on software engineering, system design, and the co
 ---
 
 <BaseLayout title={title} description={description}>
-  <SiteHeader />
-  <main id="main-content" tabindex="-1">
-    <h1 class="sr-only">Writings</h1>
+  <h1 class="sr-only">Writings</h1>
 
-    <!-- Category toggle -->
-    <div
-      class="category-toggle flex justify-center gap-0 my-8"
-      role="group"
-      aria-label="Filter by category"
+  <!-- Category toggle -->
+  <div
+    class="category-toggle flex gap-0 mb-8"
+    role="group"
+    aria-label="Filter by category"
+  >
+    <button class="cat-btn active" data-cat="all" aria-pressed="true"
+      >All</button
     >
-      <button class="cat-btn active" data-cat="all" aria-pressed="true"
-        >All</button
-      >
-      <button class="cat-btn" data-cat="posts" aria-pressed="false"
-        >Posts</button
-      >
-      <button class="cat-btn" data-cat="essays" aria-pressed="false"
-        >Essays</button
-      >
-    </div>
-
-    <!-- Tag filter pills -->
-    <div
-      class="tags-bar flex flex-wrap gap-2 mb-8"
-      role="group"
-      aria-label="Filter by tag"
+    <button class="cat-btn" data-cat="posts" aria-pressed="false"
+      >Posts</button
     >
-      <button class="tag-pill active" data-tag="all" aria-pressed="true"
-        >All</button
-      >
-      {
-        allTags.map((tag) => (
-          <button
-            class="tag-pill"
-            data-tag={tag}
-            aria-pressed="false"
-            data-count-all={tagCountsByCategory[tag].all}
-            data-count-posts={tagCountsByCategory[tag].posts}
-            data-count-essays={tagCountsByCategory[tag].essays}
-          >
-            {tag.replace(/-/g, " ")}
-            <sup class="tag-count">{tagCountsByCategory[tag].all}</sup>
-          </button>
-        ))
-      }
-    </div>
+    <button class="cat-btn" data-cat="essays" aria-pressed="false"
+      >Essays</button
+    >
+  </div>
 
-    <!-- Search -->
-    <section class="search-bar mb-8">
-      <label for="search-input" class="sr-only">Search writings</label>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Search writings..."
-        autocomplete="off"
-        spellcheck="false"
-      />
-    </section>
+  <!-- Tag filter pills -->
+  <div
+    class="tags-bar flex flex-wrap gap-2 mb-8"
+    role="group"
+    aria-label="Filter by tag"
+  >
+    <button class="tag-pill active" data-tag="all" aria-pressed="true"
+      >All</button
+    >
+    {
+      allTags.map((tag) => (
+        <button
+          class="tag-pill"
+          data-tag={tag}
+          aria-pressed="false"
+          data-count-all={tagCountsByCategory[tag].all}
+          data-count-posts={tagCountsByCategory[tag].posts}
+          data-count-essays={tagCountsByCategory[tag].essays}
+        >
+          {tag.replace(/-/g, " ")}
+          <sup class="tag-count">{tagCountsByCategory[tag].all}</sup>
+        </button>
+      ))
+    }
+  </div>
 
-    <!-- Result count -->
-    <p class="result-count mb-4" aria-live="polite"></p>
+  <!-- Search -->
+  <section class="search-bar mb-8">
+    <label for="search-input" class="sr-only">Search writings</label>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search writings..."
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </section>
 
-    <!-- Writings list -->
-    <section class="writings-section">
-      {
-        allPosts.map((post) => (
-          <div
-            class="list-row flex items-baseline gap-x-8"
-            data-kind="posts"
-            data-tags={JSON.stringify(post.data.tags || [])}
-            data-title={post.data.title}
-          >
-            <span class="kind-label" data-kind-label>post</span>
-            <a href={getPostLink(post)} class="flex-1 truncate">
-              {post.data.title}
-            </a>
-            <time class="date-mono" datetime={isoDate(post.data.date)}>
-              {formatedYMD(post.data.date)}
-            </time>
-          </div>
-        ))
-      }
-      {
-        allEssays.map((essay) => (
-          <div
-            class="list-row flex items-baseline gap-x-8"
-            data-kind="essays"
-            data-tags={JSON.stringify(essay.data.tags || [])}
-            data-title={essay.data.title}
-          >
-            <span class="kind-label" data-kind-label>essay</span>
-            <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
-              {essay.data.title}
-            </a>
-          </div>
-        ))
-      }
-    </section>
-  </main>
+  <!-- Result count -->
+  <p class="result-count mb-4" aria-live="polite"></p>
+
+  <!-- Writings list -->
+  <section class="writings-section">
+    {
+      allPosts.map((post) => (
+        <div
+          class="list-row flex items-baseline gap-x-8"
+          data-kind="posts"
+          data-tags={JSON.stringify(post.data.tags || [])}
+          data-title={post.data.title}
+        >
+          <span class="kind-label" data-kind-label>post</span>
+          <a href={getPostLink(post)} class="flex-1 truncate">
+            {post.data.title}
+          </a>
+          <time class="date-mono" datetime={isoDate(post.data.date)}>
+            {formatedYMD(post.data.date)}
+          </time>
+        </div>
+      ))
+    }
+    {
+      allEssays.map((essay) => (
+        <div
+          class="list-row flex items-baseline gap-x-8"
+          data-kind="essays"
+          data-tags={JSON.stringify(essay.data.tags || [])}
+          data-title={essay.data.title}
+        >
+          <span class="kind-label" data-kind-label>essay</span>
+          <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
+            {essay.data.title}
+          </a>
+        </div>
+      ))
+    }
+  </section>
 </BaseLayout>
 
 <script>
@@ -148,5 +144,4 @@ const description = "Writings on software engineering, system design, and the co
   .kind-label {
     width: 3rem;
   }
-
 </style>

@@ -63,15 +63,15 @@ const palettes = {
     logo: {
       dark: {
         text: '#e6edf3',
-        accent: '#9fbbe0',
-        bars: ['#f0f2f6', '#e5e9f2', '#c7d4ea', '#9fbbe0'],
-        particles: ['#9fbbe0', '#e0a458', '#c7d4ea', '#9fbbe0'],
+        accent: '#48d597',        // was #9fbbe0 — now matches your primary green
+        bars: ['#e6edf3', '#8b949e', '#4a5568', '#2d333b'],  // your existing grays
+        particles: ['#48d597', '#e0a458', '#4a5568', '#48d597'],  // green + amber + one neutral
       },
       light: {
         text: '#3d4f5f',
-        accent: '#7a9ab8',
-        bars: ['#d5dce6', '#c4ced9', '#a8b8cc', '#8a9db5'],
-        particles: ['#8a9db5', '#c8935f', '#a8b8cc', '#8a9db5'],
+        accent: '#2d9d6a',        // your primary-on-light green
+        bars: ['#d1d5db', '#b0b8c4', '#8b949e', '#6b7280'],  // your light mode grays
+        particles: ['#2d9d6a', '#c8935f', '#8b949e', '#2d9d6a'],  // green + amber + one neutral
       },
     },
     giscus: {

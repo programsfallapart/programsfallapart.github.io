@@ -1,5 +1,4 @@
 ---
-import SiteHeader from '@components/site-header.astro'
 import BaseLayout from '@layouts/base-layout.astro'
 
 const title = '404 Not Found'
@@ -7,9 +6,6 @@ const description = 'Page Not Found'
 ---
 
 <BaseLayout title={title} description={description}>
-  <SiteHeader />
-  <main id="main-content" tabindex="-1">
-    <h1 class="sr-only">Page Not Found</h1>
-    <section class="mono flex justify-center py-10 text-4xl text-muted" style="letter-spacing: 10px; text-transform: uppercase;">404</section>
-  </main>
+  <h1 class="sr-only">Page Not Found</h1>
+  <section class="mono flex justify-center py-10 text-4xl text-muted" style="letter-spacing: 10px; text-transform: uppercase;">404</section>
 </BaseLayout>

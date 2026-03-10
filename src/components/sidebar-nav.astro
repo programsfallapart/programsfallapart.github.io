@@ -1,0 +1,178 @@
+---
+import AvatarImage from "@components/avatar-image.astro";
+import ThemeButton from "@components/theme-button.astro";
+import MusicButton from "@components/music-button.astro";
+import { navLinks, isActivePath } from "@utils/nav-links";
+
+const currentPath = Astro.url.pathname;
+---
+
+<aside class="sidebar-nav">
+  <a href="/" class="sidebar-logo" aria-label="Home">
+    <AvatarImage />
+  </a>
+  <nav aria-label="Main">
+    {
+      navLinks.map((item) => {
+        const active = isActivePath(item.url, currentPath);
+        return (
+          <a
+            href={item.url}
+            class:list={["sidebar-link", { active }]}
+            aria-current={active ? "page" : undefined}
+          >
+            {active && <span class="nav-dot" aria-hidden="true" />}
+            {item.title}
+          </a>
+        );
+      })
+    }
+  </nav>
+  <div class="sidebar-controls">
+    <ThemeButton />
+    <MusicButton />
+  </div>
+  <p class="now-playing" id="nowPlayingBar">
+    <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
+    <span id="nowPlaying" aria-live="polite">&nbsp;</span>
+    <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
+  </p>
+</aside>
+
+<style>
+  /* Bars start at x=10 in viewBox(-5,5,420,130).
+     Offset ratio: (10+5)/420 ≈ 3.6% of SVG width.
+     Nav text aligns with the left edge of the stacking bars. */
+  .sidebar-nav {
+    --bars-offset: 3.6%;
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+  }
+
+  .sidebar-logo {
+    display: block;
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-logo :global(.site-logo) {
+    justify-content: flex-start;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .sidebar-logo :global(.site-logo svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .sidebar-logo :global(.epigraph) {
+    display: none;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-left: var(--bars-offset);
+  }
+
+  .sidebar-link {
+    font-family: "JetBrains Mono";
+    font-size: 0.7rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: theme("colors.muted");
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .sidebar-link.active {
+    color: theme("colors.primary");
+  }
+
+  .nav-dot {
+    position: absolute;
+    left: -12px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .sidebar-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-left: var(--bars-offset);
+  }
+
+  .now-playing {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: -0.02em;
+    font-size: 0.5rem;
+    color: var(--color-muted);
+    margin: 0.75rem 0 0;
+    padding-left: var(--bars-offset);
+    user-select: all;
+  }
+
+  .track-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    padding: 0 0.15rem;
+    line-height: 1;
+  }
+
+  @media screen and (max-width: 768px) {
+    .sidebar-nav {
+      width: 100%;
+      position: static;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .sidebar-logo {
+      margin-bottom: 0;
+    }
+
+    nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-left: 0;
+    }
+
+    .sidebar-link {
+      padding-left: 0.75rem;
+    }
+
+    .nav-dot {
+      left: 0;
+    }
+
+    .sidebar-controls {
+      margin-top: 0;
+      padding-left: 0;
+    }
+
+    .now-playing {
+      padding-left: 0;
+      width: 100%;
+    }
+  }
+</style>

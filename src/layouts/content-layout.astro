@@ -1,7 +1,6 @@
 ---
 import ContentRender from '@components/content-render.astro'
 import SidebarToc from '@components/sidebar-toc.astro'
-import SiteHeader from '@components/site-header.astro'
 import BaseLayout from '@layouts/base-layout.astro'
 import type { PostModel, EssayModel } from '@interfaces/models'
 import { render } from 'astro:content'
@@ -16,12 +15,9 @@ const { headings: rawHeadings } = await render(entry)
 const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description ?? ''} hasComments>
-  <SiteHeader />
-  <main id="main-content" tabindex="-1" class="content-layout">
-    <section class="my-10">
-      <SidebarToc headings={headings} />
-      <ContentRender post={entry} from={from} headings={headings} />
-    </section>
-  </main>
+<BaseLayout title={entry.data.title} description={entry.data.description ?? ''} hasComments mainClass="content-layout">
+  <section>
+    <SidebarToc headings={headings} />
+    <ContentRender post={entry} from={from} headings={headings} />
+  </section>
 </BaseLayout>

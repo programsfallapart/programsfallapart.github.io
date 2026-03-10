@@ -1,86 +1,82 @@
 ---
 import BaseLayout from "../layouts/base-layout.astro";
-import SiteHeader from "@components/site-header.astro";
 
 const title = "About";
 const description = "Amira Azarglayoun — software engineer writing at the intersection of programming, mathematics, and curiosity.";
 ---
 
 <BaseLayout title={title} description={description}>
-  <SiteHeader />
-  <main id="main-content" tabindex="-1">
-    <h1 class="sr-only">About</h1>
-    <section>
-      <div>
-        <p>Hey there, I’m Amira (ah-mee-rah).</p>
-        <p>
-          I started in mathematics, the kind where everything is provable and
-          nothing decays. Then I stumbled into software engineering, where
-          everything decays and very little is provable. I stayed anyway.
-        </p>
-
-        <p>
-          I don’t claim mastery over any of this. I’m a curious programmer with
-          a skeptical mind and a habit of pulling on threads until the whole
-          thing unravels. Most of what you’ll find here was written on those
-          nights, you know the ones, when a quick fix spirals into three hours
-          of asking why, and by the time you look up, the coffee beside you has
-          gone cold and the room is different.
-        </p>
-
-        <p>
-          This isn’t a place for answers. It’s where I write things down before
-          I forget the shape of them. I’ll get things wrong. That’s part of it.
-        </p>
-
-        <p>
-          If something here made you pause, even for a second, I’m a comment, an <a
-            href="mailto:amira@programsfallapart.com">email</a
-          >, or a <a
-            href="https://twitter.com/pfa_amira"
-            target="_blank"
-            rel="noopener noreferrer"
-            >twitter <span class="sr-only">(opens in new tab)</span></a
-          ><sup class="footnote">*</sup> away. I’d like to know your name too.
-        </p>
-      </div>
-      <p class="about-footnote">
-        * Yes, I know it's called X now. No, I will not be calling it that.
+  <h1 class="sr-only">About</h1>
+  <section>
+    <div>
+      <p>Hey there, I'm Amira (ah-mee-rah).</p>
+      <p>
+        I started in mathematics, the kind where everything is provable and
+        nothing decays. Then I stumbled into software engineering, where
+        everything decays and very little is provable. I stayed anyway.
       </p>
 
-      <div class="credits">
-        <h3>Credits</h3>
-        <ul>
-          <li>
-            Fonts: <a
-              href="https://fonts.google.com/specimen/EB+Garamond"
-              target="_blank"
-              rel="noopener noreferrer">EB Garamond</a
-            >, <a
-              href="https://fonts.google.com/specimen/JetBrains+Mono"
-              target="_blank"
-              rel="noopener noreferrer">JetBrains Mono</a>
-          </li>
-          <li>
-            Music: classical recordings from <a
-              href="https://www.classicals.de"
-              target="_blank"
-              rel="noopener noreferrer">classicals.de</a
-            >, licensed under <a
-              href="https://creativecommons.org/licenses/by-nc/4.0/"
-              target="_blank"
-              rel="noopener noreferrer">CC BY-NC 4.0</a>
-          </li>
-          <li>
-            Built with <a
-              href="https://astro.build"
-              target="_blank"
-              rel="noopener noreferrer">Astro</a>
-          </li>
-        </ul>
-      </div>
-    </section>
-  </main>
+      <p>
+        I don't claim mastery over any of this. I'm a curious programmer with
+        a skeptical mind and a habit of pulling on threads until the whole
+        thing unravels. Most of what you'll find here was written on those
+        nights, you know the ones, when a quick fix spirals into three hours
+        of asking why, and by the time you look up, the coffee beside you has
+        gone cold and the room is different.
+      </p>
+
+      <p>
+        This isn't a place for answers. It's where I write things down before
+        I forget the shape of them. I'll get things wrong. That's part of it.
+      </p>
+
+      <p>
+        If something here made you pause, even for a second, I'm a comment, an <a
+          href="mailto:amira@programsfallapart.com">email</a
+        >, or a <a
+          href="https://twitter.com/pfa_amira"
+          target="_blank"
+          rel="noopener noreferrer"
+          >twitter <span class="sr-only">(opens in new tab)</span></a
+        ><sup class="footnote">*</sup> away. I'd like to know your name too.
+      </p>
+    </div>
+    <p class="about-footnote">
+      * Yes, I know it's called X now. No, I will not be calling it that.
+    </p>
+
+    <div class="credits">
+      <h3>Credits</h3>
+      <ul>
+        <li>
+          Fonts: <a
+            href="https://fonts.google.com/specimen/EB+Garamond"
+            target="_blank"
+            rel="noopener noreferrer">EB Garamond</a
+          >, <a
+            href="https://fonts.google.com/specimen/JetBrains+Mono"
+            target="_blank"
+            rel="noopener noreferrer">JetBrains Mono</a>
+        </li>
+        <li>
+          Music: classical recordings from <a
+            href="https://www.classicals.de"
+            target="_blank"
+            rel="noopener noreferrer">classicals.de</a
+          >, licensed under <a
+            href="https://creativecommons.org/licenses/by-nc/4.0/"
+            target="_blank"
+            rel="noopener noreferrer">CC BY-NC 4.0</a>
+        </li>
+        <li>
+          Built with <a
+            href="https://astro.build"
+            target="_blank"
+            rel="noopener noreferrer">Astro</a>
+        </li>
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
