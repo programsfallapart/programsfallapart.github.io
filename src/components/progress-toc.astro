@@ -42,7 +42,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
 <style>
   .progress-toc {
     position: fixed;
-    left: 2rem;
+    left: clamp(1rem, 3vw, 2rem);
     top: 50%;
     transform: translateY(-50%);
     z-index: 50;
@@ -59,13 +59,9 @@ const h2Headings = headings.filter((h) => h.depth === 2)
   .toc-line {
     height: 2px;
     width: 20px;
-    background-color: #d1d5db;
+    background-color: var(--color-border);
     border-radius: 1px;
     transition: width 0.25s ease, background-color 0.25s ease;
-  }
-
-  :global(.dark) .toc-line {
-    background-color: theme('colors.primary-gray');
   }
 
   .toc-line.active {
@@ -77,29 +73,18 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     background-color: theme('colors.muted');
   }
 
-  :global(.dark) .toc-line.passed {
-    background-color: theme('colors.muted');
-  }
-
   .toc-panel {
     display: none;
     max-width: 280px;
     max-height: 60vh;
     overflow-y: auto;
-    overflow-x: hidden;
     scrollbar-width: none;
-    background: rgba(255, 255, 255, 0.95);
+    background: light-dark(rgba(255, 255, 255, 0.95), rgba(30, 30, 30, 0.95));
     backdrop-filter: blur(8px);
-    border: 1px solid #e5e5e5;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     padding: 0.75rem 1rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  :global(.dark) .toc-panel {
-    background: rgba(30, 30, 30, 0.95);
-    border-color: #333;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
   }
 
   .toc-panel::-webkit-scrollbar {
@@ -144,10 +129,7 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     white-space: nowrap;
   }
 
-  .toc-panel a:hover {
-    color: theme('colors.primary');
-  }
-
+  .toc-panel a:hover,
   .toc-panel a.active {
     color: theme('colors.primary');
   }
@@ -156,9 +138,9 @@ const h2Headings = headings.filter((h) => h.depth === 2)
     padding-left: 1rem;
   }
 
-  @media screen and (max-width: 1400px) {
+  @media screen and (max-width: 1200px) {
     .progress-toc {
-      left: 0.5rem;
+      display: none;
     }
   }
 </style>
