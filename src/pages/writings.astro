@@ -1,31 +1,24 @@
 ---
 import BaseLayout from "@layouts/base-layout.astro";
-import { getAllPosts } from "@utils/all-posts";
-import { getAllEssays } from "@utils/all-essays";
+import { getAllWritings } from "@utils/all-writings";
+import { getEntryLink } from "@utils/entry-link";
 import { formatedYMD, isoDate } from "@utils/date-helper";
-import { getPostLink } from "@utils/post-link";
 import { computeTagCounts } from "@utils/tag-counts";
 
-const allPosts = await getAllPosts();
-const allEssays = await getAllEssays();
+const allWritings = await getAllWritings();
 
 const allTags = [
-  ...new Set(
-    [
-      ...allPosts.flatMap((p) => p.data.tags),
-      ...allEssays.flatMap((e) => e.data.tags),
-    ].filter(Boolean),
-  ),
+  ...new Set(allWritings.flatMap((w) => w.entry.data.tags).filter(Boolean)),
 ] as string[];
 
 const categories = ["posts", "essays"];
 
 const tagCountsByCategory = computeTagCounts(
   allTags,
-  [
-    ...allPosts.map((p) => ({ tags: p.data.tags || [], category: "posts" })),
-    ...allEssays.map((e) => ({ tags: e.data.tags || [], category: "essays" })),
-  ],
+  allWritings.map((w) => ({
+    tags: w.entry.data.tags || [],
+    category: `${w.kind}s`,
+  })),
   categories,
 );
 
@@ -97,35 +90,20 @@ const description = "Writings on software engineering, system design, and the co
   <!-- Writings list -->
   <section class="writings-section">
     {
-      allPosts.map((post) => (
+      allWritings.map((w) => (
         <div
           class="list-row flex items-baseline gap-x-8"
-          data-kind="posts"
-          data-tags={JSON.stringify(post.data.tags || [])}
-          data-title={post.data.title}
+          data-kind={`${w.kind}s`}
+          data-tags={JSON.stringify(w.entry.data.tags || [])}
+          data-title={w.entry.data.title}
         >
-          <span class="kind-label" data-kind-label>post</span>
-          <a href={getPostLink(post)} class="flex-1 truncate">
-            {post.data.title}
+          <span class="kind-label" data-kind-label>{w.kind}</span>
+          <a href={getEntryLink(w)} class="flex-1 truncate">
+            {w.entry.data.title}
           </a>
-          <time class="date-mono" datetime={isoDate(post.data.date)}>
-            {formatedYMD(post.data.date)}
+          <time class="date-mono" datetime={isoDate(w.entry.data.date)}>
+            {formatedYMD(w.entry.data.date)}
           </time>
-        </div>
-      ))
-    }
-    {
-      allEssays.map((essay) => (
-        <div
-          class="list-row flex items-baseline gap-x-8"
-          data-kind="essays"
-          data-tags={JSON.stringify(essay.data.tags || [])}
-          data-title={essay.data.title}
-        >
-          <span class="kind-label" data-kind-label>essay</span>
-          <a href={`/essays/${essay.data.abbrlink}`} class="flex-1 truncate">
-            {essay.data.title}
-          </a>
         </div>
       ))
     }

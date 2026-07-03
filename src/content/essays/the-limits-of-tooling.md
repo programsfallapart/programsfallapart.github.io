@@ -1,11 +1,11 @@
 ---
 title: The Limits of Tooling
+date: 2024-10-18T10:00:00.000Z
 abbrlink: a1b2c3d5
 tags:
   - programming
   - tools
 description: Tools amplify skill but cannot replace understanding
-order: 6
 ---
 
 Every few years, a new tool promises to eliminate a category of programming error. Linters, type checkers, formatters, AI assistants — each one genuine progress, each one subtly dangerous if mistaken for a substitute for understanding.

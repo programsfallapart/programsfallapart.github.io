@@ -28,12 +28,8 @@ const { Content } = await render(post)
         <div class="flex items-baseline my-3">
           <div class="mono inline-flex items-center gap-2 flex-1 text-left" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             <span class="text-muted">{from}</span>
-            {from === 'post' && 'date' in post.data && (
-              <>
-                <span class="text-muted">&middot;</span>
-                <time class="date-mono" datetime={isoDate(post.data.date)}>{getFormatDate(post.data.date)}</time>
-              </>
-            )}
+            <span class="text-muted">&middot;</span>
+            <time class="date-mono" datetime={isoDate(post.data.date)}>{getFormatDate(post.data.date)}</time>
           </div>
           <div class="mono inline-flex items-center gap-2" style="font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;">
             {post.data.tags.flatMap((tag, index, array) => [

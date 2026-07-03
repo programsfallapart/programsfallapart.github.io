@@ -1,11 +1,11 @@
 ---
 title: Complexity is a Choice
+date: 2024-06-05T10:00:00.000Z
 abbrlink: f3a4b5c6
 tags:
   - architecture
   - design
 description: Most software complexity is not inherent but accumulated through decisions
-order: 4
 ---
 
 Fred Brooks distinguished between essential complexity — the irreducible difficulty of the problem — and accidental complexity, the difficulty we introduce through our own choices. Most codebases suffer far more from the latter.

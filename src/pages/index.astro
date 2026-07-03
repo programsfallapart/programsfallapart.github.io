@@ -1,12 +1,16 @@
 ---
 import BaseLayout from "@layouts/base-layout.astro";
-import { getAllPosts } from "@utils/all-posts";
-import { getAllEssays } from "@utils/all-essays";
+import { getAllPosts, getAllEssays } from "@utils/all-writings";
+import { getEntryLink } from "@utils/entry-link";
 import { formatedYMD, isoDate } from "@utils/date-helper";
-import { getPostLink } from "@utils/post-link";
+import type { WritingEntry } from "@interfaces/models";
 
-const latestPosts = (await getAllPosts()).slice(0, 5);
-const latestEssays = (await getAllEssays()).slice(0, 5);
+const latestEssays: WritingEntry[] = (await getAllEssays())
+  .slice(0, 5)
+  .map((entry) => ({ kind: "essay", entry }));
+const latestPosts: WritingEntry[] = (await getAllPosts())
+  .slice(0, 5)
+  .map((entry) => ({ kind: "post", entry }));
 
 const title = "Programs Fall Apart";
 const description = "Software examined slowly. Writings on programming, architecture, and the connections between disciplines that specialization taught us to ignore.";
@@ -20,14 +24,17 @@ const description = "Software examined slowly. Writings on programming, architec
     </h2>
     <div class="flex flex-col">
       {
-        latestEssays.map((essay) => (
+        latestEssays.map((w) => (
           <div class="list-row flex items-baseline gap-x-8" data-list-row>
-            <a
-              class="flex-1 truncate"
-              href={`/essays/${essay.data.abbrlink}`}
-            >
-              {essay.data.title}
+            <a class="flex-1 truncate" href={getEntryLink(w)}>
+              {w.entry.data.title}
             </a>
+            <time
+              class="date-mono date-small"
+              datetime={isoDate(w.entry.data.date)}
+            >
+              {formatedYMD(w.entry.data.date)}
+            </time>
           </div>
         ))
       }
@@ -41,16 +48,16 @@ const description = "Software examined slowly. Writings on programming, architec
     </h2>
     <div class="flex flex-col">
       {
-        latestPosts.map((post) => (
+        latestPosts.map((w) => (
           <div class="list-row flex items-baseline gap-x-8" data-list-row>
-            <a class="flex-1 truncate" href={getPostLink(post)}>
-              {post.data.title}
+            <a class="flex-1 truncate" href={getEntryLink(w)}>
+              {w.entry.data.title}
             </a>
             <time
               class="date-mono date-small"
-              datetime={isoDate(post.data.date)}
+              datetime={isoDate(w.entry.data.date)}
             >
-              {formatedYMD(post.data.date)}
+              {formatedYMD(w.entry.data.date)}
             </time>
           </div>
         ))

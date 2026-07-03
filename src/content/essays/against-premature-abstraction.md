@@ -1,11 +1,11 @@
 ---
 title: Against Premature Abstraction
+date: 2024-04-10T10:00:00.000Z
 abbrlink: c9d0e1f2
 tags:
   - programming
   - design
 description: Why three lines of duplicated code are often better than one wrong abstraction
-order: 3
 ---
 
 Abstraction is the programmer's most powerful tool and most seductive trap. We are taught to never repeat ourselves, to extract and generalize at the first sign of duplication. But this instinct, applied too early, creates more problems than it solves.

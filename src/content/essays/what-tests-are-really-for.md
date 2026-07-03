@@ -1,11 +1,11 @@
 ---
 title: What Tests Are Really For
+date: 2024-08-12T10:00:00.000Z
 abbrlink: d7e8f9a0
 tags:
   - testing
   - craftsmanship
 description: Tests are not about catching bugs — they are specifications that happen to be executable
-order: 5
 ---
 
 The common understanding of tests is that they catch bugs. This is true but incomplete, like saying that blueprints are for catching construction errors. Blueprints do catch errors, but their primary purpose is to communicate intent.

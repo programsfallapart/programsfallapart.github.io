@@ -19,10 +19,10 @@ const essays = defineCollection({
   schema: z.object({
     isDraft: z.boolean().optional(),
     title: z.string(),
+    date: z.date(),
     abbrlink: z.string(),
     tags: z.array(z.string()),
     description: z.string().optional(),
-    order: z.number(),
   }),
 })
 

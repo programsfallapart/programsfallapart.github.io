@@ -1,11 +1,11 @@
 ---
 title: On Software Entropy
+date: 2024-01-15T10:00:00.000Z
 abbrlink: a1b2c3d4
 tags:
   - programming
   - rust
 description: Why programs fall apart and what we can do about it
-order: 1
 ---
 
 Every sufficiently complex program carries within it the seeds of its own decay[^1]. This is not a flaw in engineering — it is a law of nature applied to code.

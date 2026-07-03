@@ -1,11 +1,11 @@
 ---
 title: The Case for Immutability
+date: 2024-02-20T10:00:00.000Z
 abbrlink: e5f6g7h8
 tags:
   - functional programming
   - haskell
 description: Why letting go of mutation leads to better programs
-order: 2
 ---
 
 Mutation is the original sin of programming. Every shared mutable variable is a promise waiting to be broken, a contract that any thread, any function, any careless line of code can violate without warning.
