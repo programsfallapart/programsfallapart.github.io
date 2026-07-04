@@ -101,9 +101,11 @@ const description = "Writings on software engineering, system design, and the co
           <a href={getEntryLink(w)} class="flex-1 truncate">
             {w.entry.data.title}
           </a>
-          <time class="date-mono" datetime={isoDate(w.entry.data.date)}>
-            {formatedYMD(w.entry.data.date)}
-          </time>
+          {w.kind === "post" && (
+            <time class="date-mono" datetime={isoDate(w.entry.data.date)}>
+              {formatedYMD(w.entry.data.date)}
+            </time>
+          )}
         </div>
       ))
     }

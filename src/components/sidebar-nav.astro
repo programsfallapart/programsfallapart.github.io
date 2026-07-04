@@ -7,7 +7,7 @@ import { navLinks, isActivePath } from "@utils/nav-links";
 const currentPath = Astro.url.pathname;
 ---
 
-<aside class="sidebar-nav">
+<header class="sidebar-nav">
   <a href="/" class="sidebar-logo" aria-label="Home">
     <AvatarImage />
   </a>
@@ -32,12 +32,14 @@ const currentPath = Astro.url.pathname;
     <ThemeButton />
     <MusicButton />
   </div>
-  <p class="now-playing" id="nowPlayingBar">
-    <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
+  <div class="now-playing" id="nowPlayingBar">
     <span id="nowPlaying" aria-live="polite">&nbsp;</span>
-    <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
-  </p>
-</aside>
+    <span class="track-controls">
+      <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
+      <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
+    </span>
+  </div>
+</header>
 
 <style>
   /* Bars start at x=10 in viewBox(-5,5,420,130).
@@ -114,16 +116,30 @@ const currentPath = Astro.url.pathname;
   }
 
   .now-playing {
+    /* display toggled to flex by the music script */
     display: none;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
     font-family: "JetBrains Mono", monospace;
     letter-spacing: -0.02em;
     font-size: 0.5rem;
+    line-height: 1.5;
     color: var(--color-muted);
     margin: 0.75rem 0 0;
     padding-left: var(--bars-offset);
     user-select: all;
+  }
+
+  #nowPlaying {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .track-controls {
+    display: flex;
+    gap: 0.75rem;
   }
 
   .track-btn {

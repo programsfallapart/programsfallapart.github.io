@@ -29,12 +29,6 @@ const description = "Software examined slowly. Writings on programming, architec
             <a class="flex-1 truncate" href={getEntryLink(w)}>
               {w.entry.data.title}
             </a>
-            <time
-              class="date-mono date-small"
-              datetime={isoDate(w.entry.data.date)}
-            >
-              {formatedYMD(w.entry.data.date)}
-            </time>
           </div>
         ))
       }
