@@ -50,7 +50,8 @@ const currentPath = Astro.url.pathname;
     width: 200px;
     flex-shrink: 0;
     position: sticky;
-    top: 2rem;
+    /* Match the layout's top padding so the sidebar doesn't jump on scroll */
+    top: var(--layout-top);
     align-self: flex-start;
   }
 

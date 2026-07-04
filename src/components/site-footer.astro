@@ -11,9 +11,12 @@
 
 <style>
   .site-footer {
-    width: 60%;
-    max-width: 1220px;
+    /* Share the content column's width + centering so the footer and its
+       separator line up with the content above it */
+    width: 100%;
+    max-width: var(--content-max);
     margin: 0 auto;
+    flex-shrink: 0;
     padding: 2rem 0 3rem;
     text-align: center;
   }
@@ -33,17 +36,5 @@
     color: var(--color-muted);
     text-decoration: underline;
     text-underline-offset: 3px;
-  }
-
-  @media screen and (max-width: 1000px) {
-    .site-footer {
-      width: 85%;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    .site-footer {
-      width: 90%;
-    }
   }
 </style>

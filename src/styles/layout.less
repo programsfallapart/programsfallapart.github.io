@@ -1,10 +1,13 @@
 // Two-column site layout: sidebar + main content
 .site-layout {
   display: flex;
-  max-width: 1024px;
+  width: 100%;
+  max-width: var(--content-max);
   margin: 0 auto;
-  padding-top: 3rem;
+  padding-top: var(--layout-top);
   gap: 4rem;
+  // Grow to fill the viewport so the footer sits at the bottom on short pages
+  flex: 1 0 auto;
 }
 
 // Main content area
@@ -14,9 +17,10 @@ main {
   padding-bottom: 6rem;
 }
 
-// Content layout for post/essay pages (wider to accommodate sidenotes)
-main.content-layout {
-  max-width: none;
+// First content block never adds its own top margin — keeps the content
+// baseline aligned with the sidebar logo across every page
+main > :first-child {
+  margin-top: 0;
 }
 
 main.content-layout article {
