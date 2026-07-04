@@ -61,11 +61,11 @@
     border-color: theme('colors.primary');
   }
 
-  // Selected: solid green fill so the active choice is unmistakable
+  // Selected: faint green tint + green text/border so it's clear but quiet
   &.active {
-    background: theme('colors.primary');
+    background: var(--color-primary-soft);
     border-color: theme('colors.primary');
-    color: var(--color-on-primary);
+    color: theme('colors.primary');
   }
 
   &.active + & {
@@ -92,9 +92,9 @@
   }
 
   &.active {
-    background: theme('colors.primary');
+    background: var(--color-primary-soft);
     border-color: theme('colors.primary');
-    color: var(--color-on-primary);
+    color: theme('colors.primary');
   }
 }
 
