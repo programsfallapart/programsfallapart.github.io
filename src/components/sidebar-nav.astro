@@ -121,21 +121,30 @@ const currentPath = Astro.url.pathname;
     display: none;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.4rem;
+    gap: 0.5rem;
+    width: 100%;
     font-family: "JetBrains Mono", monospace;
     letter-spacing: -0.02em;
     font-size: 0.5rem;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--color-muted);
     margin: 0.75rem 0 0;
     padding-left: var(--bars-offset);
+    box-sizing: border-box;
     user-select: all;
   }
 
   #nowPlaying {
-    display: block;
-    max-width: 100%;
+    /* Clamp long track names to two lines so they never overflow the sidebar */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     overflow-wrap: anywhere;
+    width: 100%;
+    max-width: 100%;
+    cursor: default;
   }
 
   .track-controls {
