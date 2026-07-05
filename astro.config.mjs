@@ -12,6 +12,11 @@ import { oxideDark, oxideLight } from './src/styles/code-theme.mjs'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://programsfallapart.com',
+  // Inline all CSS into each page's <head> so the stylesheet is never a
+  // separate render-blocking request (removes it from the critical chain).
+  build: {
+    inlineStylesheets: 'always',
+  },
   image: {
    service: passthroughImageService(),
  },
