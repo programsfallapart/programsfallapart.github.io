@@ -15,7 +15,7 @@ const { headings: rawHeadings } = await render(entry)
 const headings = rawHeadings.filter((h) => h.slug !== 'footnote-label')
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description ?? ''} hasComments mainClass="content-layout">
+<BaseLayout title={entry.data.title} description={entry.data.description ?? ''} mainClass="content-layout">
   <section>
     <SidebarToc headings={headings} />
     <ContentRender post={entry} from={from} headings={headings} />

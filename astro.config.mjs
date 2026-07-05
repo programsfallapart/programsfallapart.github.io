@@ -12,7 +12,6 @@ import { oxideDark, oxideLight } from './src/styles/code-theme.mjs'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://programsfallapart.com',
-  prefetch: true,
   image: {
    service: passthroughImageService(),
  },

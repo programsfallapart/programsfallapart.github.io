@@ -81,12 +81,6 @@ main[tabindex="-1"]:focus {
   outline: none;
 }
 
-// Disable view transition animation for instant page switches
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-}
-
 // Respect reduced motion preference
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

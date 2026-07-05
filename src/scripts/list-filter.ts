@@ -199,4 +199,4 @@ function initListFilter() {
   suppressURLSync = false;
 }
 
-document.addEventListener("astro:page-load", initListFilter);
+initListFilter();

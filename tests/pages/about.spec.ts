@@ -21,13 +21,11 @@ test.describe('About page', () => {
     await expect(twitterLink).toHaveAttribute('href', 'https://twitter.com/pfa_amira')
   })
 
-  test('credits section lists the correct fonts, music source, and framework', async ({ page }) => {
+  test('credits section lists the correct fonts and framework', async ({ page }) => {
     await page.goto('/about/')
     await expect(page.getByText(/credits/i)).toBeVisible()
     await expect(page.getByRole('link', { name: /EB Garamond/i })).toHaveAttribute('href', 'https://fonts.google.com/specimen/EB+Garamond')
     await expect(page.getByRole('link', { name: /JetBrains Mono/i })).toHaveAttribute('href', 'https://fonts.google.com/specimen/JetBrains+Mono')
-    await expect(page.getByRole('link', { name: /classicals\.de/i })).toHaveAttribute('href', 'https://www.classicals.de')
-    await expect(page.getByRole('link', { name: /CC BY-NC 4\.0/i })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nc/4.0/')
     await expect(page.getByRole('link', { name: /Astro/i })).toHaveAttribute('href', 'https://astro.build')
   })
 

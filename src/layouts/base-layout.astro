@@ -4,12 +4,12 @@ import SidebarNav from '@components/sidebar-nav.astro'
 import ScrollButton from '@components/scroll-button.astro'
 import SiteFooter from '@components/site-footer.astro'
 
-const { title, description, hasComments, mainClass } = Astro.props.frontmatter || Astro.props
+const { title, description, mainClass } = Astro.props.frontmatter || Astro.props
 const isAbout = Astro.url.pathname.replace(/\/+$/, '') === '/about'
 ---
 
 <html lang="en">
-  <BaseHead title={title} description={description} hasComments={hasComments} />
+  <BaseHead title={title} description={description} />
   <body class="bg-primary-white text-primary-dark dark:bg-primary-dark dark:text-[#e4e4e7]">
     <a href="#main-content" class="skip-link" data-skip-link>Skip to content</a>
     <div class="site-layout">

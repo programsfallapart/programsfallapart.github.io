@@ -1,7 +1,6 @@
 ---
 import AvatarImage from "@components/avatar-image.astro";
 import ThemeButton from "@components/theme-button.astro";
-import MusicButton from "@components/music-button.astro";
 import { navLinks, isActivePath } from "@utils/nav-links";
 
 const currentPath = Astro.url.pathname;
@@ -30,14 +29,6 @@ const currentPath = Astro.url.pathname;
   </nav>
   <div class="sidebar-controls">
     <ThemeButton />
-    <MusicButton />
-  </div>
-  <div class="now-playing" id="nowPlayingBar">
-    <span id="nowPlaying" aria-live="polite">&nbsp;</span>
-    <span class="track-controls">
-      <button class="track-btn" id="prevTrack" aria-label="Previous track">&lsaquo;</button>
-      <button class="track-btn" id="nextTrack" aria-label="Next track">&rsaquo;</button>
-    </span>
   </div>
 </header>
 
@@ -116,52 +107,6 @@ const currentPath = Astro.url.pathname;
     padding-left: var(--bars-offset);
   }
 
-  .now-playing {
-    /* display toggled to flex by the music script */
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    width: 100%;
-    font-family: "JetBrains Mono", monospace;
-    letter-spacing: -0.02em;
-    font-size: 0.5rem;
-    line-height: 1.6;
-    color: var(--color-muted);
-    margin: 0.75rem 0 0;
-    padding-left: var(--bars-offset);
-    box-sizing: border-box;
-    user-select: all;
-  }
-
-  #nowPlaying {
-    /* Clamp long track names to two lines so they never overflow the sidebar */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    width: 100%;
-    max-width: 100%;
-    cursor: default;
-  }
-
-  .track-controls {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  .track-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    padding: 0 0.15rem;
-    line-height: 1;
-  }
-
   @media screen and (max-width: 768px) {
     .sidebar-nav {
       width: 100%;
@@ -194,11 +139,6 @@ const currentPath = Astro.url.pathname;
     .sidebar-controls {
       margin-top: 0;
       padding-left: 0;
-    }
-
-    .now-playing {
-      padding-left: 0;
-      width: 100%;
     }
   }
 </style>
