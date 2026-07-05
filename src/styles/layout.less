@@ -25,8 +25,13 @@ main > :first-child {
 
 main.content-layout article {
   position: relative;
+  // Cap the reading measure near Bringhurst's 66-char sweet spot. Ragged-right
+  // (not justified) so word-spacing stays even — no rivers — and let the
+  // browser pick better line breaks.
+  max-width: 68ch;
   margin: 0 auto;
-  text-align: justify;
+  text-align: left;
+  text-wrap: pretty;
 }
 
 @media screen and (max-width: 768px) {

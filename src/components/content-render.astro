@@ -52,9 +52,48 @@ const { Content } = await render(post)
   <GiscusComments />
 </article>
 
+<script>
+  // Give section headings a hover anchor for deep-linking (reader utility).
+  function addHeadingAnchors() {
+    const headings = document.querySelectorAll<HTMLElement>('article :is(h2, h3)[id]')
+    headings.forEach((h) => {
+      if (h.querySelector('.heading-anchor')) return
+      const link = document.createElement('a')
+      link.className = 'heading-anchor'
+      link.href = `#${h.id}`
+      link.setAttribute('aria-label', 'Link to this section')
+      link.textContent = '#'
+      h.appendChild(link)
+    })
+  }
+  addHeadingAnchors()
+  document.addEventListener('astro:page-load', addHeadingAnchors)
+</script>
+
 <style>
   .metadata-divider {
     border-bottom: 0.5px solid var(--color-muted);
     margin-bottom: 1.5rem;
+  }
+
+  /* Hover anchors on section headings — invisible until you want them */
+  article :global(:is(h2, h3)) {
+    position: relative;
+  }
+  article :global(.heading-anchor) {
+    margin-left: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--color-muted);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  article :global(:is(h2, h3):hover) .heading-anchor,
+  article :global(.heading-anchor:focus-visible) {
+    opacity: 0.5;
+  }
+  article :global(.heading-anchor:hover) {
+    opacity: 1;
+    color: var(--color-primary);
   }
 </style>

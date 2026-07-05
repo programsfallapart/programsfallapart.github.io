@@ -7,6 +7,7 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHeadingNumbers from './src/plugins/rehype-heading-numbers'
+import { oxideDark, oxideLight } from './src/styles/code-theme.mjs'
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,7 +24,7 @@ export default defineConfig({
   },
   integrations: [
     expressiveCode({
-      themes: ['catppuccin-mocha','catppuccin-latte'],
+      themes: [oxideDark, oxideLight],
       themeCssSelector: (theme) => {
         return theme.type === 'dark' ? '.dark' : ':root:not(.dark)'
       },

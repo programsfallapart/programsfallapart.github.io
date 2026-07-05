@@ -2,17 +2,26 @@
 p code,
 li code,
 strong code {
-  font-size: 0.75em;
+  // JetBrains Mono has a taller x-height than EB Garamond, so hold the chip a
+  // touch smaller. Plain `display: inline` keeps the true text baseline and
+  // lets padding pad the background without inflating the line's leading.
+  // (inline-block + overflow moves the baseline to the box edge — the bug.)
+  font-size: 0.85em;
   white-space: nowrap;
   color: var(--color-code-fg);
   background-color: var(--color-code-bg);
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 100%;
   margin: 0 0.1rem;
-  padding: 0.1rem 0.4rem;
+  padding: 0.1em 0.4em;
   border-radius: 0.3rem;
-  overflow-x: auto;
+}
+
+// Code must show exactly what the file contains — no font ligatures turning
+// <= into ≤ (which isn't even valid in most languages). Honest published code.
+code,
+pre,
+.expressive-code code {
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
 }
 
 // Code blocks

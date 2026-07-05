@@ -90,15 +90,10 @@ const description =
 
   <!-- Rating legend -->
   <div class="rating-legend">
-    <p class="rating-intro">
-      Rated by impact on my thinking (which, yes, is like grading my own
-      homework)
-    </p>
-    <div class="rating-stars">
-      <span><span class="bookmark-rating" aria-hidden="true">★☆☆</span> Caught my eye</span>
-      <span><span class="bookmark-rating" aria-hidden="true">★★☆</span> Stayed with me</span>
-      <span><span class="bookmark-rating" aria-hidden="true">★★★</span> Rewired me</span>
-    </div>
+    <span class="rating-intro">Rated by impact on my thinking:</span>
+    <span class="rating-item"><span class="bookmark-rating" aria-hidden="true">★☆☆</span> Caught my eye</span>
+    <span class="rating-item"><span class="bookmark-rating" aria-hidden="true">★★☆</span> Stayed with me</span>
+    <span class="rating-item"><span class="bookmark-rating" aria-hidden="true">★★★</span> Rewired me</span>
   </div>
 
   <!-- Result count -->
@@ -167,8 +162,12 @@ const description =
   }
 
   .rating-legend {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.4rem 1.5rem;
+    margin: 3rem 0;
     font-family: "JetBrains Mono";
     font-size: 0.55rem;
     letter-spacing: 0.5px;
@@ -176,13 +175,17 @@ const description =
   }
 
   .rating-intro {
-    margin-bottom: 0.4rem;
+    margin-right: 0.5rem;
   }
 
-  .rating-stars {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
+  .rating-item {
+    white-space: nowrap;
+  }
+
+  /* Enlarge only the legend stars, not the per-row ratings */
+  .rating-item .bookmark-rating {
+    font-size: 0.9rem;
+    letter-spacing: -0.5px;
   }
 
   .bookmark-rating {

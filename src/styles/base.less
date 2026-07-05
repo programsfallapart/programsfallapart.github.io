@@ -9,8 +9,10 @@
   --color-muted: #656d76;
   --color-border: #e5e7eb;
   --color-border-strong: #374151;
-  --color-code-bg: #374151;
-  --color-code-fg: #e4e4e7;
+  // Inline code: a light pill on the light page (not a dark navy chip),
+  // matching the light-mode code-block background.
+  --color-code-bg: #e6eaef;
+  --color-code-fg: #26313b;
   // Faint primary tint used as the background of a selected chip/pill
   --color-primary-soft: rgba(35, 125, 84, 0.1);
 
@@ -46,6 +48,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+// EB Garamond (variable, 400–600) runs delicate. Light text on a dark ground
+// always reads bolder than the reverse, so on white the 400 body can feel
+// anemic — give light mode a hair more weight to hold the same presence.
+// Scoped to reading text; elements that set their own weight are untouched.
+html:not(.dark) body {
+  font-weight: 450;
 }
 
 // Global link styling

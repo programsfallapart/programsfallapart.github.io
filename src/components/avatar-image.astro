@@ -4,19 +4,14 @@ const cjsRequire = createRequire(import.meta.url)
 const { active } = cjsRequire('../../palettes.config.cjs')
 const ld = active.logo.dark
 const ll = active.logo.light
-
-const logos = import.meta.glob('./logos/*.astro', { eager: true })
-const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
 ---
 
 <div class="site-logo mt-4 mb-1 select-none flex justify-center" style={`--lt:${ll.text};--la:${ll.accent};--lb1:${ll.bars[0]};--lb2:${ll.bars[1]};--lb3:${ll.bars[2]};--lb4:${ll.bars[3]};--lp1:${ll.particles[0]};--lp2:${ll.particles[1]};--lp3:${ll.particles[2]};--lp4:${ll.particles[3]};--dt:${ld.text};--da:${ld.accent};--db1:${ld.bars[0]};--db2:${ld.bars[1]};--db3:${ld.bars[2]};--db4:${ld.bars[3]};--dp1:${ld.particles[0]};--dp2:${ld.particles[1]};--dp3:${ld.particles[2]};--dp4:${ld.particles[3]}`}>
-  <svg width="300" height="99" viewBox="-5 5 420 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Programs Fall Apart logo">
-    <style>
-      .logo-text { font-family: 'EB Garamond', serif; font-size: 38px; }
-    </style>
-    {LogoIcon && <LogoIcon />}
-    <text x="178" y="55" class="logo-text logo-text-primary">programs</text>
-    <text x="178" y="95" class="logo-text logo-text-accent">fall apart</text>
+  <!-- Champion · stacked wordmark, stripped. Entropy cue: the final "t" of
+       "apart" sits a hair below the baseline — subliminal, not a performance. -->
+  <svg width="300" height="104" viewBox="0 0 300 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Programs Fall Apart logo">
+    <text x="6" y="44" class="logo-grotesque logo-ink" font-size="38" letter-spacing="-1.5">programs</text>
+    <text x="6" y="92" class="logo-grotesque logo-dim" font-size="38" letter-spacing="-1.5">fall apar<tspan dy="3">t</tspan></text>
   </svg>
 </div>
 <figure class="epigraph" lang="fr">
@@ -32,8 +27,29 @@ const LogoIcon = (logos['./logos/bars.astro'] as any)?.default
   .site-logo :global(svg) {
     max-width: 100%;
     height: auto;
-    aspect-ratio: 300 / 99;
+    aspect-ratio: 300 / 104;
   }
+
+  /* Candidate-logo helpers (grotesque wordmark, ink field, knockout ground) */
+  .site-logo :global(.logo-grotesque) {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+  }
+  .site-logo :global(.logo-field),
+  .site-logo :global(.logo-field-text) { fill: var(--lt); }
+  :global(.dark) .site-logo :global(.logo-field),
+  :global(.dark) .site-logo :global(.logo-field-text) { fill: var(--dt); }
+  .site-logo :global(.logo-knockout) { fill: #f8f9fa; }
+  :global(.dark) .site-logo :global(.logo-knockout) { fill: #181c21; }
+  .site-logo :global(.logo-grid) { stroke: var(--lt); }
+  :global(.dark) .site-logo :global(.logo-grid) { stroke: var(--dt); }
+  /* "programs" anchors the logo — near-black in light, near-white in dark,
+     so the hierarchy survives the inversion instead of washing out. */
+  .site-logo :global(.logo-ink) { fill: #181c21; }
+  :global(.dark) .site-logo :global(.logo-ink) { fill: #e6edf3; }
+  /* "fall apart" one clear step dimmer than "programs" */
+  .site-logo :global(.logo-dim) { fill: #6b7280; }
+  :global(.dark) .site-logo :global(.logo-dim) { fill: #8b949e; }
 
   .site-logo :global(.logo-text-primary) { fill: var(--lt); }
   .site-logo :global(.logo-text-accent) { fill: var(--la); }

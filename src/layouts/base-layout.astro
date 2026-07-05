@@ -5,6 +5,7 @@ import ScrollButton from '@components/scroll-button.astro'
 import SiteFooter from '@components/site-footer.astro'
 
 const { title, description, hasComments, mainClass } = Astro.props.frontmatter || Astro.props
+const isAbout = Astro.url.pathname.replace(/\/+$/, '') === '/about'
 ---
 
 <html lang="en">
@@ -17,7 +18,7 @@ const { title, description, hasComments, mainClass } = Astro.props.frontmatter |
         <slot />
       </main>
     </div>
-    <SiteFooter />
+    <SiteFooter isAbout={isAbout} />
     <ScrollButton />
     <script>
       document.querySelector('[data-skip-link]')?.addEventListener('click', (e) => {
