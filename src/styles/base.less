@@ -1,6 +1,8 @@
 // Font variables (shared across all style files)
-@font-serif: 'EB Garamond';
-@font-mono: 'JetBrains Mono';
+// Fallback stacks matter: Georgia is metrically close to EB Garamond, so the
+// swap barely shifts; the OS mono stack matches JetBrains Mono's proportions.
+@font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+@font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
 // CSS custom properties
 :root {
